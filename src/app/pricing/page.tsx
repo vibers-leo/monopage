@@ -113,7 +113,7 @@ export default function PricingPage() {
                             <span className="bg-blue-500/30 text-blue-200 text-[10px] px-2 py-0.5 rounded-full">2개월 SAVE</span>
                         </div>
                     </div>
-                     <p className="text-xs text-gray-400 mt-4 ml-1">초기 세팅비 별도 ~</p>
+                     <p className="text-xs text-gray-400 mt-4 ml-1">초기 세팅비 100만원부터 ~</p>
                 </div>
 
                 <div className="space-y-4 mb-10">
