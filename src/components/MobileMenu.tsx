@@ -52,6 +52,13 @@ export default function MobileMenu() {
               archive
             </Link>
             <Link 
+              href="/portfolio" 
+              onClick={closeMenu} 
+              className="hover:text-primary transition-colors"
+            >
+              portfolio
+            </Link>
+            <Link 
               href="/demo/media" 
               onClick={closeMenu} 
               className="hover:text-primary transition-colors"

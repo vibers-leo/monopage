@@ -28,6 +28,12 @@ export default function AdminLayout({
                             >
                                 언론보도 관리
                             </Link>
+                            <Link
+                                href="/admin/portfolio"
+                                className="hover:text-black transition-colors"
+                            >
+                                포트폴리오 관리
+                            </Link>
                             {/* 추가 메뉴 공간 */}
                         </nav>
                     </div>

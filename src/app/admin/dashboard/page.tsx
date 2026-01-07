@@ -13,7 +13,8 @@ import {
   BarChart3,
   TrendingUp,
   Eye,
-  Edit
+  Edit,
+  Folder
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
@@ -29,7 +30,8 @@ export default function AdminDashboardPage() {
     { label: "페이지 편집", href: "/admin/pages", icon: Edit, color: "bg-primary" },
     { label: "미디어 관리", href: "/admin/media", icon: ImageIcon, color: "bg-secondary" },
     { label: "상품 관리", href: "/admin/products", icon: ShoppingBag, color: "bg-accent" },
-    { label: "전시 관리", href: "/admin/exhibitions", icon: Palette, color: "bg-primary" },
+    { label: "전시 관리", href: "/admin/exhibition", icon: Palette, color: "bg-primary" },
+    { label: "포트폴리오", href: "/admin/portfolio", icon: Folder, color: "bg-black" },
   ];
 
   const recentPages = [

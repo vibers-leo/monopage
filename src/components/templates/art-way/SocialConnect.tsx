@@ -1,0 +1,65 @@
+"use client";
+
+import Link from "next/link";
+import { Instagram, Youtube, BookOpen } from "lucide-react"; // Blog 아이콘으로 BookOpen 사용
+
+export default function SocialConnect() {
+  const socialLinks = [
+    {
+      name: "Instagram",
+      id: "@artwaygallery_story",
+      url: "https://www.instagram.com/artwaygallery_story/",
+      icon: <Instagram size={24} />,
+      color: "text-pink-600",
+      bgHover: "hover:border-pink-200 hover:shadow-pink-100",
+      btnColor: "bg-pink-600 hover:bg-pink-700",
+    },
+    {
+      name: "Naver Blog",
+      id: "blog.naver.com/art_way_",
+      url: "https://blog.naver.com/art_way_",
+      icon: <BookOpen size={24} />, // 네이버 로고 대신 책 아이콘 사용
+      color: "text-green-600",
+      bgHover: "hover:border-green-200 hover:shadow-green-100",
+      btnColor: "bg-green-500 hover:bg-green-600",
+    },
+    {
+      name: "YouTube",
+      id: "아트웨이 갤러리",
+      url: "https://www.youtube.com/@artwaygallerybusan",
+      icon: <Youtube size={24} />,
+      color: "text-red-600",
+      bgHover: "hover:border-red-200 hover:shadow-red-100",
+      btnColor: "bg-red-600 hover:bg-red-700",
+    },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+      {socialLinks.map((social) => (
+        <Link
+          key={social.name}
+          href={social.url}
+          target="_blank"
+          className={`group flex flex-col items-center justify-between p-6 bg-white border border-gray-100 rounded-2xl shadow-sm transition-all duration-300 ${social.bgHover} hover:-translate-y-1`}
+        >
+          {/* 아이콘 + 이름 */}
+          <div className="flex flex-col items-center gap-3 mb-4">
+            <div className={`p-3 rounded-full bg-gray-50 group-hover:bg-white transition-colors ${social.color}`}>
+              {social.icon}
+            </div>
+            <div className="text-center">
+              <p className="font-bold text-gray-900">{social.name}</p>
+              <p className="text-xs text-gray-400 mt-1">{social.id}</p>
+            </div>
+          </div>
+
+          {/* 바로가기 버튼 */}
+          <div className={`text-white text-xs font-bold px-6 py-2 rounded-full transition-colors ${social.btnColor}`}>
+            바로가기
+          </div>
+        </Link>
+      ))}
+    </div>
+  );
+}
