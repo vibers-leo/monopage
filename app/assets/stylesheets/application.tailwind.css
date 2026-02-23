@@ -10,6 +10,10 @@
     --color-success: #10b981;
     --color-warning: #f59e0b;
     --color-error: #ef4444;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+    --gradient-accent: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
   }
 }
 
