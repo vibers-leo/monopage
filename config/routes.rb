@@ -74,6 +74,8 @@ Rails.application.routes.draw do
     resources :biddings do
       member do
         post :generate_proposal
+        post :generate_diagnosis
+        post :generate_slides
       end
     end
 

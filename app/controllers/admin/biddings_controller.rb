@@ -1,5 +1,5 @@
 class Admin::BiddingsController < ApplicationController
-  before_action :set_bidding, only: [:show, :edit, :update, :destroy, :generate_proposal]
+  before_action :set_bidding, only: [:show, :edit, :update, :destroy, :generate_proposal, :generate_diagnosis, :generate_slides]
   layout 'admin'
 
   def index
@@ -55,6 +55,16 @@ class Admin::BiddingsController < ApplicationController
     redirect_to admin_bidding_path(@bidding), notice: '제안서 아웃라인이 생성되었습니다.'
   end
 
+  def generate_diagnosis
+    @bidding.generate_diagnosis
+    redirect_to admin_bidding_path(@bidding), notice: 'NotebookLM 스타일 진단 보고서가 생성되었습니다.'
+  end
+
+  def generate_slides
+    @bidding.generate_slides_html
+    redirect_to admin_bidding_path(@bidding), notice: '피그마 연동 가능한 슬라이드가 생성되었습니다.'
+  end
+
   private
 
   def set_bidding
@@ -66,6 +76,7 @@ class Admin::BiddingsController < ApplicationController
       :title, :agency, :application_period, :budget, :status,
       :progress, :assignee, :description, :deadline, :partner,
       :analysis_notes, :proposal_outline, :winning_strategy,
+      :diagnosis_report, :slides_html,
       documents: []
     )
   end

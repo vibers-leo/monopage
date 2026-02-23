@@ -2,10 +2,16 @@
   <div class="header">
     <h1><%= @bidding.title %></h1>
     <div class="actions">
-      <%= button_to "제안서 생성", generate_proposal_admin_bidding_path(@bidding), method: :post, class: "btn btn-success" %>
-      <%= link_to "수정", edit_admin_bidding_path(@bidding), class: "btn btn-primary" %>
-      <%= link_to "삭제", admin_bidding_path(@bidding), method: :delete, data: { confirm: "정말 삭제하시겠습니까?" }, class: "btn btn-danger" %>
-      <%= link_to "목록으로", admin_biddings_path, class: "btn btn-secondary" %>
+      <div class="action-group">
+        <%= button_to "📊 진단 생성", generate_diagnosis_admin_bidding_path(@bidding), method: :post, class: "btn btn-success" %>
+        <%= button_to "📄 슬라이드 생성", generate_slides_admin_bidding_path(@bidding), method: :post, class: "btn btn-info" %>
+        <%= button_to "📝 아웃라인", generate_proposal_admin_bidding_path(@bidding), method: :post, class: "btn btn-warning" %>
+      </div>
+      <div class="action-group">
+        <%= link_to "수정", edit_admin_bidding_path(@bidding), class: "btn btn-primary" %>
+        <%= link_to "삭제", admin_bidding_path(@bidding), method: :delete, data: { confirm: "정말 삭제하시겠습니까?" }, class: "btn btn-danger" %>
+        <%= link_to "목록으로", admin_biddings_path, class: "btn btn-secondary" %>
+      </div>
     </div>
   </div>
 
@@ -105,15 +111,62 @@
     </div>
   <% end %>
 
+  <% if @bidding.diagnosis_report.present? %>
+    <div class="diagnosis-section">
+      <label>🔍 NotebookLM 스타일 진단 보고서</label>
+      <div class="diagnosis-content">
+        <%= simple_format(@bidding.diagnosis_report) %>
+      </div>
+    </div>
+  <% end %>
+
   <% if @bidding.proposal_outline.present? %>
     <div class="proposal-section">
-      <label>제안서 아웃라인 (AI 생성)</label>
+      <label>📝 제안서 아웃라인 (텍스트 버전)</label>
       <div class="proposal-content">
         <%= simple_format(@bidding.proposal_outline) %>
       </div>
     </div>
   <% end %>
+
+  <% if @bidding.slides_html.present? %>
+    <div class="slides-section">
+      <label>📊 피그마 연동 가능한 슬라이드 (HTML)</label>
+      <div class="slides-actions">
+        <%= link_to "슬라이드 미리보기", "#", class: "btn btn-info btn-sm", onclick: "openSlidesPreview(); return false;" %>
+        <%= link_to "HTML 다운로드", "#", class: "btn btn-outline btn-sm", onclick: "downloadSlidesHTML(); return false;" %>
+        <span style="font-size: 0.875rem; color: #6B7280; margin-left: 1rem;">💡 피그마에서 File → Import → HTML로 가져올 수 있습니다</span>
+      </div>
+      <div class="slides-preview" style="display: none;">
+        <iframe id="slides-iframe" style="width: 100%; height: 800px; border: 1px solid #E5E7EB; border-radius: 0.5rem; margin-top: 1rem;"></iframe>
+      </div>
+    </div>
+  <% end %>
 </div>
+
+<script>
+  function openSlidesPreview() {
+    const preview = document.querySelector('.slides-preview');
+    const iframe = document.getElementById('slides-iframe');
+    const htmlContent = <%= raw @bidding.slides_html.to_json %>;
+
+    preview.style.display = 'block';
+    iframe.srcdoc = htmlContent;
+  }
+
+  function downloadSlidesHTML() {
+    const htmlContent = <%= raw @bidding.slides_html.to_json %>;
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '<%= @bidding.title.gsub(/[^\w\s-]/, '') %>_슬라이드.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+</script>
 
 <style>
   .bidding-show {
@@ -123,8 +176,9 @@
   .header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 2rem;
+    gap: 2rem;
   }
 
   .header h1 {
@@ -132,11 +186,18 @@
     font-weight: 700;
     color: #1E3A8A;
     margin: 0;
+    flex: 1;
   }
 
   .actions {
     display: flex;
+    flex-direction: column;
     gap: 0.75rem;
+  }
+
+  .action-group {
+    display: flex;
+    gap: 0.5rem;
   }
 
   .info-grid {
@@ -265,10 +326,46 @@
     background: #059669;
   }
 
+  .btn-info {
+    background: #3B82F6;
+    color: white;
+  }
+
+  .btn-info:hover {
+    background: #2563EB;
+  }
+
+  .btn-warning {
+    background: #F59E0B;
+    color: white;
+  }
+
+  .btn-warning:hover {
+    background: #D97706;
+  }
+
+  .btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-outline {
+    background: white;
+    color: #3B82F6;
+    border: 2px solid #3B82F6;
+  }
+
+  .btn-outline:hover {
+    background: #3B82F6;
+    color: white;
+  }
+
   .documents-section,
   .analysis-section,
   .strategy-section,
-  .proposal-section {
+  .proposal-section,
+  .diagnosis-section,
+  .slides-section {
     background: white;
     border: 1px solid #E5E7EB;
     border-radius: 0.5rem;
@@ -279,12 +376,14 @@
   .documents-section label,
   .analysis-section label,
   .strategy-section label,
-  .proposal-section label {
+  .proposal-section label,
+  .diagnosis-section label,
+  .slides-section label {
     display: block;
-    font-size: 0.875rem;
-    color: #6B7280;
+    font-size: 1rem;
+    color: #1E40AF;
     margin-bottom: 1rem;
-    font-weight: 500;
+    font-weight: 700;
   }
 
   .documents-list {
@@ -324,12 +423,25 @@
 
   .analysis-content,
   .strategy-content,
-  .proposal-content {
+  .proposal-content,
+  .diagnosis-content {
     color: #374151;
     line-height: 1.6;
     background: #F9FAFB;
     padding: 1rem;
     border-radius: 0.375rem;
     white-space: pre-wrap;
+  }
+
+  .diagnosis-content {
+    max-height: 600px;
+    overflow-y: auto;
+  }
+
+  .slides-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
   }
 </style>
