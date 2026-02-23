@@ -1,5 +1,5 @@
 class Admin::BiddingsController < ApplicationController
-  before_action :set_bidding, only: [:show, :edit, :update, :destroy]
+  before_action :set_bidding, only: [:show, :edit, :update, :destroy, :generate_proposal]
   layout 'admin'
 
   def index
@@ -50,6 +50,11 @@ class Admin::BiddingsController < ApplicationController
     redirect_to admin_biddings_path, notice: '입찰사업이 삭제되었습니다.'
   end
 
+  def generate_proposal
+    @bidding.generate_proposal_outline
+    redirect_to admin_bidding_path(@bidding), notice: '제안서 아웃라인이 생성되었습니다.'
+  end
+
   private
 
   def set_bidding
@@ -59,7 +64,9 @@ class Admin::BiddingsController < ApplicationController
   def bidding_params
     params.require(:bidding).permit(
       :title, :agency, :application_period, :budget, :status,
-      :progress, :assignee, :description, :deadline, :partner
+      :progress, :assignee, :description, :deadline, :partner,
+      :analysis_notes, :proposal_outline, :winning_strategy,
+      documents: []
     )
   end
 end

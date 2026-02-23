@@ -68,6 +68,35 @@
     <%= form.text_area :description, rows: 4, class: "form-control" %>
   </div>
 
+  <div class="divider">
+    <span>제안서 작성 지원</span>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :documents, "첨부 파일 (공고문/RFP/과업지시서)" %>
+    <%= form.file_field :documents, multiple: true, class: "form-control-file", accept: ".pdf,.hwp,.doc,.docx" %>
+    <small class="form-text">NotebookLM 등 AI 도구로 분석할 문서를 업로드하세요 (PDF, HWP, DOC 등)</small>
+    <% if bidding.documents.attached? %>
+      <div class="attached-files">
+        <% bidding.documents.each do |document| %>
+          <div class="file-tag">
+            <%= document.filename %> (<%= number_to_human_size(document.byte_size) %>)
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :analysis_notes, "분석 노트 (NotebookLM 결과)" %>
+    <%= form.text_area :analysis_notes, rows: 6, class: "form-control", placeholder: "NotebookLM 등 AI 도구로 공고문을 분석한 결과를 여기에 붙여넣으세요.\n\n예:\n- 사업 핵심 목적: ...\n- 평가 기준: ...\n- 중점 요구사항: ..." %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :winning_strategy, "승리 전략" %>
+    <%= form.text_area :winning_strategy, rows: 6, class: "form-control", placeholder: "분석 결과를 바탕으로 우리의 강점을 어떻게 어필할지 전략을 작성하세요.\n\n예:\n- 강점 1: 리멘과 협업 → 공간 디자인 전문성\n- 강점 2: ...\n- 차별화 포인트: ..." %>
+  </div>
+
   <div class="form-actions">
     <%= form.submit "저장", class: "btn btn-primary" %>
     <%= link_to "취소", admin_biddings_path, class: "btn btn-secondary" %>
@@ -171,5 +200,60 @@
     margin: 0;
     color: #991B1B;
     font-size: 0.875rem;
+  }
+
+  .divider {
+    margin: 2rem 0 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #E5E7EB;
+    position: relative;
+  }
+
+  .divider span {
+    position: absolute;
+    top: -0.625rem;
+    left: 0;
+    background: white;
+    padding: 0 0.5rem;
+    color: #1E40AF;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .form-control-file {
+    width: 100%;
+    padding: 0.625rem;
+    border: 2px dashed #D1D5DB;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+
+  .form-control-file:hover {
+    border-color: #1E40AF;
+  }
+
+  .form-text {
+    display: block;
+    margin-top: 0.5rem;
+    color: #6B7280;
+    font-size: 0.75rem;
+  }
+
+  .attached-files {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .file-tag {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    background: #DBEAFE;
+    color: #1E40AF;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
   }
 </style>

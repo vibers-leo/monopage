@@ -2,6 +2,7 @@
   <div class="header">
     <h1><%= @bidding.title %></h1>
     <div class="actions">
+      <%= button_to "제안서 생성", generate_proposal_admin_bidding_path(@bidding), method: :post, class: "btn btn-success" %>
       <%= link_to "수정", edit_admin_bidding_path(@bidding), class: "btn btn-primary" %>
       <%= link_to "삭제", admin_bidding_path(@bidding), method: :delete, data: { confirm: "정말 삭제하시겠습니까?" }, class: "btn btn-danger" %>
       <%= link_to "목록으로", admin_biddings_path, class: "btn btn-secondary" %>
@@ -64,6 +65,51 @@
       <label>사업 설명</label>
       <div class="description-content">
         <%= simple_format(@bidding.description) %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @bidding.documents.attached? %>
+    <div class="documents-section">
+      <label>첨부 파일 (공고문/RFP/과업지시서)</label>
+      <div class="documents-list">
+        <% @bidding.documents.each do |document| %>
+          <div class="document-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <%= link_to document.filename, rails_blob_path(document, disposition: "attachment"), target: "_blank" %>
+            <span class="file-size">(<%= number_to_human_size(document.byte_size) %>)</span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @bidding.analysis_notes.present? %>
+    <div class="analysis-section">
+      <label>분석 노트 (NotebookLM 결과)</label>
+      <div class="analysis-content">
+        <%= simple_format(@bidding.analysis_notes) %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @bidding.winning_strategy.present? %>
+    <div class="strategy-section">
+      <label>승리 전략</label>
+      <div class="strategy-content">
+        <%= simple_format(@bidding.winning_strategy) %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @bidding.proposal_outline.present? %>
+    <div class="proposal-section">
+      <label>제안서 아웃라인 (AI 생성)</label>
+      <div class="proposal-content">
+        <%= simple_format(@bidding.proposal_outline) %>
       </div>
     </div>
   <% end %>
@@ -208,5 +254,82 @@
 
   .btn-danger:hover {
     background: #B91C1C;
+  }
+
+  .btn-success {
+    background: #10B981;
+    color: white;
+  }
+
+  .btn-success:hover {
+    background: #059669;
+  }
+
+  .documents-section,
+  .analysis-section,
+  .strategy-section,
+  .proposal-section {
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .documents-section label,
+  .analysis-section label,
+  .strategy-section label,
+  .proposal-section label {
+    display: block;
+    font-size: 0.875rem;
+    color: #6B7280;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .documents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .document-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #F9FAFB;
+    border-radius: 0.375rem;
+  }
+
+  .document-item svg {
+    flex-shrink: 0;
+    color: #1E40AF;
+  }
+
+  .document-item a {
+    color: #1E40AF;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .document-item a:hover {
+    text-decoration: underline;
+  }
+
+  .file-size {
+    color: #9CA3AF;
+    font-size: 0.875rem;
+  }
+
+  .analysis-content,
+  .strategy-content,
+  .proposal-content {
+    color: #374151;
+    line-height: 1.6;
+    background: #F9FAFB;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    white-space: pre-wrap;
   }
 </style>
