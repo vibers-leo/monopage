@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { HeroParallax } from "@/components/ui/hero-parallax";
-import { ArrowRight, ArrowUpRight, Database, Layout, Palette, CheckCircle2, Coffee, Globe, Archive, Brush, Monitor } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Database, Layout, Palette, CheckCircle2, Coffee, Globe, Archive, Brush, Monitor, Send } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { getActiveClients, type Client } from "@/actions/clientActions";
 
@@ -53,6 +53,7 @@ export default function PlatformHomePage() {
       desc: a.clients.arthyun.desc,
       category: a.clients.arthyun.category,
       href: "/arthyun",
+      slug: "arthyun",
       image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=2971&auto=format&fit=crop",
     },
     {
@@ -60,6 +61,7 @@ export default function PlatformHomePage() {
       desc: a.clients.artway.desc,
       category: a.clients.artway.category,
       href: "/art-way",
+      slug: "artway",
       image: "https://images.unsplash.com/photo-1547891654-e66ed7ebb968?q=80&w=3000&auto=format&fit=crop",
     },
   ];
@@ -319,7 +321,7 @@ export default function PlatformHomePage() {
           </p>
 
           {/* Client Cards — DB 데이터 우선, 없으면 정적 fallback */}
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8" id="our-work">
             {(dbClients.length > 0
               ? dbClients.map((c) => ({
                   key: c.id,
@@ -327,51 +329,56 @@ export default function PlatformHomePage() {
                   desc: c.description || "",
                   category: c.category || "",
                   href: c.website_url || `/${c.slug}`,
+                  slug: c.slug,
                   image: c.thumbnail_url,
                 }))
               : clientProjects.map((c, i) => ({ ...c, key: String(i) }))
             ).map((client) => (
-              <Link
+              <div
                 key={client.key}
-                href={client.href}
-                className="group block border border-border rounded-lg overflow-hidden hover:border-foreground/30 transition-all duration-500"
+                className="group border border-border rounded-lg overflow-hidden hover:border-foreground/30 transition-all duration-500"
               >
-                <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-                  {client.image ? (
-                    <Image
-                      src={client.image}
-                      alt={client.name}
-                      fill
-                      className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-muted-foreground font-serif text-2xl">
-                      {client.name}
-                    </div>
-                  )}
-                  {client.category && (
-                    <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1 bg-black/60 backdrop-blur-sm text-white text-xs font-mono rounded-full">
-                        {client.category}
-                      </span>
-                    </div>
-                  )}
-                </div>
+                <Link href={`/work/${client.slug}`} className="block">
+                  <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                    {client.image ? (
+                      <Image
+                        src={client.image}
+                        alt={client.name}
+                        fill
+                        className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-muted-foreground font-serif text-2xl">
+                        {client.name}
+                      </div>
+                    )}
+                    {client.category && (
+                      <div className="absolute top-4 left-4">
+                        <span className="px-3 py-1 bg-black/60 backdrop-blur-sm text-white text-xs font-mono rounded-full">
+                          {client.category}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </Link>
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-2xl font-serif">{client.name}</h3>
-                    <ArrowUpRight size={20} className="text-muted-foreground group-hover:text-foreground group-hover:-translate-y-1 group-hover:translate-x-1 transition-all" />
+                    <ArrowUpRight size={20} className="text-muted-foreground group-hover:text-foreground transition-all" />
                   </div>
                   <p className="text-foreground/60 font-light leading-relaxed">
                     {client.desc}
                   </p>
-                  <div className="mt-4 pt-4 border-t border-border">
-                    <span className="text-sm font-mono text-primary group-hover:underline">
-                      {a.view_site} →
-                    </span>
+                  <div className="mt-4 pt-4 border-t border-border flex items-center gap-6">
+                    <Link href={`/work/${client.slug}`} className="text-sm font-mono text-primary hover:underline">
+                      {a.case_study} →
+                    </Link>
+                    <Link href={client.href} className="text-sm font-mono text-muted-foreground hover:text-foreground transition-colors">
+                      {a.view_site} ↗
+                    </Link>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </div>
@@ -409,7 +416,44 @@ export default function PlatformHomePage() {
         </div>
       </section>
 
-      {/* 4. CTA Section */}
+      {/* 4. Agency Inquiry CTA */}
+      <section className="py-32 px-6 md:px-12 border-t border-border bg-foreground text-background relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <Image
+            src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=3000&auto=format&fit=crop"
+            alt="Contact Background"
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="max-w-screen-xl mx-auto relative z-10">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div>
+              <span className="text-sm font-mono text-white/60 block mb-6">{a.inquiry_label}</span>
+              <h2 className="text-3xl md:text-5xl font-serif font-medium leading-tight whitespace-pre-line mb-8">
+                {a.inquiry_title}
+              </h2>
+              <p className="text-xl font-light leading-relaxed text-white/80">
+                {a.inquiry_desc}
+              </p>
+            </div>
+            <div className="flex flex-col items-start gap-6">
+              <Link
+                href="/inquiry"
+                className="group px-8 py-5 bg-white text-black text-lg font-medium rounded-sm hover:bg-white/90 transition-all flex items-center gap-3 shadow-lg"
+              >
+                {a.inquiry_submit}
+                <Send size={20} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <p className="text-sm text-white/50 font-light">
+                * 24시간 이내 회신드립니다
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. CTA Section */}
       <section className="py-40 px-6 md:px-12 border-t border-border text-center bg-background text-foreground">
         <h2 className="text-4xl md:text-6xl font-serif font-medium mb-12 tracking-tighter whitespace-pre-line">
           {p.cta.title}

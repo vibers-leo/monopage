@@ -102,8 +102,10 @@ export default function WriteClientPage() {
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black"
                         >
                             <option value="default">기본</option>
-                            <option value="arthyun">아트현</option>
-                            <option value="art-way">아트웨이</option>
+                            <option value="arthyun">아트현 (클래식 갤러리)</option>
+                            <option value="art-way">아트웨이 (커뮤니티)</option>
+                            <option value="minimal">미니멀 (화이트)</option>
+                            <option value="modern-dark">모던 다크</option>
                         </select>
                     </div>
                 </div>
