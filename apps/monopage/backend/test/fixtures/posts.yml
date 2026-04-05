@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  social_account: one
+  external_id: MyString
+  media_url: MyString
+  permalink: MyString
+  caption: MyText
+  published_at: 2026-04-04 12:27:46
+  media_type: MyString
+
+two:
+  social_account: two
+  external_id: MyString
+  media_url: MyString
+  permalink: MyString
+  caption: MyText
+  published_at: 2026-04-04 12:27:46
+  media_type: MyString

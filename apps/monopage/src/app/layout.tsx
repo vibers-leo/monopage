@@ -1,19 +1,25 @@
 import type { Metadata } from "next";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Monopage",
-  description: "나만의 아티스트 페이지를 만들어보세요",
+  title: "Monopage | Your Unified Social Portal",
+  description: "One page, all your social content. Premium bio-profile platform.",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="ko">
-      <body>{children}</body>
+    <html lang="en">
+      <body className={`${outfit.variable} font-sans antialiased text-black bg-white`}>{children}</body>
     </html>
   );
 }
