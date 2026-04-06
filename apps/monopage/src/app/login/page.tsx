@@ -1,16 +1,34 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2, ArrowRight } from 'lucide-react';
 import { login, setToken } from '@/lib/api';
 
+const KAKAO_REST_KEY = '3a4930ab39652ad5f387496697bf66ba';
+const KAKAO_REDIRECT = 'https://monopage.kr/auth/kakao/callback';
+const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_KEY}&redirect_uri=${KAKAO_REDIRECT}&response_type=code`;
+
+function KakaoIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-[#3C1E1E]">
+      <path d="M12 3C6.477 3 2 6.477 2 10.938c0 2.813 1.61 5.283 4.047 6.76-.178.663-.647 2.4-.741 2.773-.117.463.17.457.357.333.147-.098 2.335-1.577 3.28-2.217.342.048.692.073 1.057.073 5.523 0 10-3.477 10-7.722C22 6.477 17.523 3 12 3z"/>
+    </svg>
+  );
+}
+
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() => {
+    const e = searchParams.get('error');
+    if (e === 'kakao_cancelled') return '카카오 로그인이 취소되었습니다.';
+    if (e === 'kakao_failed') return '카카오 로그인에 실패했습니다. 다시 시도해주세요.';
+    return null;
+  });
 
   const handleLogin = async () => {
     if (!form.email || !form.password) { setError('이메일과 비밀번호를 입력해주세요'); return; }
@@ -27,6 +45,10 @@ export default function LoginPage() {
     }
   };
 
+  const handleKakao = () => {
+    window.location.href = KAKAO_AUTH_URL;
+  };
+
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-6 font-sans">
       <div className="max-w-md w-full flex flex-col gap-8">
@@ -38,7 +60,26 @@ export default function LoginPage() {
           <p className="text-gray-400 text-sm font-medium mt-2">로그인하고 내 페이지를 관리하세요.</p>
         </div>
 
+        {/* 소셜 로그인 */}
         <div className="flex flex-col gap-3">
+          <button
+            onClick={handleKakao}
+            className="w-full py-4 bg-[#FEE500] rounded-2xl font-black text-sm text-[#3C1E1E] flex items-center justify-center gap-2.5 hover:brightness-95 active:scale-95 transition-all"
+          >
+            <KakaoIcon />
+            카카오로 시작하기
+          </button>
+          {/* 네이버·구글은 키 받은 후 추가 */}
+        </div>
+
+        {/* 구분선 */}
+        <div className="flex items-center gap-4">
+          <div className="flex-1 h-px bg-gray-100" />
+          <span className="text-xs text-gray-300 font-bold">또는 이메일로 로그인</span>
+          <div className="flex-1 h-px bg-gray-100" />
+        </div>
+
+        <div className="flex flex-col gap-3 -mt-4">
           <input
             type="email"
             placeholder="이메일"
