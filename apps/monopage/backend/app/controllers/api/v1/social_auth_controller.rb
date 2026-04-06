@@ -70,7 +70,34 @@ class Api::V1::SocialAuthController < ApplicationController
     }
   end
 
-  # POST /api/v1/auth/google (추후)
+  # POST /api/v1/auth/google
+  def google
+    code         = params[:code]
+    redirect_uri = params[:redirect_uri] || "#{ENV['FRONTEND_URL']}/auth/google/callback"
+
+    token_res = google_exchange_token(code, redirect_uri)
+    return render json: { error: '구글 토큰 교환 실패' }, status: :unprocessable_entity unless token_res['access_token']
+
+    google_user = google_fetch_user(token_res['access_token'])
+    return render json: { error: '구글 사용자 정보 조회 실패' }, status: :unprocessable_entity unless google_user['id']
+
+    uid        = google_user['id']
+    email      = google_user['email']
+    name       = google_user['name'] || email&.split('@')&.first || "user_#{uid[0..5]}"
+    avatar_url = google_user['picture']
+
+    user = find_or_create_social_user(
+      provider: 'google', uid: uid,
+      email: email, name: name, avatar_url: avatar_url
+    )
+
+    jwt = encode_token({ user_id: user.id })
+    render json: {
+      token: jwt,
+      user: user.as_json(only: [:id, :email, :name, :avatar_url, :provider]),
+      profile: user.profile.as_json(only: [:username, :bio, :avatar_url, :display_name])
+    }
+  end
 
   private
 
@@ -117,6 +144,32 @@ class Api::V1::SocialAuthController < ApplicationController
       i += 1
     end
     candidate
+  end
+
+  def google_exchange_token(code, redirect_uri)
+    uri = URI('https://oauth2.googleapis.com/token')
+    res = Net::HTTP.post_form(uri, {
+      grant_type:    'authorization_code',
+      client_id:     ENV['GOOGLE_CLIENT_ID'],
+      client_secret: ENV['GOOGLE_CLIENT_SECRET'],
+      redirect_uri:  redirect_uri,
+      code:          code
+    })
+    JSON.parse(res.body)
+  rescue => e
+    Rails.logger.error "Google token exchange error: #{e}"
+    {}
+  end
+
+  def google_fetch_user(access_token)
+    uri = URI('https://www.googleapis.com/oauth2/v2/userinfo')
+    req = Net::HTTP::Get.new(uri)
+    req['Authorization'] = "Bearer #{access_token}"
+    res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |h| h.request(req) }
+    JSON.parse(res.body)
+  rescue => e
+    Rails.logger.error "Google user fetch error: #{e}"
+    {}
   end
 
   def naver_exchange_token(code, state, redirect_uri)
