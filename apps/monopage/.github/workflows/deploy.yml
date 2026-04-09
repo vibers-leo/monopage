@@ -23,6 +23,6 @@ jobs:
             cd apps/monopage
             docker compose up -d --build
             sleep 15
-            curl -sf http://localhost:4110 || (echo "❌ 헬스체크 실패" && exit 1)
+            curl -sf http://localhost:4111 || (echo "❌ 헬스체크 실패" && exit 1)
             docker exec npm-app-1 nginx -s reload || true
             echo "✅ monopage 배포 완료: $(date)"
