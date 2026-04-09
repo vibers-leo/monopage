@@ -10,8 +10,8 @@ const nextConfig: NextConfig = {
       // www 제거 리다이렉트
       {
         source: '/:path*',
-        destination: '/:path*',
-        permanent: false,
+        destination: 'https://monopage.kr/:path*',
+        permanent: true,
         has: [{ type: 'host', value: 'www.monopage.kr' }],
       },
     ];
