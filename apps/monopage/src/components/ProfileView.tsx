@@ -1,12 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ProfileHeader } from '@/components/ProfileHeader';
-import { LinkCard } from '@/components/LinkCard';
-import { SnsGallery } from '@/components/SnsGallery';
-import { PortfolioGallery } from '@/components/PortfolioGallery';
 import { ShareButton } from '@/components/ShareButton';
-import { getPublicProfile, trackView, trackClick } from '@/lib/api';
+import { SectionRenderer, DEFAULT_SECTIONS } from '@/components/SectionRenderer';
+import { getPublicProfile, trackView } from '@/lib/api';
 
 interface ProfileViewProps {
   username: string;
@@ -21,7 +18,6 @@ export function ProfileView({ username }: ProfileViewProps) {
     getPublicProfile(username)
       .then((p) => {
         setProfile(p);
-        // Track page view
         trackView(p.id).catch(() => {});
       })
       .catch(() => setNotFound(true))
@@ -45,6 +41,7 @@ export function ProfileView({ username }: ProfileViewProps) {
   const bgTone = profile.theme_config?.bg_tone || '#ffffff';
   const posts = profile.social_accounts?.flatMap((sa: any) => sa.posts || []) || [];
   const portfolioItems = profile.portfolio_items || [];
+  const sections = profile.theme_config?.sections || DEFAULT_SECTIONS;
 
   return (
     <div
@@ -55,27 +52,13 @@ export function ProfileView({ username }: ProfileViewProps) {
       } as React.CSSProperties}
     >
       <div className="max-w-xl mx-auto px-6 py-24 flex flex-col items-center">
-        <ProfileHeader
-          username={profile.username}
-          bio={profile.bio || ''}
-          avatarUrl={profile.avatar_url}
+        <SectionRenderer
+          sections={sections}
+          profile={profile}
+          links={profile.links || []}
+          portfolioItems={portfolioItems}
+          posts={posts}
         />
-
-        <div className="w-full space-y-3">
-          {(profile.links || []).map((link: any) => (
-            <LinkCard
-              key={link.id}
-              title={link.title}
-              url={link.url}
-              className="hover:border-[var(--accent-neon)] group transition-all"
-              onClick={() => trackClick(profile.id, link.id).catch(() => {})}
-            />
-          ))}
-        </div>
-
-        {portfolioItems.length > 0 && <PortfolioGallery items={portfolioItems} />}
-
-        {posts.length > 0 && <SnsGallery posts={posts} />}
 
         <ShareButton username={profile.username} />
 

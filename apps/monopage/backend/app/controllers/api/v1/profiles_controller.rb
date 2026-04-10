@@ -42,6 +42,6 @@ class Api::V1::ProfilesController < ApplicationController
   private
 
   def profile_params
-    params.permit(:bio, :avatar_url, :theme_settings)
+    params.permit(:bio, :avatar_url, :theme_settings, theme_config: {})
   end
 end

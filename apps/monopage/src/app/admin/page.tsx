@@ -4,11 +4,15 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { LinkCard } from '@/components/LinkCard';
 import { PortfolioGallery } from '@/components/PortfolioGallery';
+import { SectionRenderer, DEFAULT_SECTIONS, type Section } from '@/components/SectionRenderer';
+import { ToastContainer, useToast } from '@/components/Toast';
 import {
   Plus, Save, Link as LinkIcon,
   ChevronLeft, Trash2, GripVertical, Check, X, Loader2, LogOut, Camera,
   Shield, AlertTriangle, Unlink, Image, User, Settings, Eye, EyeOff, BarChart3, MousePointerClick,
+  Layout, Type, ChevronUp, ChevronDown,
 } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -24,7 +28,7 @@ interface LinkItem { id: number; title: string; url: string; }
 interface ProfileData { username: string; bio: string; avatar_url: string; }
 interface PortfolioItemData { id: number; image_url: string; title: string; description: string; category: string; }
 
-type Tab = 'profile' | 'links' | 'portfolio' | 'analytics' | 'settings';
+type Tab = 'profile' | 'links' | 'portfolio' | 'layout' | 'analytics' | 'settings';
 
 interface AnalyticsData {
   total_views: number;
@@ -36,6 +40,8 @@ interface AnalyticsData {
 
 export default function AdminDashboard() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { toasts, addToast, dismiss } = useToast();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
   const [profile, setProfile] = useState<ProfileData>({ username: '', bio: '', avatar_url: '' });
   const [links, setLinks] = useState<LinkItem[]>([]);
@@ -54,6 +60,7 @@ export default function AdminDashboard() {
   const [showPreview, setShowPreview] = useState(false);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [sections, setSections] = useState<Section[]>(DEFAULT_SECTIONS);
 
   // account section
   const [connections, setConnections] = useState<{ provider: string | null; uid: string | null; has_password: boolean; email: string | null } | null>(null);
@@ -69,6 +76,7 @@ export default function AdminDashboard() {
     try {
       const [p, l, pi, c] = await Promise.all([getMyProfile(), getLinks(), getPortfolioItems(), getSocialConnections()]);
       setProfile({ username: p.username || '', bio: p.bio || '', avatar_url: p.avatar_url || '' });
+      setSections(p.theme_config?.sections || DEFAULT_SECTIONS);
       setLinks(l);
       setPortfolioItems(pi);
       setConnections(c);
@@ -81,6 +89,19 @@ export default function AdminDashboard() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
+  // Instagram 연결 결과 토스트
+  useEffect(() => {
+    const igResult = searchParams.get('instagram');
+    if (igResult === 'success') {
+      const username = searchParams.get('username');
+      addToast('instagram', `Instagram @${username || ''} 연결 완료!`);
+      router.replace('/admin');
+    } else if (igResult === 'error') {
+      addToast('error', 'Instagram 연결에 실패했어요. 다시 시도해주세요.');
+      router.replace('/admin');
+    }
+  }, [searchParams]);
+
   useEffect(() => {
     if (activeTab === 'analytics' && !analytics) {
       setAnalyticsLoading(true);
@@ -92,7 +113,7 @@ export default function AdminDashboard() {
     setSaving(true);
     setError(null);
     try {
-      await updateProfile({ bio: profile.bio, username: profile.username, avatar_url: profile.avatar_url });
+      await updateProfile({ bio: profile.bio, username: profile.username, avatar_url: profile.avatar_url, theme_config: { sections } });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (e: any) {
@@ -240,12 +261,14 @@ export default function AdminDashboard() {
     { key: 'profile', label: 'Profile', icon: <User size={14} /> },
     { key: 'links', label: 'Links', icon: <LinkIcon size={14} /> },
     { key: 'portfolio', label: 'Portfolio', icon: <Image size={14} /> },
+    { key: 'layout', label: 'Layout', icon: <Layout size={14} /> },
     { key: 'analytics', label: 'Stats', icon: <BarChart3 size={14} /> },
     { key: 'settings', label: 'Settings', icon: <Settings size={14} /> },
   ];
 
   return (
     <div className="flex h-screen bg-white text-black overflow-hidden font-sans">
+      <ToastContainer toasts={toasts} onDismiss={dismiss} />
       {/* Editor Sidebar */}
       <aside className={`w-full lg:w-[400px] border-r border-gray-100 flex flex-col p-6 lg:p-8 bg-white z-10 ${showPreview ? 'hidden lg:flex' : 'flex'}`}>
         <div className="flex items-center justify-between mb-6">
@@ -332,9 +355,25 @@ export default function AdminDashboard() {
 
               <section>
                 <label className="block text-[10px] font-black text-gray-300 uppercase mb-3 tracking-widest">SNS Accounts</label>
-                <button className="w-full py-4 border border-dashed border-gray-200 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:border-black transition-colors">
-                  Connect New Account
-                </button>
+                <div className="flex flex-col gap-2">
+                  <a
+                    href={`/api/instagram/login?token=${getToken() || ''}`}
+                    className="flex items-center gap-3 p-4 border border-gray-100 rounded-2xl hover:border-pink-300 transition-colors group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white">
+                      <Camera size={18} />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs font-black">Instagram 연결</p>
+                      <p className="text-[10px] text-gray-400">게시물이 자동으로 페이지에 표시돼요</p>
+                    </div>
+                  </a>
+                  <div className="p-3 bg-gray-50 rounded-xl">
+                    <p className="text-[9px] text-gray-400 leading-relaxed">
+                      연결하면 Instagram 앱에서 승인 요청 화면이 나타나요. "허용"을 눌러주세요. 최근 게시물 20개가 자동으로 동기화됩니다.
+                    </p>
+                  </div>
+                </div>
               </section>
             </>
           )}
@@ -531,6 +570,92 @@ export default function AdminDashboard() {
                   </div>
                 ))}
               </div>
+            </section>
+          )}
+
+          {/* ===== LAYOUT TAB ===== */}
+          {activeTab === 'layout' && (
+            <section>
+              <div className="flex justify-between items-center mb-4">
+                <label className="text-[10px] font-black text-gray-300 uppercase tracking-widest">페이지 섹션</label>
+                <div className="flex gap-1">
+                  {[
+                    { type: 'text' as const, label: 'Text', icon: <Type size={10} /> },
+                    { type: 'sns_icons' as const, label: 'SNS', icon: <Camera size={10} /> },
+                  ].filter(b => !sections.some(s => s.type === b.type && b.type === 'sns_icons')).map(block => (
+                    <button
+                      key={block.type}
+                      onClick={() => {
+                        const id = `${block.type}_${Date.now()}`;
+                        setSections([...sections, { id, type: block.type, order: sections.length, content: block.type === 'text' ? { text: '' } : {} }]);
+                      }}
+                      className="flex items-center gap-1 px-2 py-1 text-[9px] font-black text-gray-400 border border-gray-100 rounded-lg hover:border-black hover:text-black transition-colors"
+                    >
+                      {block.icon} {block.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                {[...sections].sort((a, b) => a.order - b.order).map((section, index) => (
+                  <div key={section.id} className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl group">
+                    <div className="flex flex-col gap-0.5">
+                      <button
+                        onClick={() => {
+                          if (index === 0) return;
+                          const sorted = [...sections].sort((a, b) => a.order - b.order);
+                          const newSections = sorted.map((s, i) => ({ ...s, order: i }));
+                          [newSections[index].order, newSections[index - 1].order] = [newSections[index - 1].order, newSections[index].order];
+                          setSections(newSections);
+                        }}
+                        disabled={index === 0}
+                        className="text-gray-300 hover:text-black disabled:opacity-20 transition-colors"
+                      >
+                        <ChevronUp size={10} />
+                      </button>
+                      <button
+                        onClick={() => {
+                          const sorted = [...sections].sort((a, b) => a.order - b.order);
+                          if (index >= sorted.length - 1) return;
+                          const newSections = sorted.map((s, i) => ({ ...s, order: i }));
+                          [newSections[index].order, newSections[index + 1].order] = [newSections[index + 1].order, newSections[index].order];
+                          setSections(newSections);
+                        }}
+                        disabled={index >= sections.length - 1}
+                        className="text-gray-300 hover:text-black disabled:opacity-20 transition-colors"
+                      >
+                        <ChevronDown size={10} />
+                      </button>
+                    </div>
+                    <span className="text-xs font-black flex-1 capitalize">
+                      {section.type === 'header' ? '프로필 헤더' :
+                       section.type === 'links' ? '링크' :
+                       section.type === 'portfolio' ? '포트폴리오' :
+                       section.type === 'sns_icons' ? 'SNS 아이콘' :
+                       section.type === 'sns_feed' ? 'SNS 피드' :
+                       section.type === 'text' ? '텍스트' : section.type}
+                    </span>
+                    {section.type === 'text' && (
+                      <input
+                        value={section.content?.text || ''}
+                        onChange={(e) => setSections(sections.map(s => s.id === section.id ? { ...s, content: { text: e.target.value } } : s))}
+                        placeholder="텍스트 입력..."
+                        className="text-[10px] bg-white border border-gray-100 rounded-lg px-2 py-1 w-32 outline-none focus:border-black transition-colors"
+                      />
+                    )}
+                    {!['header', 'links', 'portfolio'].includes(section.type) && (
+                      <button
+                        onClick={() => setSections(sections.filter(s => s.id !== section.id))}
+                        className="text-gray-200 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                      >
+                        <Trash2 size={10} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p className="text-[9px] text-gray-300 mt-3 text-center">섹션 순서를 변경하면 퍼블릭 페이지에 반영돼요. 저장 버튼을 눌러주세요.</p>
             </section>
           )}
 
@@ -782,15 +907,13 @@ export default function AdminDashboard() {
             <div className="inline-block px-3 py-1 bg-black text-white rounded-full text-[8px] font-black uppercase tracking-widest mb-10">
               Live Preview
             </div>
-            <ProfileHeader username={profile.username} bio={profile.bio} avatarUrl={profile.avatar_url} />
-            <div className="w-full space-y-2">
-              {links.map((link) => (
-                <LinkCard key={link.id} title={link.title} url={link.url} className="px-4 py-4" />
-              ))}
-            </div>
-            {portfolioItems.length > 0 && (
-              <PortfolioGallery items={portfolioItems} />
-            )}
+            <SectionRenderer
+              sections={sections}
+              profile={{ ...profile, id: 0 }}
+              links={links}
+              portfolioItems={portfolioItems}
+              posts={[]}
+            />
             <div className="mt-12 opacity-10 text-[8px] font-black uppercase tracking-widest text-center">
               Preview Mode
             </div>

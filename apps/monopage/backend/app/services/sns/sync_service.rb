@@ -1,3 +1,6 @@
+require 'net/http'
+require 'json'
+
 module Sns
   class SyncService
     def initialize(social_account)
@@ -16,42 +19,39 @@ module Sns
     private
 
     def sync_instagram
-      # Mocking Instagram API response
-      mock_posts = [
-        { id: 'ig_1', media_url: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113', permalink: 'https://instagr.am/p/1', caption: 'Summer Vibes ☀️', media_type: 'IMAGE', timestamp: Time.current },
-        { id: 'ig_2', media_url: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0', permalink: 'https://instagr.am/p/2', caption: 'Deep Workspace', media_type: 'IMAGE', timestamp: 1.day.ago }
-      ]
+      token = @social_account.access_token
+      return unless token.present?
 
-      mock_posts.each do |p|
-        post = @social_account.posts.find_or_initialize_by(external_id: p[:id])
+      uri = URI("https://graph.instagram.com/v21.0/me/media?fields=id,caption,media_url,permalink,timestamp,media_type,thumbnail_url&limit=20&access_token=#{token}")
+      response = Net::HTTP.get_response(uri)
+
+      unless response.is_a?(Net::HTTPSuccess)
+        Rails.logger.error "Instagram sync failed: #{response.body}"
+        @social_account.update(status: :reauth_required) if response.code == '190' || response.body.include?('OAuthException')
+        return
+      end
+
+      data = JSON.parse(response.body)
+      posts = data['data'] || []
+
+      posts.each_with_index do |p, i|
+        post = @social_account.posts.find_or_initialize_by(external_id: p['id'])
         post.data = {
-          media_url: p[:media_url],
-          permalink: p[:permalink],
-          caption: p[:caption]
+          media_url: p['media_url'] || p['thumbnail_url'],
+          permalink: p['permalink'],
+          caption: p['caption'],
         }
-        post.media_type = p[:media_type]
-        post.published_at = p[:timestamp]
+        post.media_type = p['media_type']
+        post.published_at = p['timestamp']
+        post.position = i
         post.save!
       end
+
+      @social_account.update(status: :active)
     end
 
     def sync_youtube
-      # Mocking YouTube API response
-      mock_videos = [
-        { id: 'yt_1', media_url: 'https://images.unsplash.com/photo-1611162618071-b39a2ec055fb', permalink: 'https://youtube.com/v/1', caption: 'Next.js Tutorial', media_type: 'VIDEO', timestamp: 2.days.ago }
-      ]
-
-      mock_videos.each do |v|
-        post = @social_account.posts.find_or_initialize_by(external_id: v[:id])
-        post.data = {
-          media_url: v[:media_url],
-          permalink: v[:permalink],
-          caption: v[:caption]
-        }
-        post.media_type = 'VIDEO'
-        post.published_at = v[:timestamp]
-        post.save!
-      end
+      # YouTube Data API 연동 (추후 구현)
     end
   end
 end
