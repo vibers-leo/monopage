@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
 import "./globals.css";
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "모노페이지 — 나를 위한 단 하나의 페이지",
@@ -38,8 +32,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${outfit.variable} font-sans antialiased text-black bg-white`}>{children}</body>
+    <html lang="ko">
+      <body className="font-sans antialiased text-black bg-white">{children}</body>
     </html>
   );
 }
