@@ -21,7 +21,7 @@ export default function Home() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `사용자가 다음 링크를 입력했어: ${summary}. 이 링크들을 보고 "~~ 관련 웹사이트네요! 멋진 페이지가 될 것 같아요." 형태로 한 문장만 답변해. 절대 다른 말 하지마.` }),
+        body: JSON.stringify({ message: `사용자가 다음 링크를 입력했어: ${summary}. 이 링크들을 분석해서 "~~ 관련 웹사이트네요! 멋진 페이지가 될 것 같아요. 계속 진행하려면 간단한 회원가입이 필요해요 — 30초면 끝나요!" 형태로 두 문장으로 답변해. 첫 문장은 링크 분석, 두 번째 문장은 반드시 회원가입 유도. 절대 다른 말 하지마.` }),
       });
       const data = await res.json();
       setAiComment(data.response || '');
@@ -157,10 +157,7 @@ export default function Home() {
                   <span className="text-xs font-bold">링크를 분석하고 있어요...</span>
                 </div>
               ) : aiComment ? (
-                <div>
-                  <p className="text-sm font-bold text-gray-700">{aiComment}</p>
-                  <p className="text-[11px] text-gray-400 font-medium mt-1.5">페이지를 만들려면 간단한 가입이 필요해요 (30초면 끝!)</p>
-                </div>
+                <p className="text-sm font-bold text-gray-700">{aiComment}</p>
               ) : null}
             </div>
           )}
