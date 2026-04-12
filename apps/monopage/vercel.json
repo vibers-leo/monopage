@@ -1,4 +1,4 @@
 {
-  "buildCommand": "next build || true",
+  "buildCommand": "NODE_ENV=production next build",
   "installCommand": "bun install"
 }

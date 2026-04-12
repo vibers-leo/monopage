@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+
 export const metadata: Metadata = {
   title: "모노페이지 — 나를 위한 단 하나의 페이지",
   description: "나를 위한 단 하나의 페이지. 링크, 프로필, 소개까지 하나의 URL로 완성하는 가장 심플한 웹 페이지 빌더.",

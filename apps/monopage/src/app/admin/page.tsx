@@ -12,7 +12,6 @@ import {
   Shield, AlertTriangle, Unlink, Image, User, Settings, Eye, EyeOff, BarChart3, MousePointerClick,
   Layout, Type, ChevronUp, ChevronDown,
 } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -40,7 +39,6 @@ interface AnalyticsData {
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { toasts, addToast, dismiss } = useToast();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
   const [profile, setProfile] = useState<ProfileData>({ username: '', bio: '', avatar_url: '' });
@@ -91,16 +89,16 @@ export default function AdminDashboard() {
 
   // Instagram 연결 결과 토스트
   useEffect(() => {
-    const igResult = searchParams.get('instagram');
+    const params = new URLSearchParams(window.location.search);
+    const igResult = params.get('instagram');
     if (igResult === 'success') {
-      const username = searchParams.get('username');
-      addToast('instagram', `Instagram @${username || ''} 연결 완료!`);
-      router.replace('/admin');
+      addToast('instagram', `Instagram @${params.get('username') || ''} 연결 완료!`);
+      window.history.replaceState({}, '', '/admin');
     } else if (igResult === 'error') {
       addToast('error', 'Instagram 연결에 실패했어요. 다시 시도해주세요.');
-      router.replace('/admin');
+      window.history.replaceState({}, '', '/admin');
     }
-  }, [searchParams]);
+  }, []);
 
   useEffect(() => {
     if (activeTab === 'analytics' && !analytics) {
