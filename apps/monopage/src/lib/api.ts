@@ -27,7 +27,8 @@ async function request<T>(
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ message: res.statusText }));
-    throw new Error(err.message || err.error || '요청 실패');
+    const msg = err.message || err.error || (Array.isArray(err.errors) ? err.errors.join(', ') : null) || '요청 실패';
+    throw new Error(msg);
   }
 
   if (res.status === 204) return undefined as T;
