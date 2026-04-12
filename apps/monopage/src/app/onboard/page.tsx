@@ -108,10 +108,12 @@ export default function Onboarding() {
       const res = await signup(form.email, form.password, form.username);
       setToken(res.token);
 
-      // 2. 사진 업로드
+      // 2. 사진 업로드 (실패해도 계속 진행)
       if (photoFile) {
-        const avatarUrl = await uploadPhoto(photoFile);
-        await updateProfile({ avatar_url: avatarUrl });
+        try {
+          const avatarUrl = await uploadPhoto(photoFile);
+          await updateProfile({ avatar_url: avatarUrl });
+        } catch { /* 사진 업로드 실패 시 스킵 */ }
       }
 
       // 3. 링크 저장
