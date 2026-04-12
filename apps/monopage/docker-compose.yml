@@ -7,14 +7,16 @@ services:
     ports:
       - "4111:3000"
     restart: unless-stopped
+    environment:
+      - BACKEND_URL=http://monopage-api:80
     networks:
       - npm_default
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3000"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 60s
 
 networks:
   npm_default:

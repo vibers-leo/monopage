@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: deploy-monopage
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,8 +25,18 @@ jobs:
             git stash 2>/dev/null || true
             git pull origin main
             cd apps/monopage
-            docker compose up -d --build
-            sleep 15
+            docker compose build
+            docker compose up -d --wait
             curl -sf http://localhost:4111 || (echo "❌ 헬스체크 실패" && exit 1)
-            docker exec npm-app-1 nginx -s reload || true
             echo "✅ monopage 배포 완료: $(date)"
+
+      - name: Cleanup old images
+        if: success()
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.NCP_HOST }}
+          username: ${{ secrets.NCP_USER }}
+          key: ${{ secrets.NCP_SSH_KEY }}
+          script: |
+            docker image prune -af --filter "until=24h"
+            docker builder prune -af --filter "until=24h"
