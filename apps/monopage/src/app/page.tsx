@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useRef } from "react";
 import { ArrowRight, Sparkles, Plus, Trash2, Link as LinkIcon } from "lucide-react";
 import { detectLink, getLinkIcon, type DetectedLink } from "@/lib/link-detector";
+import ChatWidget from "@/components/ChatWidget";
 
 export default function Home() {
   const [links, setLinks] = useState<DetectedLink[]>([]);
@@ -229,6 +230,8 @@ export default function Home() {
           © 2026 Monopage. All rights reserved.
         </p>
       </footer>
+
+      <ChatWidget />
     </div>
   );
 }

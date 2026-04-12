@@ -9,6 +9,8 @@ services:
     restart: unless-stopped
     environment:
       - BACKEND_URL=http://172.17.0.1:4110
+      - ZEROCLAW_URL=http://172.17.0.1:42618
+      - ZEROCLAW_TOKEN=zc_de636b3d09ca4ad2e186d4813561321f45a0588e42bb468820b5f56815e90bef
     networks:
       - npm_default
     healthcheck:
