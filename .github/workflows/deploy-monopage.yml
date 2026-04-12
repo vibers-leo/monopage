@@ -1,0 +1,42 @@
+name: Deploy to NCP
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-monopage
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.NCP_HOST }}
+          username: ${{ secrets.NCP_USER }}
+          key: ${{ secrets.NCP_SSH_KEY }}
+          command_timeout: 15m
+          script: |
+            set -e
+            cd /root/projects/monopage
+            git stash 2>/dev/null || true
+            git pull origin main
+            cd apps/monopage
+            docker compose build
+            docker compose up -d --wait
+            curl -sf http://localhost:4111 || (echo "❌ 헬스체크 실패" && exit 1)
+            echo "✅ monopage 배포 완료: $(date)"
+
+      - name: Cleanup old images
+        if: success()
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.NCP_HOST }}
+          username: ${{ secrets.NCP_USER }}
+          key: ${{ secrets.NCP_SSH_KEY }}
+          script: |
+            docker image prune -af --filter "until=24h"
+            docker builder prune -af --filter "until=24h"
