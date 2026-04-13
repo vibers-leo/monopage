@@ -25,8 +25,16 @@ import {
 } from '@/lib/api';
 
 interface LinkItem { id: number; title: string; url: string; }
-interface ProfileData { username: string; bio: string; avatar_url: string; }
+interface ProfileData { username: string; bio: string; avatar_url: string; email?: string; }
 interface PortfolioItemData { id: number; image_url: string; title: string; description: string; category: string; }
+
+const SUPER_ADMINS = [
+  'juuuno@naver.com',
+  'juuuno1116@gmail.com',
+  'designd@designd.co.kr',
+  'designdlab@designdlab.co.kr',
+  'vibers.leo@gmail.com',
+];
 
 type Tab = 'profile' | 'links' | 'portfolio' | 'layout' | 'analytics' | 'settings';
 
@@ -59,6 +67,7 @@ export default function AdminDashboard() {
   const [showPreview, setShowPreview] = useState(false);
   const [view, setView] = useState<'list' | 'editor'>('list');
   const [showSupportModal, setShowSupportModal] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [sections, setSections] = useState<Section[]>(DEFAULT_SECTIONS);
@@ -76,7 +85,7 @@ export default function AdminDashboard() {
     if (!getToken()) { router.push('/login'); return; }
     try {
       const [p, l, pi, c] = await Promise.all([getMyProfile(), getLinks(), getPortfolioItems(), getSocialConnections()]);
-      setProfile({ username: p.username || '', bio: p.bio || '', avatar_url: p.avatar_url || '' });
+      setProfile({ username: p.username || '', bio: p.bio || '', avatar_url: p.avatar_url || '', email: p.email || '' });
       setSections(p.theme_config?.sections || DEFAULT_SECTIONS);
       setLinks(l);
       setPortfolioItems(pi);
@@ -304,11 +313,26 @@ export default function AdminDashboard() {
             {/* 목록 헤더 */}
             <div className="flex items-center justify-between mb-8">
               <Link href="/" className="font-black text-base tracking-tight">Monopage<span className="text-gray-300">.</span></Link>
-              <div className="flex items-center gap-3">
-                <span className="text-[10px] font-bold text-gray-300">@{profile.username}</span>
-                <button onClick={logout} className="text-gray-200 hover:text-black transition-colors">
-                  <LogOut size={16} />
+              <div className="relative">
+                <button
+                  onClick={() => setShowUserMenu(v => !v)}
+                  className="flex items-center gap-2 text-[10px] font-bold text-gray-300 hover:text-black transition-colors"
+                >
+                  <span>@{profile.username}</span>
+                  <ChevronDown size={12} />
                 </button>
+                {showUserMenu && (
+                  <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-100 rounded-2xl shadow-lg py-2 z-50" onClick={() => setShowUserMenu(false)}>
+                    {SUPER_ADMINS.includes(profile.email || '') && (
+                      <Link href="/admin-console" className="flex items-center gap-2 px-4 py-2.5 text-xs font-bold hover:bg-gray-50 transition-colors text-purple-600">
+                        <Shield size={13} /> 관리자 콘솔
+                      </Link>
+                    )}
+                    <button onClick={logout} className="flex items-center gap-2 w-full px-4 py-2.5 text-xs font-bold hover:bg-gray-50 transition-colors text-gray-500">
+                      <LogOut size={13} /> 로그아웃
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
