@@ -109,7 +109,10 @@ export default function Onboarding() {
       router.push('/admin');
     } catch (e: any) {
       setIsGenerating(false);
-      setError(e.message || '페이지 만들기에 실패했어요');
+      const msg = e.message || '';
+      if (msg.includes('Email has already been taken')) setError('이미 사용 중인 이메일이에요. 다른 이메일을 사용해주세요.');
+      else if (msg.includes('Username has already been taken') || msg.includes('already been taken')) setError('이미 사용 중인 사용자명이에요. 다른 주소를 선택해주세요.');
+      else setError(msg || '페이지 만들기에 실패했어요. 다시 시도해주세요.');
     }
   };
 
