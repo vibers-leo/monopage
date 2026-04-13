@@ -135,7 +135,6 @@ export default function Onboarding() {
                     : '페이지를 준비하고 있어요'}
                 </p>
               </div>
-            </motion.div>
           ) : (
             <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
               {/* 헤더 */}
