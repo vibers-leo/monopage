@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { LinkCard } from '@/components/LinkCard';
 import { PortfolioGallery } from '@/components/PortfolioGallery';
@@ -266,9 +267,8 @@ export default function AdminDashboard() {
     { key: 'settings', label: 'Settings', icon: <Settings size={14} /> },
   ];
 
-  // 목록 화면
-  if (view === 'list' && !loading) return (
-    <div className="min-h-screen bg-white text-black font-sans">
+  return (
+    <div className="flex h-screen bg-white text-black overflow-hidden font-sans">
       <ToastContainer toasts={toasts} onDismiss={dismiss} />
 
       {/* 후원 모달 */}
@@ -295,71 +295,72 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* 헤더 */}
-      <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="font-black text-lg tracking-tight">Monopage<span className="text-gray-300">.</span></Link>
-        <div className="flex items-center gap-4">
-          <span className="text-xs font-bold text-gray-400">@{profile.username}</span>
-          <button onClick={logout} className="text-gray-300 hover:text-black transition-colors">
-            <LogOut size={16} />
-          </button>
-        </div>
-      </div>
+      {/* Left Panel — 목록 or 에디터 */}
+      <aside className={`w-full lg:w-[400px] border-r border-gray-100 flex flex-col bg-white z-10 ${showPreview ? 'hidden lg:flex' : 'flex'}`}>
 
-      {/* 콘텐츠 */}
-      <div className="max-w-2xl mx-auto px-6 py-12">
-        <div className="mb-8">
-          <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em] mb-2">내 페이지</p>
-          <h1 className="text-3xl font-black">페이지 목록</h1>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          {/* 내 페이지 카드 */}
-          <button
-            onClick={() => setView('editor')}
-            className="aspect-[3/4] border border-gray-200 rounded-3xl p-6 flex flex-col text-left hover:border-black transition-all group relative overflow-hidden"
-          >
-            {profile.avatar_url ? (
-              <img src={profile.avatar_url} className="absolute inset-0 w-full h-full object-cover opacity-10 group-hover:opacity-20 transition-opacity" alt="" />
-            ) : null}
-            <div className="relative z-10 flex flex-col h-full">
-              <div className="w-12 h-12 rounded-full bg-gray-100 overflow-hidden mb-auto">
-                {profile.avatar_url
-                  ? <img src={profile.avatar_url} className="w-full h-full object-cover" alt="" />
-                  : <div className="w-full h-full flex items-center justify-center text-lg">👤</div>
-                }
-              </div>
-              <div>
-                <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1">Active</p>
-                <p className="font-black text-sm">@{profile.username}</p>
-                <p className="text-[10px] text-gray-400 font-medium mt-0.5 truncate">{profile.bio || '소개 없음'}</p>
+        {/* ===== 목록 뷰 ===== */}
+        {view === 'list' ? (
+          <div className="flex flex-col h-full p-6 lg:p-8 animate-in fade-in duration-200">
+            {/* 목록 헤더 */}
+            <div className="flex items-center justify-between mb-8">
+              <Link href="/" className="font-black text-base tracking-tight">Monopage<span className="text-gray-300">.</span></Link>
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] font-bold text-gray-300">@{profile.username}</span>
+                <button onClick={logout} className="text-gray-200 hover:text-black transition-colors">
+                  <LogOut size={16} />
+                </button>
               </div>
             </div>
-          </button>
 
-          {/* + 추가 카드 */}
-          <button
-            onClick={() => setShowSupportModal(true)}
-            className="aspect-[3/4] border border-dashed border-gray-200 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-gray-400 transition-all group"
-          >
-            <div className="w-12 h-12 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center group-hover:border-gray-400 transition-colors">
-              <Plus size={20} className="text-gray-300 group-hover:text-gray-500 transition-colors" />
-            </div>
-            <div className="text-center">
-              <p className="text-xs font-black text-gray-300">새 페이지</p>
-              <p className="text-[10px] text-gray-200 font-medium mt-0.5">후원 후 문의</p>
-            </div>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+            <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em] mb-2">내 모노페이지</p>
+            <h1 className="text-2xl font-black mb-6">페이지 목록</h1>
 
-  return (
-    <div className="flex h-screen bg-white text-black overflow-hidden font-sans">
-      <ToastContainer toasts={toasts} onDismiss={dismiss} />
-      {/* Editor Sidebar */}
-      <aside className={`w-full lg:w-[400px] border-r border-gray-100 flex flex-col p-6 lg:p-8 bg-white z-10 ${showPreview ? 'hidden lg:flex' : 'flex'}`}>
+            <div className="grid grid-cols-2 gap-3 flex-1 content-start">
+              {/* 내 페이지 카드 */}
+              <button
+                onClick={() => setView('editor')}
+                className="aspect-[3/4] border border-gray-200 rounded-2xl p-5 flex flex-col text-left hover:border-black transition-colors group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98]"
+              >
+                {profile.avatar_url && (
+                  <img src={profile.avatar_url} className="absolute inset-0 w-full h-full object-cover opacity-5 group-hover:opacity-10 transition-opacity" alt="" />
+                )}
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden mb-auto shrink-0">
+                    {profile.avatar_url
+                      ? <img src={profile.avatar_url} className="w-full h-full object-cover" alt="" />
+                      : <div className="w-full h-full flex items-center justify-center text-base">👤</div>
+                    }
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0"></span>
+                      <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest">Active</span>
+                    </div>
+                    <p className="font-black text-xs">@{profile.username}</p>
+                    <p className="text-[10px] text-gray-400 font-medium mt-0.5 truncate">{profile.bio || '소개 없음'}</p>
+                  </div>
+                </div>
+              </button>
+
+              {/* + 추가 카드 */}
+              <button
+                onClick={() => setShowSupportModal(true)}
+                className="aspect-[3/4] border border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center gap-3 hover:border-gray-400 transition-colors group hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <div className="w-10 h-10 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center group-hover:border-gray-400 transition-colors">
+                  <Plus size={18} className="text-gray-300 group-hover:text-gray-500 transition-colors" />
+                </div>
+                <div className="text-center">
+                  <p className="text-xs font-black text-gray-300">새 페이지</p>
+                  <p className="text-[10px] text-gray-200 font-medium mt-0.5">후원 후 문의</p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+        ) : (
+          /* ===== 에디터 뷰 ===== */
+          <div className="flex flex-col h-full p-6 lg:p-8 animate-in fade-in duration-200">
         <div className="flex items-center justify-between mb-6">
           <button onClick={() => setView('list')} className="text-gray-300 hover:text-black transition-colors">
             <ChevronLeft size={20} />
@@ -992,6 +993,8 @@ export default function AdminDashboard() {
             {saving ? <Loader2 size={14} className="animate-spin" /> : saved ? <><Check size={14} /> 저장됨!</> : <><Save size={14} /> Save Changes</>}
           </button>
         </div>
+          </div>
+        )}
       </aside>
 
       {/* Live Preview */}
@@ -1004,6 +1007,21 @@ export default function AdminDashboard() {
           >
             <EyeOff size={14} /> 에디터로 돌아가기
           </button>
+        )}
+
+        {/* 목록 뷰일 때 — 페이지 선택 안내 + 바로가기 */}
+        {view === 'list' && (
+          <div className="text-center mb-8">
+            <p className="text-xs font-bold text-gray-300 mb-3">왼쪽에서 페이지를 선택하면 편집할 수 있어요</p>
+            <a
+              href={`/${profile.username}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-full text-xs font-black hover:border-black transition-colors"
+            >
+              <Eye size={12} /> monopage.kr/{profile.username}
+            </a>
+          </div>
         )}
         <div className="w-[375px] max-w-full h-[668px] lg:h-[768px] bg-white border-[8px] border-black rounded-[50px] shadow-2xl relative overflow-y-auto scrollbar-hide">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-b-2xl z-20"></div>
