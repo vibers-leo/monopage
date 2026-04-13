@@ -362,16 +362,15 @@ export default function AdminDashboard() {
           /* ===== 에디터 뷰 ===== */
           <div className="flex flex-col h-full p-6 lg:p-8 animate-in fade-in duration-200">
         <div className="flex items-center justify-between mb-6">
-          <button onClick={() => setView('list')} className="text-gray-300 hover:text-black transition-colors">
-            <ChevronLeft size={20} />
+          <button onClick={() => setView('list')} className="flex items-center gap-1.5 text-gray-400 hover:text-black transition-colors text-xs font-bold">
+            <ChevronLeft size={16} /> 목록
           </button>
-          <h1 className="font-black text-xs uppercase tracking-[0.3em]">Editor</h1>
           <div className="flex items-center gap-3">
-            <button onClick={() => setShowPreview(true)} className="text-gray-200 hover:text-black transition-colors lg:hidden">
-              <Eye size={18} />
+            <button onClick={() => setShowPreview(true)} className="text-gray-300 hover:text-black transition-colors lg:hidden">
+              <Eye size={16} />
             </button>
-            <button onClick={logout} className="text-gray-200 hover:text-black transition-colors">
-              <LogOut size={18} />
+            <button onClick={logout} className="text-gray-300 hover:text-black transition-colors">
+              <LogOut size={16} />
             </button>
           </div>
         </div>
@@ -961,21 +960,6 @@ export default function AdminDashboard() {
         </div>
 
         {error && <p className="text-red-500 text-xs font-bold text-center mb-3">{error}</p>}
-
-        {/* Buy Me a Coffee 배너 */}
-        <a
-          href="https://buymeacoffee.com/vibers"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-auto mb-4 flex items-center gap-3 px-4 py-3 bg-[#FFDD00] rounded-2xl hover:scale-[1.02] active:scale-95 transition-all group"
-        >
-          <span className="text-xl">☕</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-black text-black leading-tight">모노페이지가 도움이 됐나요?</p>
-            <p className="text-[10px] font-bold text-black/60">커피 한 잔으로 개발을 응원해주세요</p>
-          </div>
-          <span className="text-[10px] font-black text-black/40 group-hover:text-black transition-colors">→</span>
-        </a>
 
         <div className="pt-4 border-t border-gray-50 flex gap-3">
           <Link
