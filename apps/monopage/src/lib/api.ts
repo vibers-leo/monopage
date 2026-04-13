@@ -11,7 +11,7 @@ export const clearToken = () =>
   localStorage.removeItem('monopage_token');
 
 // ---------- fetch wrapper ----------
-async function request<T>(
+export async function request<T>(
   path: string,
   options: RequestInit = {}
 ): Promise<T> {
