@@ -56,6 +56,8 @@ export default function AdminDashboard() {
   const [editingPortfolio, setEditingPortfolio] = useState<number | null>(null);
   const [uploadingPortfolio, setUploadingPortfolio] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [view, setView] = useState<'list' | 'editor'>('list');
+  const [showSupportModal, setShowSupportModal] = useState(false);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [sections, setSections] = useState<Section[]>(DEFAULT_SECTIONS);
@@ -264,15 +266,104 @@ export default function AdminDashboard() {
     { key: 'settings', label: 'Settings', icon: <Settings size={14} /> },
   ];
 
+  // 목록 화면
+  if (view === 'list' && !loading) return (
+    <div className="min-h-screen bg-white text-black font-sans">
+      <ToastContainer toasts={toasts} onDismiss={dismiss} />
+
+      {/* 후원 모달 */}
+      {showSupportModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-6" onClick={() => setShowSupportModal(false)}>
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center" onClick={e => e.stopPropagation()}>
+            <div className="text-4xl mb-4">☕</div>
+            <h2 className="text-xl font-black mb-2">추가 페이지 개설</h2>
+            <p className="text-sm text-gray-400 font-medium mb-6 leading-relaxed">
+              현재 오픈 베타 기간으로 1인 1페이지만 지원돼요.<br />
+              후원해주시면 추가 페이지 개설 권한을 드릴게요!
+            </p>
+            <a
+              href="https://buymeacoffee.com/vibers"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-4 bg-[#FFDD00] rounded-full font-black text-sm mb-3 hover:scale-[1.02] active:scale-95 transition-all"
+            >
+              ☕ Buy Me a Coffee
+            </a>
+            <p className="text-[10px] text-gray-300 font-medium">후원 후 vibers@vibers.co.kr 로 문의해주세요</p>
+            <button onClick={() => setShowSupportModal(false)} className="mt-4 text-xs text-gray-300 hover:text-black transition-colors">닫기</button>
+          </div>
+        </div>
+      )}
+
+      {/* 헤더 */}
+      <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+        <Link href="/" className="font-black text-lg tracking-tight">Monopage<span className="text-gray-300">.</span></Link>
+        <div className="flex items-center gap-4">
+          <span className="text-xs font-bold text-gray-400">@{profile.username}</span>
+          <button onClick={logout} className="text-gray-300 hover:text-black transition-colors">
+            <LogOut size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* 콘텐츠 */}
+      <div className="max-w-2xl mx-auto px-6 py-12">
+        <div className="mb-8">
+          <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em] mb-2">내 페이지</p>
+          <h1 className="text-3xl font-black">페이지 목록</h1>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          {/* 내 페이지 카드 */}
+          <button
+            onClick={() => setView('editor')}
+            className="aspect-[3/4] border border-gray-200 rounded-3xl p-6 flex flex-col text-left hover:border-black transition-all group relative overflow-hidden"
+          >
+            {profile.avatar_url ? (
+              <img src={profile.avatar_url} className="absolute inset-0 w-full h-full object-cover opacity-10 group-hover:opacity-20 transition-opacity" alt="" />
+            ) : null}
+            <div className="relative z-10 flex flex-col h-full">
+              <div className="w-12 h-12 rounded-full bg-gray-100 overflow-hidden mb-auto">
+                {profile.avatar_url
+                  ? <img src={profile.avatar_url} className="w-full h-full object-cover" alt="" />
+                  : <div className="w-full h-full flex items-center justify-center text-lg">👤</div>
+                }
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1">Active</p>
+                <p className="font-black text-sm">@{profile.username}</p>
+                <p className="text-[10px] text-gray-400 font-medium mt-0.5 truncate">{profile.bio || '소개 없음'}</p>
+              </div>
+            </div>
+          </button>
+
+          {/* + 추가 카드 */}
+          <button
+            onClick={() => setShowSupportModal(true)}
+            className="aspect-[3/4] border border-dashed border-gray-200 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-gray-400 transition-all group"
+          >
+            <div className="w-12 h-12 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center group-hover:border-gray-400 transition-colors">
+              <Plus size={20} className="text-gray-300 group-hover:text-gray-500 transition-colors" />
+            </div>
+            <div className="text-center">
+              <p className="text-xs font-black text-gray-300">새 페이지</p>
+              <p className="text-[10px] text-gray-200 font-medium mt-0.5">후원 후 문의</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex h-screen bg-white text-black overflow-hidden font-sans">
       <ToastContainer toasts={toasts} onDismiss={dismiss} />
       {/* Editor Sidebar */}
       <aside className={`w-full lg:w-[400px] border-r border-gray-100 flex flex-col p-6 lg:p-8 bg-white z-10 ${showPreview ? 'hidden lg:flex' : 'flex'}`}>
         <div className="flex items-center justify-between mb-6">
-          <Link href="/" className="text-gray-300 hover:text-black transition-colors">
+          <button onClick={() => setView('list')} className="text-gray-300 hover:text-black transition-colors">
             <ChevronLeft size={20} />
-          </Link>
+          </button>
           <h1 className="font-black text-xs uppercase tracking-[0.3em]">Editor</h1>
           <div className="flex items-center gap-3">
             <button onClick={() => setShowPreview(true)} className="text-gray-200 hover:text-black transition-colors lg:hidden">
