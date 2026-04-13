@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Camera, Sparkles, Loader2, X, Plus, Trash2, Link as LinkIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { signup, setToken, updateProfile, createLink } from '@/lib/api';
@@ -122,14 +121,8 @@ export default function Onboarding() {
   return (
     <div className="min-h-screen bg-white text-black flex items-center justify-center p-6 font-sans">
       <div className="max-w-md w-full">
-        <AnimatePresence mode="wait">
           {isGenerating ? (
-            <motion.div
-              key="generating"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col items-center gap-6 text-center"
-            >
+            <div className="flex flex-col items-center gap-6 text-center animate-in fade-in zoom-in-95 duration-300">
               <div className="relative">
                 <div className="absolute inset-0 bg-black/5 animate-ping rounded-full"></div>
                 <Loader2 className="w-12 h-12 animate-spin text-black" />
@@ -144,12 +137,7 @@ export default function Onboarding() {
               </div>
             </motion.div>
           ) : (
-            <motion.div
-              key="form"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col gap-6"
-            >
+            <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
               {/* 헤더 */}
               <div className="flex flex-col gap-2">
                 <h1 className="text-4xl font-black tracking-tightest leading-[1.1]">
@@ -189,11 +177,9 @@ export default function Onboarding() {
               {links.length > 0 && (
                 <div className="flex flex-col gap-1.5 max-h-[200px] overflow-y-auto">
                   {links.map((link, index) => (
-                    <motion.div
+                    <div
                       key={`${link.url}-${index}`}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl group"
+                      className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl group animate-in fade-in slide-in-from-left-2 duration-200"
                     >
                       <span className="text-base shrink-0">{getLinkIcon(link.type)}</span>
                       <div className="flex-1 min-w-0">
@@ -211,7 +197,7 @@ export default function Onboarding() {
                       >
                         <Trash2 size={12} />
                       </button>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               )}
@@ -306,9 +292,8 @@ export default function Onboarding() {
               <p className="text-[10px] text-gray-300 text-center font-medium">
                 링크는 나중에 어드민에서 추가/수정할 수 있어요
               </p>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
       </div>
     </div>
   );
