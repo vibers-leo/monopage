@@ -45,13 +45,20 @@ export function ProfileView({ username }: ProfileViewProps) {
 
   return (
     <div
-      className="min-h-screen transition-colors duration-1000"
+      className="min-h-screen"
       style={{
         backgroundColor: bgTone,
         '--accent-neon': neonColor,
       } as React.CSSProperties}
     >
-      <div className="max-w-xl mx-auto px-6 py-24 flex flex-col items-center">
+      {/* 배경 그라디언트 */}
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse 80% 50% at 50% -10%, ${neonColor}18 0%, transparent 70%)`,
+        }}
+      />
+      <div className="relative max-w-sm mx-auto px-5 pt-16 pb-20 flex flex-col items-center">
         <SectionRenderer
           sections={sections}
           profile={profile}
@@ -60,11 +67,18 @@ export function ProfileView({ username }: ProfileViewProps) {
           posts={posts}
         />
 
-        <ShareButton username={profile.username} />
-
-        <div className="mt-12 opacity-20 text-center text-[10px] font-black uppercase tracking-widest">
-          Created with Monopage
+        <div className="mt-10 w-full">
+          <ShareButton username={profile.username} />
         </div>
+
+        <a
+          href="https://monopage.kr"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-10 opacity-30 hover:opacity-60 transition-opacity text-[9px] font-black uppercase tracking-[0.3em]"
+        >
+          Made with Monopage
+        </a>
       </div>
     </div>
   );

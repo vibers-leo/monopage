@@ -11,7 +11,12 @@ export default function Home() {
   const [input, setInput] = useState('');
   const [aiComment, setAiComment] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
+  const [pageCount, setPageCount] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    fetch('/api/proxy/api/v1/stats').then(r => r.json()).then(d => setPageCount(d.pages)).catch(() => {});
+  }, []);
 
   const analyzeLinks = async (allLinks: DetectedLink[]) => {
     if (allLinks.length === 0) { setAiComment(''); return; }
@@ -93,8 +98,16 @@ export default function Home() {
       <section className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20 px-6 py-16 lg:py-24 max-w-6xl mx-auto w-full">
         {/* Left: Copy + Input */}
         <div className="flex-1 max-w-lg">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-full text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6">
-            <Sparkles size={12} /> 지금 바로 체험해보세요
+          <div className="flex items-center gap-3 mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-full text-[10px] font-black uppercase tracking-widest text-gray-400">
+              <Sparkles size={12} /> 오픈 베타
+            </div>
+            {pageCount !== null && pageCount > 0 && (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-black text-white rounded-full text-[10px] font-black">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+                {pageCount}명이 만들었어요
+              </div>
+            )}
           </div>
 
           <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-[1.1] mb-4">
