@@ -1,0 +1,14 @@
+services:
+  api:
+    build: .
+    container_name: monopage-api
+    ports:
+      - "4110:80"
+    env_file:
+      - .env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/up"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
