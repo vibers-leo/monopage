@@ -1121,9 +1121,11 @@ export default function AdminDashboard() {
             </a>
           </div>
         )}
-        <div className="w-[375px] max-w-full h-[668px] lg:h-[768px] bg-white border-[8px] border-black rounded-[50px] shadow-2xl relative overflow-y-auto scrollbar-hide">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-b-2xl z-20"></div>
-          <div className="px-8 py-20 flex flex-col items-center">
+        <div className="w-[320px] max-w-full h-[620px] lg:h-[680px] border-[7px] border-black rounded-[44px] shadow-2xl relative overflow-hidden"
+          style={{ backgroundColor: THEMES[selectedTheme].vars.bg }}>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-5 bg-black rounded-b-2xl z-20"></div>
+          <div className="h-full overflow-y-auto scrollbar-hide">
+          <div className="px-5 py-16 flex flex-col items-center">
             <div className="inline-block px-3 py-1 bg-black text-white rounded-full text-[8px] font-black uppercase tracking-widest mb-10">
               Live Preview
             </div>
@@ -1133,10 +1135,13 @@ export default function AdminDashboard() {
               links={links}
               portfolioItems={portfolioItems}
               posts={[]}
+              theme={THEMES[selectedTheme]}
             />
-            <div className="mt-12 opacity-10 text-[8px] font-black uppercase tracking-widest text-center">
+            <div className="mt-10 opacity-20 text-[7px] font-black uppercase tracking-widest text-center"
+              style={{ color: THEMES[selectedTheme].vars.textMuted }}>
               Preview Mode
             </div>
+          </div>
           </div>
         </div>
       </main>
