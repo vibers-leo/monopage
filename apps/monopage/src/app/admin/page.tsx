@@ -67,6 +67,10 @@ export default function AdminDashboard() {
   const [editingPortfolio, setEditingPortfolio] = useState<number | null>(null);
   const [uploadingPortfolio, setUploadingPortfolio] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [panelWidth, setPanelWidth] = useState(380);
+  const isResizing = useRef(false);
+  const startX = useRef(0);
+  const startW = useRef(0);
   const [view, setView] = useState<'list' | 'editor'>('list');
   const [showSupportModal, setShowSupportModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -131,7 +135,7 @@ export default function AdminDashboard() {
     try {
       await updateProfile({ bio: profile.bio, username: profile.username, avatar_url: profile.avatar_url, theme_config: { sections, theme: selectedTheme } });
       setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
+      setTimeout(() => { setSaved(false); setView('list'); }, 1500);
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -282,6 +286,20 @@ export default function AdminDashboard() {
     { key: 'settings', label: 'Settings', icon: <Settings size={14} /> },
   ];
 
+  const onResizeStart = (e: React.MouseEvent) => {
+    isResizing.current = true;
+    startX.current = e.clientX;
+    startW.current = panelWidth;
+    const onMove = (ev: MouseEvent) => {
+      if (!isResizing.current) return;
+      const delta = ev.clientX - startX.current;
+      setPanelWidth(Math.max(280, Math.min(600, startW.current + delta)));
+    };
+    const onUp = () => { isResizing.current = false; window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  };
+
   return (
     <div className="flex h-screen bg-white text-black overflow-hidden font-sans">
       <ToastContainer toasts={toasts} onDismiss={dismiss} />
@@ -311,7 +329,17 @@ export default function AdminDashboard() {
       )}
 
       {/* Left Panel — 목록 or 에디터 */}
-      <aside className={`w-full lg:w-[400px] border-r border-gray-100 flex flex-col bg-white z-10 ${showPreview ? 'hidden lg:flex' : 'flex'}`}>
+      <aside
+        className={`w-full border-r border-gray-100 flex flex-col bg-white z-10 relative ${showPreview ? 'hidden lg:flex' : 'flex'}`}
+        style={{ width: typeof window !== 'undefined' && window.innerWidth >= 1024 ? panelWidth : undefined }}
+      >
+        {/* Resize handle */}
+        <div
+          onMouseDown={onResizeStart}
+          className="hidden lg:flex absolute right-0 top-0 bottom-0 w-1 cursor-col-resize items-center justify-center hover:bg-black/5 transition-colors z-50 group"
+        >
+          <div className="w-0.5 h-8 bg-gray-200 rounded-full group-hover:bg-gray-400 transition-colors" />
+        </div>
 
         {/* ===== 목록 뷰 ===== */}
         {view === 'list' ? (
@@ -1088,7 +1116,7 @@ export default function AdminDashboard() {
             disabled={saving}
             className="flex-1 py-4 bg-black text-white rounded-full text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform disabled:opacity-50"
           >
-            {saving ? <Loader2 size={14} className="animate-spin" /> : saved ? <><Check size={14} /> 저장됨!</> : <><Save size={14} /> Save Changes</>}
+            {saving ? <Loader2 size={14} className="animate-spin" /> : saved ? <><Check size={14} /> 저장 완료!</> : <><Save size={14} /> 저장하기</>}
           </button>
         </div>
           </div>
