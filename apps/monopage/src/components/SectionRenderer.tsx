@@ -7,6 +7,7 @@ import { SnsIconBar } from './SnsIconBar';
 import { PortfolioGallery } from './PortfolioGallery';
 import { SnsGallery } from './SnsGallery';
 import { trackClick } from '@/lib/api';
+import type { Theme } from '@/lib/themes';
 
 export interface Section {
   id: string;
@@ -21,9 +22,10 @@ interface SectionRendererProps {
   links: any[];
   portfolioItems: any[];
   posts: any[];
+  theme?: Theme;
 }
 
-export function SectionRenderer({ sections, profile, links, portfolioItems, posts }: SectionRendererProps) {
+export function SectionRenderer({ sections, profile, links, portfolioItems, posts, theme }: SectionRendererProps) {
   const sorted = [...sections].sort((a, b) => a.order - b.order);
 
   return (
@@ -37,6 +39,7 @@ export function SectionRenderer({ sections, profile, links, portfolioItems, post
                 username={profile.username}
                 bio={profile.bio || ''}
                 avatarUrl={profile.avatar_url}
+                theme={theme}
               />
             );
 
@@ -57,7 +60,9 @@ export function SectionRenderer({ sections, profile, links, portfolioItems, post
                     key={link.id}
                     title={link.title}
                     url={link.url}
-                    className="hover:border-[var(--accent-neon)] group transition-all"
+                    favicon={link.favicon}
+                    domain={link.domain}
+                    theme={theme}
                     onClick={() => trackClick(profile.id, link.id).catch(() => {})}
                   />
                 ))}

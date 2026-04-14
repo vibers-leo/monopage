@@ -11,8 +11,9 @@ import {
   Plus, Save, Link as LinkIcon, ArrowRight,
   ChevronLeft, Trash2, GripVertical, Check, X, Loader2, LogOut, Camera,
   Shield, AlertTriangle, Unlink, Image, User, Settings, Eye, EyeOff, BarChart3, MousePointerClick,
-  Layout, Type, ChevronUp, ChevronDown,
+  Layout, Type, ChevronUp, ChevronDown, Palette,
 } from 'lucide-react';
+import { THEMES, type ThemeKey } from '@/lib/themes';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -73,6 +74,7 @@ export default function AdminDashboard() {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [sections, setSections] = useState<Section[]>(DEFAULT_SECTIONS);
+  const [selectedTheme, setSelectedTheme] = useState<ThemeKey>('minimal');
 
   // account section
   const [connections, setConnections] = useState<{ provider: string | null; uid: string | null; has_password: boolean; email: string | null } | null>(null);
@@ -90,6 +92,7 @@ export default function AdminDashboard() {
       setSocialAccounts(sa as any);
       setProfile({ username: p.username || '', bio: p.bio || '', avatar_url: p.avatar_url || '', email: p.email || '' });
       setSections(p.theme_config?.sections || DEFAULT_SECTIONS);
+      setSelectedTheme((p.theme_config?.theme as ThemeKey) || 'minimal');
       setLinks(l);
       setPortfolioItems(pi);
       setConnections(c);
@@ -126,7 +129,7 @@ export default function AdminDashboard() {
     setSaving(true);
     setError(null);
     try {
-      await updateProfile({ bio: profile.bio, username: profile.username, avatar_url: profile.avatar_url, theme_config: { sections } });
+      await updateProfile({ bio: profile.bio, username: profile.username, avatar_url: profile.avatar_url, theme_config: { sections, theme: selectedTheme } });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (e: any) {
@@ -726,6 +729,44 @@ export default function AdminDashboard() {
           {/* ===== LAYOUT TAB ===== */}
           {activeTab === 'layout' && (
             <section>
+              {/* 테마 선택 */}
+              <div className="mb-6">
+                <label className="text-[10px] font-black text-gray-300 uppercase tracking-widest flex items-center gap-1 mb-3">
+                  <Palette size={10} /> 테마
+                </label>
+                <div className="grid grid-cols-5 gap-2">
+                  {Object.values(THEMES).map((theme) => (
+                    <button
+                      key={theme.key}
+                      onClick={() => setSelectedTheme(theme.key)}
+                      className="flex flex-col items-center gap-1.5 group"
+                    >
+                      <div
+                        className="w-full aspect-square rounded-xl border-2 transition-all"
+                        style={{
+                          background: theme.preview,
+                          borderColor: selectedTheme === theme.key ? '#000' : 'transparent',
+                          boxShadow: selectedTheme === theme.key ? '0 0 0 1px #000' : 'none',
+                        }}
+                      >
+                        {selectedTheme === theme.key && (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <div className="w-4 h-4 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center">
+                              <Check size={8} className="text-white" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-[9px] font-bold text-gray-500 group-hover:text-black transition-colors">
+                        {theme.label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="h-px bg-gray-100 mb-5" />
+
               <div className="flex justify-between items-center mb-4">
                 <label className="text-[10px] font-black text-gray-300 uppercase tracking-widest">페이지 섹션</label>
                 <div className="flex gap-1">

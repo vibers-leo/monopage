@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ShareButton } from '@/components/ShareButton';
 import { SectionRenderer, DEFAULT_SECTIONS } from '@/components/SectionRenderer';
 import { getPublicProfile, trackView } from '@/lib/api';
+import { getTheme } from '@/lib/themes';
 
 interface ProfileViewProps {
   username: string;
@@ -25,49 +26,58 @@ export function ProfileView({ username }: ProfileViewProps) {
   }, [username]);
 
   if (loading) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="w-6 h-6 border-2 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
+    <div className="flex items-center justify-center min-h-screen bg-white">
+      <div className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full animate-spin" />
     </div>
   );
 
   if (notFound) return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-4">
-      <p className="text-4xl font-black">404</p>
-      <p className="text-gray-400 text-sm font-medium">@{username} 페이지를 찾을 수 없어요</p>
+    <div className="flex flex-col items-center justify-center min-h-screen gap-3 bg-white">
+      <p className="text-3xl font-black tracking-tight">404</p>
+      <p className="text-gray-400 text-[13px] font-medium">@{username} 페이지를 찾을 수 없어요</p>
     </div>
   );
 
-  const neonColor = profile.theme_config?.neon_color || '#000000';
-  const bgTone = profile.theme_config?.bg_tone || '#ffffff';
+  const themeKey = profile.theme_config?.theme;
+  const theme = getTheme(themeKey);
+  const t = theme.vars;
+
   const posts = profile.social_accounts?.flatMap((sa: any) => sa.posts || []) || [];
   const portfolioItems = profile.portfolio_items || [];
   const sections = profile.theme_config?.sections || DEFAULT_SECTIONS;
 
+  const cssVars = {
+    '--t-bg': t.bg,
+    '--t-text': t.text,
+    '--t-text-sub': t.textSub,
+    '--t-text-muted': t.textMuted,
+    '--t-card-bg': t.cardBg,
+    '--t-card-border': t.cardBorder,
+    '--t-card-hover': t.cardHover,
+    '--t-avatar-ring': t.avatarRing,
+  } as React.CSSProperties;
+
   return (
     <div
-      className="min-h-screen"
-      style={{
-        backgroundColor: bgTone,
-        '--accent-neon': neonColor,
-      } as React.CSSProperties}
+      className="min-h-screen w-full"
+      style={{ backgroundColor: t.bg, ...cssVars }}
     >
       {/* 배경 그라디언트 */}
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{
-          background: `radial-gradient(ellipse 80% 50% at 50% -10%, ${neonColor}18 0%, transparent 70%)`,
-        }}
-      />
-      <div className="relative max-w-sm mx-auto px-5 pt-16 pb-20 flex flex-col items-center">
+      {t.bgGradient !== 'transparent' && (
+        <div className="fixed inset-0 pointer-events-none" style={{ background: t.bgGradient }} />
+      )}
+
+      <div className="relative max-w-[390px] mx-auto px-5 pt-14 pb-20 flex flex-col items-center">
         <SectionRenderer
           sections={sections}
           profile={profile}
           links={profile.links || []}
           portfolioItems={portfolioItems}
           posts={posts}
+          theme={theme}
         />
 
-        <div className="mt-10 w-full">
+        <div className="mt-8 w-full">
           <ShareButton username={profile.username} />
         </div>
 
@@ -75,7 +85,8 @@ export function ProfileView({ username }: ProfileViewProps) {
           href="https://monopage.kr"
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-10 opacity-30 hover:opacity-60 transition-opacity text-[9px] font-black uppercase tracking-[0.3em]"
+          className="mt-8 opacity-25 hover:opacity-50 transition-opacity text-[9px] font-black uppercase tracking-[0.3em]"
+          style={{ color: t.textMuted }}
         >
           Made with Monopage
         </a>

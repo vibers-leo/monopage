@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import type { Theme } from '@/lib/themes';
 
-// SNS별 고정 아이콘 (favicon fetch 없이)
 function getSnsIcon(url: string): { emoji: string; color: string } | null {
   if (url.includes('instagram.com')) return { emoji: '📸', color: '#E1306C' };
   if (url.includes('youtube.com') || url.includes('youtu.be')) return { emoji: '▶️', color: '#FF0000' };
@@ -27,11 +27,13 @@ interface LinkCardProps {
   domain?: string;
   className?: string;
   onClick?: () => void;
+  theme?: Theme;
 }
 
-export const LinkCard: React.FC<LinkCardProps> = ({ title, url, favicon, domain, className, onClick }) => {
+export const LinkCard: React.FC<LinkCardProps> = ({ title, url, favicon, domain, className, onClick, theme }) => {
   const [faviconError, setFaviconError] = useState(false);
   const sns = getSnsIcon(url);
+  const t = theme?.vars;
 
   let hostname = domain;
   if (!hostname) {
@@ -44,28 +46,28 @@ export const LinkCard: React.FC<LinkCardProps> = ({ title, url, favicon, domain,
       target="_blank"
       rel="noopener noreferrer"
       onClick={onClick}
-      className={cn(
-        "flex items-center gap-3.5 w-full px-4 py-3.5 bg-white border border-gray-100 rounded-2xl hover:border-gray-200 hover:shadow-md active:scale-[0.98] transition-all group",
-        className
-      )}
+      className={cn('flex items-center gap-3 w-full px-3.5 py-3 rounded-2xl active:scale-[0.97] transition-all group cursor-pointer', className)}
+      style={{
+        backgroundColor: t?.cardBg || '#ffffff',
+        border: `1px solid ${t?.cardBorder || '#f3f4f6'}`,
+      }}
+      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = t?.cardHover || '#f9fafb'; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = t?.cardBg || '#ffffff'; }}
     >
-      {/* 아이콘 */}
-      <div className="w-10 h-10 shrink-0 flex items-center justify-center text-sm font-black overflow-hidden"
+      {/* 아이콘 — squircle */}
+      <div
+        className="w-9 h-9 shrink-0 flex items-center justify-center text-[13px] font-black overflow-hidden"
         style={{
-          backgroundColor: sns ? sns.color + '15' : '#f3f4f6',
+          backgroundColor: sns ? sns.color + '18' : (t?.cardBorder || '#f3f4f6'),
           borderRadius: '28%',
-        }}>
+        }}
+      >
         {sns ? (
           <span style={{ color: sns.color }}>{sns.emoji}</span>
         ) : favicon && !faviconError ? (
-          <img
-            src={favicon}
-            alt=""
-            className="w-6 h-6 object-contain"
-            onError={() => setFaviconError(true)}
-          />
+          <img src={favicon} alt="" className="w-5 h-5 object-contain" onError={() => setFaviconError(true)} />
         ) : (
-          <span className="text-gray-400 text-xs font-black">
+          <span style={{ color: t?.textMuted || '#9ca3af' }} className="text-[11px] font-black">
             {(hostname?.[0] || '?').toUpperCase()}
           </span>
         )}
@@ -73,13 +75,18 @@ export const LinkCard: React.FC<LinkCardProps> = ({ title, url, favicon, domain,
 
       {/* 텍스트 */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-gray-900 truncate leading-snug">{title}</p>
-        <p className="text-[11px] text-gray-400 truncate font-medium mt-0.5">{hostname}</p>
+        <p className="text-[13px] font-semibold truncate leading-tight" style={{ color: t?.text || '#0a0a0a' }}>
+          {title}
+        </p>
+        <p className="text-[11px] truncate font-normal mt-0.5" style={{ color: t?.textMuted || '#9ca3af' }}>
+          {hostname}
+        </p>
       </div>
 
       <ArrowUpRight
-        size={15}
-        className="text-gray-300 group-hover:text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
+        size={14}
+        className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0"
+        style={{ color: t?.textMuted || '#d1d5db' }}
       />
     </a>
   );
