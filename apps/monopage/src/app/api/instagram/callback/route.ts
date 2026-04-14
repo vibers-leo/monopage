@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const API_URL = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || 'http://49.50.138.93:4110';
+const API_URL = process.env.BACKEND_URL || 'http://49.50.138.93:4110';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://monopage.kr';
+const CLIENT_ID = process.env.INSTAGRAM_CLIENT_ID || '1342970281185278';
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get('code');
   const token = request.nextUrl.searchParams.get('state') || ''; // monopage JWT
-  const redirectUri = `${request.nextUrl.origin}/api/instagram/callback`;
+  const redirectUri = `${APP_URL}/api/instagram/callback`;
 
   if (!code) {
     return NextResponse.redirect(new URL('/admin?instagram=error&reason=no_code', request.url));
@@ -17,8 +19,8 @@ export async function GET(request: NextRequest) {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
-        client_id: process.env.INSTAGRAM_CLIENT_ID!,
-        client_secret: process.env.INSTAGRAM_CLIENT_SECRET!,
+        client_id: CLIENT_ID,
+        client_secret: process.env.INSTAGRAM_CLIENT_SECRET || 'b50b4a7f56b505b4f8233ae721247ea6',
         grant_type: 'authorization_code',
         redirect_uri: redirectUri,
         code,
