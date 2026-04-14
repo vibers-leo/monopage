@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { ArrowRight, Sparkles, Plus, Trash2, Link as LinkIcon, Loader2 } from "lucide-react";
 import { detectLink, getLinkIcon, type DetectedLink } from "@/lib/link-detector";
+import { getToken } from "@/lib/api";
 import ChatWidget from "@/components/ChatWidget";
 
 export default function Home() {
@@ -12,10 +13,12 @@ export default function Home() {
   const [aiComment, setAiComment] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
   const [pageCount, setPageCount] = useState<number | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch('/api/proxy/api/v1/stats').then(r => r.json()).then(d => setPageCount(d.pages)).catch(() => {});
+    setIsLoggedIn(!!getToken());
   }, []);
 
   const analyzeLinks = async (allLinks: DetectedLink[]) => {
@@ -109,12 +112,20 @@ export default function Home() {
           Monopage<span className="text-gray-300">.</span>
         </Link>
         <div className="flex items-center gap-4">
-          <Link href="/login" className="text-sm font-bold text-gray-400 hover:text-black transition-colors">
-            로그인
-          </Link>
-          <Link href="/onboard" className="px-5 py-2.5 bg-black text-white rounded-full text-sm font-black hover:scale-105 active:scale-95 transition-all">
-            시작하기
-          </Link>
+          {isLoggedIn ? (
+            <Link href="/admin" className="px-5 py-2.5 bg-black text-white rounded-full text-sm font-black hover:scale-105 active:scale-95 transition-all">
+              내 페이지 →
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className="text-sm font-bold text-gray-400 hover:text-black transition-colors">
+                로그인
+              </Link>
+              <Link href="/onboard" className="px-5 py-2.5 bg-black text-white rounded-full text-sm font-black hover:scale-105 active:scale-95 transition-all">
+                시작하기
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 

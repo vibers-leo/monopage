@@ -31,10 +31,15 @@ function GoogleCallbackInner() {
       }),
     })
       .then(res => res.json())
-      .then(data => {
+      .then(async data => {
         if (data.token) {
           setToken(data.token);
-          router.replace('/admin');
+          // 링크가 없으면 onboard로 (페이지 아직 안 만든 신규 유저)
+          const profile = await fetch('/api/proxy/api/v1/profile', {
+            headers: { Authorization: `Bearer ${data.token}` },
+          }).then(r => r.json()).catch(() => null);
+          const hasLinks = profile?.links?.length > 0;
+          router.replace(hasLinks ? '/admin' : '/onboard');
         } else {
           router.replace('/login?error=google_failed');
         }

@@ -31,10 +31,14 @@ function KakaoCallbackInner() {
       }),
     })
       .then(res => res.json())
-      .then(data => {
+      .then(async data => {
         if (data.token) {
           setToken(data.token);
-          router.replace('/admin');
+          const profile = await fetch('/api/proxy/api/v1/profile', {
+            headers: { Authorization: `Bearer ${data.token}` },
+          }).then(r => r.json()).catch(() => null);
+          const hasLinks = profile?.links?.length > 0;
+          router.replace(hasLinks ? '/admin' : '/onboard');
         } else {
           router.replace('/login?error=kakao_failed');
         }

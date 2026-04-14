@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Camera, Sparkles, Loader2, X, Plus, Trash2, Link as LinkIcon, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { signup, setToken, updateProfile, createLink } from '@/lib/api';
+import { signup, setToken, updateProfile, createLink, getToken, getMyProfile } from '@/lib/api';
 import { detectLink, getLinkIcon, isSnsLink, type DetectedLink } from '@/lib/link-detector';
 
 async function uploadPhoto(file: File): Promise<string> {
@@ -24,11 +24,16 @@ export default function Onboarding() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [progressStep, setProgressStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const linkInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   useEffect(() => {
+    // 이미 로그인한 경우 회원가입 폼 숨김
+    const token = getToken();
+    if (token) setIsLoggedIn(true);
+
     try {
       const draft = sessionStorage.getItem('monopage_draft_links');
       if (draft) {
@@ -99,6 +104,27 @@ export default function Onboarding() {
   };
 
   const handleCreate = async () => {
+    // 이미 로그인한 경우: 링크만 추가
+    if (isLoggedIn) {
+      if (links.length === 0) { router.push('/admin'); return; }
+      setIsGenerating(true);
+      setProgressStep(3);
+      setError(null);
+      try {
+        for (const link of links) {
+          const title = link.handle ? `${link.label} @${link.handle}` : link.label;
+          await createLink(title, link.url, link.favicon, link.domain);
+        }
+        setProgressStep(4);
+        await new Promise(r => setTimeout(r, 400));
+        router.push('/admin');
+      } catch (e: any) {
+        setIsGenerating(false);
+        setError(e.message || '링크 추가에 실패했어요');
+      }
+      return;
+    }
+
     if (!form.username.trim()) { setError('페이지 주소를 정해주세요'); return; }
     if (!form.email.trim()) { setError('이메일을 입력해주세요'); return; }
     if (form.password.length < 6) { setError('비밀번호는 6자 이상이어야 해요'); return; }
@@ -278,49 +304,51 @@ export default function Onboarding() {
                 </div>
               </div>
 
-              {/* 페이지 주소 + 계정 정보 */}
-              <div className="flex flex-col gap-3">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">페이지 주소</p>
-                    <p className="text-[10px] font-bold text-blue-400">영문·숫자·_ 만 가능</p>
+              {/* 페이지 주소 + 계정 정보 (미로그인 상태만) */}
+              {!isLoggedIn && (
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">페이지 주소</p>
+                      <p className="text-[10px] font-bold text-blue-400">영문·숫자·_ 만 가능</p>
+                    </div>
+                    <div className="flex items-center gap-0 border border-gray-200 rounded-2xl bg-gray-50 focus-within:border-black transition-colors overflow-hidden">
+                      <span className="text-[11px] font-bold text-gray-300 pl-4 shrink-0">monopage.kr/</span>
+                      <input
+                        type="text"
+                        placeholder="my_page"
+                        className="bg-transparent outline-none font-black text-sm flex-1 py-4 pr-4"
+                        value={form.username}
+                        onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') })}
+                      />
+                    </div>
+                    <p className="text-[10px] text-gray-300 font-medium mt-2">
+                      💡 나중에 <span className="font-black text-gray-400">내 도메인</span>으로도 연결할 수 있어요 (예: mybrand.com)
+                    </p>
                   </div>
-                  <div className="flex items-center gap-0 border border-gray-200 rounded-2xl bg-gray-50 focus-within:border-black transition-colors overflow-hidden">
-                    <span className="text-[11px] font-bold text-gray-300 pl-4 shrink-0">monopage.kr/</span>
+                  <div>
+                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-2">저장할 이메일</p>
                     <input
-                      type="text"
-                      placeholder="my_page"
-                      className="bg-transparent outline-none font-black text-sm flex-1 py-4 pr-4"
-                      value={form.username}
-                      onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') })}
+                      type="email"
+                      placeholder="email@example.com"
+                      className="w-full p-4 border border-gray-200 rounded-2xl bg-gray-50 outline-none font-bold text-sm focus:border-black transition-colors"
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
                     />
                   </div>
-                  <p className="text-[10px] text-gray-300 font-medium mt-2">
-                    💡 나중에 <span className="font-black text-gray-400">내 도메인</span>으로도 연결할 수 있어요 (예: mybrand.com)
-                  </p>
+                  <div>
+                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-2">비밀번호</p>
+                    <input
+                      type="password"
+                      placeholder="6자 이상"
+                      className="w-full p-4 border border-gray-200 rounded-2xl bg-gray-50 outline-none font-bold text-sm focus:border-black transition-colors"
+                      value={form.password}
+                      onChange={(e) => setForm({ ...form, password: e.target.value })}
+                      onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-2">저장할 이메일</p>
-                  <input
-                    type="email"
-                    placeholder="email@example.com"
-                    className="w-full p-4 border border-gray-200 rounded-2xl bg-gray-50 outline-none font-bold text-sm focus:border-black transition-colors"
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-2">비밀번호</p>
-                  <input
-                    type="password"
-                    placeholder="6자 이상"
-                    className="w-full p-4 border border-gray-200 rounded-2xl bg-gray-50 outline-none font-bold text-sm focus:border-black transition-colors"
-                    value={form.password}
-                    onChange={(e) => setForm({ ...form, password: e.target.value })}
-                    onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
-                  />
-                </div>
-              </div>
+              )}
 
               {error && <p className="text-red-500 text-xs font-bold text-center">{error}</p>}
 
