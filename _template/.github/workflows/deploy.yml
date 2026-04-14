@@ -1,0 +1,51 @@
+name: Deploy {{PROJECT_NAME}} to NCP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Deploy to NCP via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.NCP_HOST }}
+          username: ${{ secrets.NCP_USER }}
+          key: ${{ secrets.NCP_SSH_KEY }}
+          timeout: 25m
+          script: |
+            set -e
+            cd /root/projects/{{PROJECT_NAME}}/repo
+
+            echo "=== git pull ==="
+            git pull origin main
+
+            echo "=== docker build ==="
+            docker build -t {{PROJECT_NAME}}:latest .
+
+            echo "=== docker compose up ==="
+            cd /root/projects/{{PROJECT_NAME}}
+            docker compose up -d --force-recreate
+
+            echo "=== nginx reload (502 방지) ==="
+            docker exec npm-app-1 nginx -s reload || true
+
+            echo "=== health check ==="
+            sleep 5
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:{{PORT}}/)
+            echo "HTTP status: $STATUS"
+            if [ "$STATUS" != "200" ]; then
+              echo "Health check failed!"
+              docker logs {{PROJECT_NAME}} --tail 50
+              exit 1
+            fi
+
+            echo "=== Deploy complete ==="

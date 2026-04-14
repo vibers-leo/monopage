@@ -1,32 +1,42 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// 링크 타입별 아이콘/색상
-function getLinkMeta(url: string) {
-  if (url.includes('instagram.com')) return { icon: '📸', label: 'Instagram', color: 'from-purple-500 to-pink-500' };
-  if (url.includes('youtube.com') || url.includes('youtu.be')) return { icon: '▶️', label: 'YouTube', color: 'from-red-500 to-red-600' };
-  if (url.includes('tiktok.com')) return { icon: '🎵', label: 'TikTok', color: 'from-gray-800 to-gray-900' };
-  if (url.includes('twitter.com') || url.includes('x.com')) return { icon: '𝕏', label: 'X', color: 'from-gray-800 to-black' };
-  if (url.includes('github.com')) return { icon: '⌨️', label: 'GitHub', color: 'from-gray-700 to-gray-900' };
-  if (url.includes('linkedin.com')) return { icon: '💼', label: 'LinkedIn', color: 'from-blue-600 to-blue-700' };
-  if (url.includes('naver.com')) return { icon: '🟢', label: 'Naver', color: 'from-green-500 to-green-600' };
-  if (url.includes('kakao')) return { icon: '💬', label: 'KakaoTalk', color: 'from-yellow-400 to-yellow-500' };
-  if (url.includes('buymeacoffee.com')) return { icon: '☕', label: 'Buy Me a Coffee', color: 'from-yellow-400 to-orange-400' };
-  if (url.includes('threads.net')) return { icon: '🧵', label: 'Threads', color: 'from-gray-700 to-black' };
-  return { icon: '🔗', label: '', color: 'from-gray-600 to-gray-800' };
+// SNS별 고정 아이콘 (favicon fetch 없이)
+function getSnsIcon(url: string): { emoji: string; color: string } | null {
+  if (url.includes('instagram.com')) return { emoji: '📸', color: '#E1306C' };
+  if (url.includes('youtube.com') || url.includes('youtu.be')) return { emoji: '▶️', color: '#FF0000' };
+  if (url.includes('tiktok.com')) return { emoji: '🎵', color: '#010101' };
+  if (url.includes('twitter.com') || url.includes('x.com')) return { emoji: '𝕏', color: '#000000' };
+  if (url.includes('github.com')) return { emoji: '⌨️', color: '#24292e' };
+  if (url.includes('linkedin.com')) return { emoji: '💼', color: '#0A66C2' };
+  if (url.includes('threads.net')) return { emoji: '🧵', color: '#101010' };
+  if (url.includes('facebook.com')) return { emoji: 'f', color: '#1877F2' };
+  if (url.includes('blog.naver.com')) return { emoji: 'N', color: '#03C75A' };
+  if (url.includes('place.naver.com') || url.includes('naver.me')) return { emoji: '📍', color: '#03C75A' };
+  if (url.includes('kakao')) return { emoji: '💬', color: '#FEE500' };
+  return null;
 }
 
 interface LinkCardProps {
   title: string;
   url: string;
-  iconType?: string;
+  favicon?: string;
+  domain?: string;
   className?: string;
   onClick?: () => void;
 }
 
-export const LinkCard: React.FC<LinkCardProps> = ({ title, url, className, onClick }) => {
-  const meta = getLinkMeta(url);
+export const LinkCard: React.FC<LinkCardProps> = ({ title, url, favicon, domain, className, onClick }) => {
+  const [faviconError, setFaviconError] = useState(false);
+  const sns = getSnsIcon(url);
+
+  let hostname = domain;
+  if (!hostname) {
+    try { hostname = new URL(url).hostname.replace(/^www\./, ''); } catch { hostname = url; }
+  }
 
   return (
     <a
@@ -35,18 +45,39 @@ export const LinkCard: React.FC<LinkCardProps> = ({ title, url, className, onCli
       rel="noopener noreferrer"
       onClick={onClick}
       className={cn(
-        "flex items-center gap-4 w-full px-5 py-4 bg-white border border-gray-100 rounded-2xl hover:border-gray-300 hover:shadow-sm active:scale-[0.98] transition-all group",
+        "flex items-center gap-3.5 w-full px-4 py-3.5 bg-white border border-gray-100 rounded-2xl hover:border-gray-200 hover:shadow-md active:scale-[0.98] transition-all group",
         className
       )}
     >
-      <div className={cn(
-        "w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0 bg-gradient-to-br text-white",
-        meta.color
-      )}>
-        {meta.icon}
+      {/* 아이콘 */}
+      <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 flex items-center justify-center text-sm font-black"
+        style={sns ? { backgroundColor: sns.color + '15' } : { backgroundColor: '#f3f4f6' }}>
+        {sns ? (
+          <span style={{ color: sns.color }}>{sns.emoji}</span>
+        ) : favicon && !faviconError ? (
+          <img
+            src={favicon}
+            alt=""
+            className="w-6 h-6 object-contain"
+            onError={() => setFaviconError(true)}
+          />
+        ) : (
+          <span className="text-gray-400 text-xs font-black">
+            {(hostname?.[0] || '?').toUpperCase()}
+          </span>
+        )}
       </div>
-      <span className="flex-1 font-bold text-sm tracking-tight truncate">{title}</span>
-      <ArrowUpRight size={15} className="text-gray-300 group-hover:text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
+
+      {/* 텍스트 */}
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-bold text-gray-900 truncate leading-snug">{title}</p>
+        <p className="text-[11px] text-gray-400 truncate font-medium mt-0.5">{hostname}</p>
+      </div>
+
+      <ArrowUpRight
+        size={15}
+        className="text-gray-300 group-hover:text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
+      />
     </a>
   );
 };

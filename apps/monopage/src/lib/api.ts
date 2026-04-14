@@ -65,13 +65,13 @@ export const getPublicProfile = (username: string) =>
 export const getLinks = () =>
   request<any[]>('/api/v1/links');
 
-export const createLink = (title: string, url: string) =>
+export const createLink = (title: string, url: string, favicon?: string, domain?: string) =>
   request<any>('/api/v1/links', {
     method: 'POST',
-    body: JSON.stringify({ title, url }),
+    body: JSON.stringify({ title, url, favicon, domain }),
   });
 
-export const updateLink = (id: number, data: { title?: string; url?: string }) =>
+export const updateLink = (id: number, data: { title?: string; url?: string; favicon?: string; domain?: string }) =>
   request<any>(`/api/v1/links/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(data),

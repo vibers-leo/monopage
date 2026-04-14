@@ -46,11 +46,15 @@ export default function Onboarding() {
   };
 
   const enrichLink = async (link: DetectedLink): Promise<DetectedLink> => {
-    if (link.type !== 'website') return link;
     try {
       const res = await fetch(`/api/og?url=${encodeURIComponent(link.url)}`);
       const og = await res.json();
-      if (og.title) return { ...link, label: og.title };
+      return {
+        ...link,
+        ...(og.title && link.type === 'website' ? { label: og.title } : {}),
+        favicon: og.favicon || undefined,
+        domain: og.hostname || undefined,
+      };
     } catch { /* keep original */ }
     return link;
   };
@@ -119,7 +123,7 @@ export default function Onboarding() {
         setProgressStep(3);
         for (const link of links) {
           const title = link.handle ? `${link.label} @${link.handle}` : link.label;
-          await createLink(title, link.url);
+          await createLink(title, link.url, link.favicon, link.domain);
         }
       }
 

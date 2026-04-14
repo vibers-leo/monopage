@@ -1,0 +1,26 @@
+services:
+  {{PROJECT_NAME}}:
+    image: {{PROJECT_NAME}}:latest
+    container_name: {{PROJECT_NAME}}
+    restart: unless-stopped
+    ports:
+      - "{{PORT}}:3000"
+    env_file:
+      - .env
+    networks:
+      - {{NETWORK}}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  {{NETWORK}}:
+    external: true

@@ -1,0 +1,120 @@
+@import url('https://cdn.jsdelivr.net/gh/Freesentation/paperlogy@main/Paperlogy.css');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css');
+@import "tailwindcss";
+
+/* ── DARK_ORANGE 테마 CSS 변수 ── */
+:root {
+  --background: #09090b;
+  --foreground: #ffffff;
+
+  --card: rgba(255, 255, 255, 0.03);
+  --card-foreground: #ffffff;
+
+  --muted: #18181b;
+  --muted-foreground: #a1a1aa;
+
+  --border: rgba(255, 255, 255, 0.08);
+
+  --primary: #f97316;
+  --primary-foreground: #09090b;
+  --accent: rgba(249, 115, 22, 0.15);
+  --accent-glow: rgba(249, 115, 22, 0.2);
+
+  --secondary: #18181b;
+  --secondary-foreground: #a1a1aa;
+
+  --radius: 10px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Paperlogy', 'Pretendard', -apple-system, sans-serif;
+  line-height: 1.2;
+}
+
+/* ── 그레인 텍스처 ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+/* ── 스크롤 리빌 ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── 오렌지 글로우 버튼 ── */
+.btn-orange {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-family: 'Paperlogy', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 0 0 var(--accent-glow);
+}
+.btn-orange:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 32px var(--accent-glow);
+}
+
+/* ── 글래스 카드 ── */
+.glass-card {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* ── 컨테이너 ── */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+}

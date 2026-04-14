@@ -29,7 +29,20 @@ export async function GET(request: NextRequest) {
 
     const hostname = new URL(url).hostname.replace(/^www\./, '');
 
-    return NextResponse.json({ title, description, image, hostname });
+    // favicon: try og:image favicon first, then Google favicon service
+    const faviconMatch =
+      html.match(/<link[^>]+rel=["'](?:shortcut )?icon["'][^>]+href=["']([^"']+)["']/i) ||
+      html.match(/<link[^>]+href=["']([^"']+)["'][^>]+rel=["'](?:shortcut )?icon["']/i);
+    let favicon = faviconMatch?.[1] || null;
+    if (favicon && !favicon.startsWith('http')) {
+      const base = new URL(url);
+      favicon = favicon.startsWith('/') ? `${base.protocol}//${base.host}${favicon}` : `${base.protocol}//${base.host}/${favicon}`;
+    }
+    if (!favicon) {
+      favicon = `https://www.google.com/s2/favicons?domain=${hostname}&sz=64`;
+    }
+
+    return NextResponse.json({ title, description, image, hostname, favicon });
   } catch {
     try {
       const hostname = new URL(url).hostname.replace(/^www\./, '');

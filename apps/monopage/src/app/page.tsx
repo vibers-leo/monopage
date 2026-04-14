@@ -43,11 +43,15 @@ export default function Home() {
   };
 
   const enrichLink = async (link: DetectedLink): Promise<DetectedLink> => {
-    if (link.type !== 'website') return link;
     try {
       const res = await fetch(`/api/og?url=${encodeURIComponent(link.url)}`);
       const og = await res.json();
-      if (og.title) return { ...link, label: og.title };
+      return {
+        ...link,
+        ...(og.title && link.type === 'website' ? { label: og.title } : {}),
+        favicon: og.favicon || undefined,
+        domain: og.hostname || undefined,
+      };
     } catch { /* keep original */ }
     return link;
   };
@@ -254,18 +258,28 @@ export default function Home() {
                   <p className="text-sm font-black mb-1">@my_page</p>
                   <p className="text-[10px] text-gray-400 mb-6">나만의 모노페이지</p>
                   <div className="w-full space-y-2">
-                    {links.map((link, i) => (
-                      <div
-                        key={`preview-${link.url}-${i}`}
-                        className="w-full flex items-center gap-3 px-4 py-3.5 bg-gray-50 rounded-2xl border border-gray-100 hover:border-gray-300 transition-colors"
-                      >
-                        <span className="text-sm">{getLinkIcon(link.type)}</span>
-                        <span className="text-xs font-bold truncate flex-1">
-                          {link.handle ? `${link.label} @${link.handle}` : link.label}
-                        </span>
-                        <ArrowRight size={12} className="text-gray-300 shrink-0" />
-                      </div>
-                    ))}
+                    {links.map((link, i) => {
+                      const hostname = link.domain || (() => { try { return new URL(link.url).hostname.replace(/^www\./, ''); } catch { return link.url; } })();
+                      return (
+                        <div
+                          key={`preview-${link.url}-${i}`}
+                          className="w-full flex items-center gap-2.5 px-3 py-2.5 bg-white rounded-xl border border-gray-100"
+                        >
+                          <div className="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+                            {link.favicon ? (
+                              <img src={link.favicon} alt="" className="w-4 h-4 object-contain" />
+                            ) : (
+                              <span className="text-[10px]">{getLinkIcon(link.type)}</span>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[10px] font-bold truncate leading-tight">{link.handle ? `@${link.handle}` : link.label}</p>
+                            <p className="text-[9px] text-gray-400 truncate">{hostname}</p>
+                          </div>
+                          <ArrowRight size={10} className="text-gray-300 shrink-0" />
+                        </div>
+                      );
+                    })}
                   </div>
                   <div className="mt-auto pt-8 opacity-10 text-[8px] font-black uppercase tracking-widest">
                     Monopage

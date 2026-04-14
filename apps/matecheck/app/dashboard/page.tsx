@@ -50,7 +50,7 @@ export default function DashboardPage() {
     { icon: <Target size={20} />, label: "목표", color: "bg-accent/20 text-accent", badge: "2개" },
     { icon: <Calendar size={20} />, label: "캘린더", color: "bg-blue-500/20 text-blue-300", badge: "오늘 일정 1개" },
     { icon: <Wallet size={20} />, label: "가계부", color: "bg-yellow-500/20 text-yellow-300", badge: "이번 달" },
-    { icon: <RotateCcw size={20} />, label: "집안일", color: "bg-orange-500/20 text-orange-300", badge: "오늘 담당자 확인" },
+    { icon: <RotateCcw size={20} />, label: "집안일", color: "bg-orange-500/20 text-orange-300", badge: "오늘 담당자 확인해요" },
     { icon: <Star size={20} />, label: "위시리스트", color: "bg-pink-500/20 text-pink-300", badge: "5개" },
   ];
 
@@ -124,7 +124,7 @@ export default function DashboardPage() {
         <h2 className="text-sm font-semibold text-slate-400 mb-3 uppercase tracking-wide">빠른 실행</h2>
         <div className="glass rounded-2xl divide-y divide-white/10">
           {[
-            { label: "오늘 집안일 확인", sub: "로테이션 스케줄" },
+            { label: "오늘 집안일 확인해요", sub: "로테이션 스케줄" },
             { label: "이번 달 지출 현황", sub: "공동 가계부" },
             { label: "다가오는 기념일", sub: "캘린더" },
           ].map((item) => (

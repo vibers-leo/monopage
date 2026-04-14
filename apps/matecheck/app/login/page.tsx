@@ -137,7 +137,7 @@ export default function LoginPage() {
                   name="passwordConfirm"
                   value={form.passwordConfirm}
                   onChange={handleChange}
-                  placeholder="비밀번호 확인"
+                  placeholder="비밀번호 확인해요"
                   required
                   className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-400 transition-colors"
                 />

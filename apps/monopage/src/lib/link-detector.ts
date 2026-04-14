@@ -16,6 +16,8 @@ export interface DetectedLink {
   label: string;
   url: string;
   handle?: string; // SNS handle if applicable
+  favicon?: string; // favicon URL (from OG fetch)
+  domain?: string;  // hostname (e.g. "myratingis.kr")
 }
 
 const patterns: { type: LinkType; regex: RegExp; label: string; extractHandle?: (url: string) => string }[] = [
