@@ -931,7 +931,19 @@ export default function AdminDashboard() {
                       )}
                     </div>
                   ) : (
-                    <p className="text-xs text-gray-400">연동된 소셜 계정 없음</p>
+                    <div className="flex flex-col gap-2">
+                      <p className="text-xs text-gray-400">연동된 소셜 계정 없음</p>
+                      <div className="flex gap-2 flex-wrap">
+                        {[
+                          { provider: 'kakao', label: '카카오', url: `https://kauth.kakao.com/oauth/authorize?client_id=3a4930ab39652ad5f387496697bf66ba&redirect_uri=${encodeURIComponent('https://monopage.kr/auth/kakao/callback')}&response_type=code` },
+                          { provider: 'google', label: '구글', url: `https://accounts.google.com/o/oauth2/v2/auth?client_id=534035148832-6b2lf74coj33s9m9cmdh509tktcaa7fn.apps.googleusercontent.com&redirect_uri=${encodeURIComponent('https://monopage.kr/auth/google/callback')}&response_type=code&scope=openid%20email%20profile` },
+                        ].map(s => (
+                          <a key={s.provider} href={s.url} className="px-3 py-1.5 border border-gray-200 rounded-xl text-[10px] font-black hover:border-black transition-colors">
+                            {s.label}로 연동하기
+                          </a>
+                        ))}
+                      </div>
+                    </div>
                   )}
                 </div>
               )}
@@ -991,11 +1003,11 @@ export default function AdminDashboard() {
                     onClick={() => setDeleteConfirm(true)}
                     className="w-full py-2.5 border border-red-200 text-red-400 text-[10px] font-black uppercase tracking-widest rounded-xl hover:border-red-400 hover:text-red-600 transition-colors"
                   >
-                    계정 없애기
+                    회원 탈퇴
                   </button>
                 ) : (
                   <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
-                    <p className="text-xs font-bold text-red-600 mb-3">정말 계정을 없애기할까요? 모든 데이터가 없애기되며 복구할 수 없습니다.</p>
+                    <p className="text-xs font-bold text-red-600 mb-3">정말 탈퇴할까요? 페이지·링크·모든 데이터가 삭제되며 복구할 수 없어요.</p>
                     <div className="flex gap-2">
                       <button onClick={() => setDeleteConfirm(false)} className="flex-1 py-2 border border-gray-200 text-[10px] font-black rounded-xl hover:border-black transition-colors">취소</button>
                       <button
@@ -1010,7 +1022,7 @@ export default function AdminDashboard() {
                         disabled={deleting}
                         className="flex-1 py-2 bg-red-500 text-white text-[10px] font-black rounded-xl hover:bg-red-600 transition-colors flex items-center justify-center gap-1"
                       >
-                        {deleting ? <Loader2 size={10} className="animate-spin" /> : '없애기 확인해요'}
+                        {deleting ? <Loader2 size={10} className="animate-spin" /> : '탈퇴 확인'}
                       </button>
                     </div>
                   </div>

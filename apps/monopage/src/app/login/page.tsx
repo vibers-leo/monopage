@@ -117,10 +117,12 @@ function LoginForm() {
         {loading ? <Loader2 size={18} className="animate-spin" /> : <>로그인 <ArrowRight size={18} /></>}
       </button>
 
-      <p className="text-center text-sm text-gray-400">
-        계정이 없으신가요?{' '}
+      <div className="flex items-center justify-between text-sm">
+        <Link href="/forgot-password" className="text-gray-400 font-bold hover:text-black transition-colors">
+          비밀번호를 잊으셨나요?
+        </Link>
         <Link href="/onboard" className="font-black text-black hover:underline">무료로 시작하기</Link>
-      </p>
+      </div>
     </div>
   );
 }
