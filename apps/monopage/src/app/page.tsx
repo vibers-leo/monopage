@@ -112,6 +112,9 @@ export default function Home() {
           Monopage<span className="text-gray-300">.</span>
         </Link>
         <div className="flex items-center gap-4">
+          <Link href="/about" className="text-sm font-bold text-gray-400 hover:text-black transition-colors hidden sm:inline">
+            서비스 소개
+          </Link>
           {isLoggedIn ? (
             <Link href="/admin" className="px-5 py-2.5 bg-black text-white rounded-full text-sm font-black hover:scale-105 active:scale-95 transition-all">
               내 페이지 →
