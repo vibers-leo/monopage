@@ -38,6 +38,6 @@ class Api::V1::LinksController < ApplicationController
   private
 
   def link_params
-    params.permit(:title, :url, :icon_type, :position)
+    params.permit(:title, :url, :icon_type, :position, :favicon, :domain)
   end
 end

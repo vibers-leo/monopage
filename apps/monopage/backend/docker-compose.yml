@@ -7,8 +7,17 @@ services:
     env_file:
       - .env
     restart: unless-stopped
+    volumes:
+      - /opt/vibers-storage:/opt/vibers-storage
+    networks:
+      - npm_default
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80/up"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 60s
+
+networks:
+  npm_default:
+    external: true

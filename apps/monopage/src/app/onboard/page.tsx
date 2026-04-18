@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Camera, Sparkles, Loader2, X, Plus, Trash2, Link as LinkIcon, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { signup, setToken, updateProfile, createLink, getToken, getMyProfile } from '@/lib/api';
+import { signup, setToken, updateProfile, createLink, getToken } from '@/lib/api';
 import { detectLink, getLinkIcon, isSnsLink, type DetectedLink } from '@/lib/link-detector';
 
 async function uploadPhoto(file: File, token?: string): Promise<string> {
@@ -144,9 +144,11 @@ export default function Onboarding() {
 
       if (photoFile) {
         try {
-          const avatarUrl = await uploadPhoto(photoFile);
+          const avatarUrl = await uploadPhoto(photoFile, getToken() || undefined);
           await updateProfile({ avatar_url: avatarUrl });
-        } catch { /* 스킵 */ }
+        } catch (e) {
+          console.error('Photo upload failed:', e);
+        }
       }
 
       if (links.length > 0) {
