@@ -34,7 +34,7 @@ export function ProfileView({ username }: ProfileViewProps) {
   if (notFound) return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-3 bg-white px-5">
       <p className="font-paperlogy text-[28px] font-extrabold tracking-tight">404</p>
-      <p className="text-[#a3a3a3] text-[13px] font-medium">@{username} 페이지를 찾을 수 없어요</p>
+      <p className="text-[#a3a3a3] text-[14px] font-medium">@{username} 페이지를 찾을 수 없어요</p>
     </div>
   );
 
@@ -85,7 +85,7 @@ export function ProfileView({ username }: ProfileViewProps) {
           href="https://monopage.kr"
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-10 opacity-20 hover:opacity-40 transition-opacity text-[9px] font-medium uppercase tracking-[0.25em]"
+          className="mt-10 opacity-20 hover:opacity-40 transition-opacity text-[14px] font-medium uppercase tracking-[0.25em]"
           style={{ color: t.textMuted }}
         >
           Made with Monopage

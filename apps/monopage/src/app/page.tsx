@@ -104,19 +104,19 @@ export default function Home() {
           Monopage
         </Link>
         <div className="flex items-center gap-3 sm:gap-5">
-          <Link href="/about" className="text-[13px] font-medium text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors hidden sm:inline">
+          <Link href="/about" className="text-[14px] font-medium text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors hidden sm:inline">
             소개
           </Link>
           {isLoggedIn ? (
-            <Link href="/admin" className="px-5 py-2.5 bg-[#0a0a0a] text-white rounded-full text-[13px] font-semibold hover:bg-[#262626] transition-colors">
+            <Link href="/admin" className="px-5 py-2.5 bg-[#0a0a0a] text-white rounded-full text-[14px] font-semibold hover:bg-[#262626] transition-colors">
               내 페이지
             </Link>
           ) : (
             <>
-              <Link href="/login" className="text-[13px] font-medium text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors">
+              <Link href="/login" className="text-[14px] font-medium text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors">
                 로그인
               </Link>
-              <Link href="/onboard" className="px-5 py-2.5 bg-[#0a0a0a] text-white rounded-full text-[13px] font-semibold hover:bg-[#262626] transition-colors">
+              <Link href="/onboard" className="px-5 py-2.5 bg-[#0a0a0a] text-white rounded-full text-[14px] font-semibold hover:bg-[#262626] transition-colors">
                 시작하기
               </Link>
             </>
@@ -129,11 +129,11 @@ export default function Home() {
         {/* Left: Copy + Input */}
         <div className="flex-1 max-w-lg w-full">
           <div className="flex items-center gap-3 mb-8">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#f5f5f5] rounded-full text-[11px] font-medium text-[#a3a3a3] tracking-wide">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#f5f5f5] rounded-full text-[14px] font-medium text-[#a3a3a3] tracking-wide">
               <Sparkles size={12} className="text-[#a3a3a3]" /> Open Beta
             </span>
             {pageCount !== null && pageCount > 0 && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0a0a0a] text-white rounded-full text-[11px] font-medium">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0a0a0a] text-white rounded-full text-[14px] font-medium">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
                 {pageCount}명 참여 중
               </span>
@@ -147,7 +147,7 @@ export default function Home() {
 
           <p className="text-[15px] sm:text-[16px] text-[#525252] font-normal leading-[1.7] mb-10 max-w-[380px]" style={{ wordBreak: 'keep-all' }}>
             SNS, 포트폴리오, 네이버 플레이스 —<br className="hidden sm:block" />
-            어떤 링크든 하나의 페이지로 정리하세요.
+            어떤 링크든 하나의 페이지로 정리할 수 있어���.
           </p>
 
           {/* Link Input */}
@@ -180,7 +180,7 @@ export default function Home() {
               {links.map((link, i) => (
                 <div key={`${link.url}-${i}`} className="flex items-center gap-3 px-4 py-3 bg-[#f5f5f5] rounded-xl group">
                   <span className="text-sm shrink-0">{getLinkIcon(link.type)}</span>
-                  <p className="text-[13px] font-medium truncate flex-1">{link.handle ? `@${link.handle}` : link.label}</p>
+                  <p className="text-[14px] font-medium truncate flex-1">{link.handle ? `@${link.handle}` : link.label}</p>
                   <button onClick={() => handleRemove(i)} className="text-[#a3a3a3] hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
                     <Trash2 size={12} />
                   </button>
@@ -195,10 +195,10 @@ export default function Home() {
               {aiLoading ? (
                 <div className="flex items-center gap-2">
                   <Loader2 size={14} className="animate-spin text-white" />
-                  <span className="text-[13px] font-medium text-[#a3a3a3]">분석 중...</span>
+                  <span className="text-[14px] font-medium text-[#a3a3a3]">분석하고 있어요...</span>
                 </div>
               ) : (
-                <p className="text-[13px] font-medium text-white leading-relaxed">{aiComment}</p>
+                <p className="text-[14px] font-medium text-white leading-relaxed">{aiComment}</p>
               )}
             </div>
           )}
@@ -220,7 +220,7 @@ export default function Home() {
                 <button
                   key={hint}
                   onClick={() => { setInput(hint); inputRef.current?.focus(); }}
-                  className="px-3 py-1.5 border border-[#e5e5e5] rounded-full text-[11px] font-medium text-[#a3a3a3] hover:border-[#a3a3a3] hover:text-[#525252] transition-colors"
+                  className="px-3 py-1.5 border border-[#e5e5e5] rounded-full text-[14px] font-medium text-[#a3a3a3] hover:border-[#a3a3a3] hover:text-[#525252] transition-colors"
                 >
                   {hint}
                 </button>
@@ -288,20 +288,20 @@ export default function Home() {
       {/* Features — inverted dark section */}
       <section className="py-20 sm:py-28 bg-[#0a0a0a] text-white">
         <div className="max-w-[960px] mx-auto px-5 sm:px-8">
-          <p className="text-[11px] font-medium text-[#525252] uppercase tracking-[0.3em] text-center mb-3">Why Monopage</p>
+          <p className="text-[14px] font-medium text-[#525252] uppercase tracking-[0.3em] text-center mb-3">Why Monopage</p>
           <h2 className="font-paperlogy text-[24px] sm:text-[30px] font-extrabold text-center mb-14 tracking-tight text-white">
             한 페이지로 충분한 이유
           </h2>
           <div className="grid sm:grid-cols-3 gap-5">
             {[
-              { num: '01', title: '링크만 넣으면 끝', desc: 'SNS, 블로그, 네이버 플레이스까지 자동으로 감지하고 정리해줍니다.' },
-              { num: '02', title: '어디서든 수정', desc: '스마트폰에서도 바로 편집하고, 변경 사항이 실시간으로 반영됩니다.' },
-              { num: '03', title: '방문자 통계', desc: '누가 언제 어떤 링크를 눌렀는지 한눈에 확인할 수 있습니다.' },
+              { num: '01', title: '링크만 넣으면 끝이에요', desc: 'SNS, 블로그, 네이버 플레이스까지 자동으로 감지하고 정리해드려요.' },
+              { num: '02', title: '어디서든 수정할 수 있어요', desc: '스마트폰에서도 바로 편집하고, 변경 사항이 실시간으로 반영돼요.' },
+              { num: '03', title: '방문자 통계를 볼 수 있어요', desc: '누가 언제 어떤 링크를 눌렀는지 한눈에 확인할 수 있어요.' },
             ].map((f) => (
               <div key={f.num} className="p-6 rounded-2xl border border-white/10 hover:border-white/20 transition-all bg-white/[0.03]">
-                <p className="text-[11px] font-medium text-[#525252] mb-4 tracking-[0.2em]">{f.num}</p>
+                <p className="text-[14px] font-medium text-[#525252] mb-4 tracking-[0.2em]">{f.num}</p>
                 <h3 className="font-paperlogy text-[15px] font-bold mb-2 text-white">{f.title}</h3>
-                <p className="text-[13px] text-[#a3a3a3] leading-[1.7]">{f.desc}</p>
+                <p className="text-[14px] text-[#a3a3a3] leading-[1.7]">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -312,11 +312,11 @@ export default function Home() {
       <section className="py-20 sm:py-24">
         <div className="max-w-[560px] mx-auto px-5 sm:px-8 text-center">
           <h2 className="font-paperlogy text-[24px] sm:text-[28px] font-extrabold tracking-tight mb-4">
-            지금 바로 시작하세요
+            지금 바로 시작해보세요
           </h2>
           <p className="text-[15px] text-[#525252] mb-8 leading-[1.7]">
-            무료로 만들고, 원하는 대로 꾸미세요.<br />
-            나만의 페이지가 1분이면 완성됩니다.
+            무료로 만들고, 원하는 대로 꾸밀 수 있어요.<br />
+            나만의 페이지가 1분이면 완성돼요.
           </p>
           <Link
             href="/onboard"
@@ -330,11 +330,11 @@ export default function Home() {
       {/* Footer */}
       <footer className="py-8 border-t border-[#e5e5e5]">
         <div className="max-w-[960px] mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[12px] text-[#a3a3a3]">&copy; 2026 Monopage by Vibers</p>
+          <p className="text-[14px] text-[#a3a3a3]">&copy; 2026 Monopage by Vibers</p>
           <div className="flex items-center gap-5">
-            <Link href="/about" className="text-[12px] text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors">소개</Link>
-            <Link href="/privacy" className="text-[12px] text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors">개인정보처리방침</Link>
-            <Link href="/terms" className="text-[12px] text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors">이용약관</Link>
+            <Link href="/about" className="text-[14px] text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors">소개</Link>
+            <Link href="/privacy" className="text-[14px] text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors">개인정보처리방침</Link>
+            <Link href="/terms" className="text-[14px] text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors">이용약관</Link>
           </div>
         </div>
       </footer>

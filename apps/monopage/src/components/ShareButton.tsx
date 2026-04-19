@@ -36,25 +36,25 @@ export function ShareButton({ username, theme }: ShareButtonProps) {
       <div className="flex items-center justify-center gap-2.5">
         <button
           onClick={handleShare}
-          className="flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[11px] font-semibold transition-all hover:opacity-70"
+          className="flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[14px] font-semibold transition-all hover:opacity-70"
           style={{
             backgroundColor: t?.cardBg || '#f5f5f5',
             color: t?.textMuted || '#a3a3a3',
             border: `1px solid ${t?.cardBorder || '#e5e5e5'}`,
           }}
         >
-          <Share2 size={12} /> 공유
+          <Share2 size={14} /> 공유하기
         </button>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[11px] font-semibold transition-all hover:opacity-70"
+          className="flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[14px] font-semibold transition-all hover:opacity-70"
           style={{
             backgroundColor: t?.cardBg || '#f5f5f5',
             color: t?.textMuted || '#a3a3a3',
             border: `1px solid ${t?.cardBorder || '#e5e5e5'}`,
           }}
         >
-          <QrCode size={12} /> QR
+          <QrCode size={14} /> QR
         </button>
       </div>
 
@@ -75,8 +75,8 @@ export function ShareButton({ username, theme }: ShareButtonProps) {
             </button>
 
             <div className="text-center">
-              <h3 className="text-[15px] font-bold mb-0.5">@{username}</h3>
-              <p className="text-[12px] text-[#a3a3a3]">이 페이지를 공유하세요</p>
+              <h3 className="text-[16px] font-bold mb-0.5">@{username}</h3>
+              <p className="text-[14px] text-[#a3a3a3]">이 페이지를 공유해보세요</p>
             </div>
 
             <div className="bg-white p-3 rounded-xl border border-[#e5e5e5]">
@@ -91,12 +91,12 @@ export function ShareButton({ username, theme }: ShareButtonProps) {
 
             <button
               onClick={handleCopy}
-              className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#0a0a0a] text-white rounded-full text-[12px] font-semibold hover:bg-[#262626] transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#0a0a0a] text-white rounded-full text-[14px] font-semibold hover:bg-[#262626] transition-colors"
             >
-              {copied ? <><Check size={13} /> 복사됨!</> : <><Copy size={13} /> 링크 복사</>}
+              {copied ? <><Check size={14} /> 복사됐어요!</> : <><Copy size={14} /> 링크 복사하기</>}
             </button>
 
-            <p className="text-[11px] text-[#a3a3a3]">{url}</p>
+            <p className="text-[14px] text-[#a3a3a3]">{url}</p>
           </div>
         </div>
       )}

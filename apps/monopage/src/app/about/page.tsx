@@ -59,7 +59,7 @@ export default function AboutPage() {
                 SNS 링크, 작품, 유튜브, 쇼핑까지 — 한 페이지에.
                 <br />
                 모노페이지는 누구나 쉽게 만들 수 있는
-                나만의 공간입니다.
+                나만의 공간이에요.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3">
@@ -98,9 +98,9 @@ export default function AboutPage() {
                     <p className="text-xs text-gray-400 mb-1 font-mono">monopage.kr/@나의페이지</p>
                     <p className="text-sm font-medium text-gray-900">나만의 단 하나의 페이지</p>
                     <div className="flex gap-2 mt-3">
-                      <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] rounded-full font-medium">링크 연결</span>
-                      <span className="px-2 py-0.5 bg-gray-50 text-gray-500 text-[10px] rounded-full">5가지 테마</span>
-                      <span className="px-2 py-0.5 bg-gray-50 text-gray-500 text-[10px] rounded-full">무료</span>
+                      <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[14px] rounded-full font-medium">링크 연결</span>
+                      <span className="px-2 py-0.5 bg-gray-50 text-gray-500 text-[14px] rounded-full">5가지 테마</span>
+                      <span className="px-2 py-0.5 bg-gray-50 text-gray-500 text-[14px] rounded-full">무료</span>
                     </div>
                   </div>
                 </div>
@@ -157,8 +157,8 @@ export default function AboutPage() {
             {[
               { icon: Globe, title: '링크 모음', desc: 'SNS, 유튜브, 블로그, 쇼핑몰 — 모든 링크를 한 곳에. 파비콘과 함께 앱 아이콘처럼 깔끔하게.' },
               { icon: Palette, title: '5가지 테마', desc: 'Minimal, Dark, Warm, Forest, Sky — 내 분위기에 맞는 테마를 골라 나만의 공간으로 꾸미세요.' },
-              { icon: Share2, title: 'SNS 연동', desc: '인스타그램 계정을 연결하면 최신 피드가 페이지에 자동 반영됩니다.' },
-              { icon: BarChart3, title: '방문 통계', desc: '내 페이지를 누가 얼마나 봤는지, 어떤 링크를 클릭했는지 한눈에 확인하세요.' },
+              { icon: Share2, title: 'SNS 연동', desc: '인스타그램 계정을 연결하면 최신 피드가 페이지에 자동으로 반영돼요.' },
+              { icon: BarChart3, title: '방문 통계', desc: '내 페이지를 누가 얼마나 봤는지, 어떤 링크를 클릭했는지 한눈에 확인할 수 있어요.' },
             ].map((feature) => (
               <div
                 key={feature.title}
@@ -193,7 +193,7 @@ export default function AboutPage() {
               {
                 subtitle: 'SIMPLE',
                 title: '알고리즘이 아닌,\n나의 큐레이션',
-                desc: 'SNS의 피드는 알고리즘이 정합니다. 모노페이지는 내가 원하는 순서와 맥락으로 링크를 배치할 수 있습니다. 나를 표현하는 방식을 내가 결정하세요.',
+                desc: 'SNS의 피드는 알고리즘이 정해요. 모노페이지는 내가 원하는 순서와 맥락으로 링크를 배치할 수 있어요. 나를 표현하는 방식을 직접 결정할 수 있어요.',
                 image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=2971&auto=format&fit=crop',
                 align: 'right' as const,
               },
@@ -207,7 +207,7 @@ export default function AboutPage() {
               {
                 subtitle: 'FREE',
                 title: '무료, 지금 바로\n1분 만에',
-                desc: '카드 등록도, 복잡한 설정도 필요 없습니다. 계정 만들고 링크 추가하면 끝. 지금 바로 나만의 모노페이지를 시작하세요.',
+                desc: '카드 등록도, 복잡한 설정도 필요 없어요. 계정 만들고 링크 추가하면 끝이에요. 지금 바로 나만의 모노페이지를 시작해보세요.',
                 image: 'https://images.unsplash.com/photo-1520423465871-0866049020b7?q=80&w=2800&auto=format&fit=crop',
                 align: 'right' as const,
               },
@@ -246,7 +246,7 @@ export default function AboutPage() {
       <section className="py-32 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-100">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-6" style={{ wordBreak: 'keep-all' }}>
-            지금 시작하세요
+            지금 시작해보세요
           </h2>
           <p className="text-gray-400 text-lg mb-10 font-light">무료 · 카드 등록 불필요 · 1분 완성</p>
           <Link

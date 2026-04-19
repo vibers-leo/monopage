@@ -68,7 +68,7 @@ export const LinkCard: React.FC<LinkCardProps> = ({ title, url, favicon, domain,
         ) : favicon && !faviconError ? (
           <img src={favicon} alt="" className="w-5 h-5 object-contain" onError={() => setFaviconError(true)} />
         ) : (
-          <span style={{ color: t?.textMuted || '#a3a3a3' }} className="text-[12px] font-bold">
+          <span style={{ color: t?.textMuted || '#a3a3a3' }} className="text-[14px] font-bold">
             {(hostname?.[0] || '?').toUpperCase()}
           </span>
         )}
@@ -76,10 +76,10 @@ export const LinkCard: React.FC<LinkCardProps> = ({ title, url, favicon, domain,
 
       {/* Text */}
       <div className="flex-1 min-w-0">
-        <p className="text-[13px] font-semibold truncate leading-tight" style={{ color: t?.text || '#0a0a0a' }}>
+        <p className="text-[14px] font-semibold truncate leading-tight" style={{ color: t?.text || '#0a0a0a' }}>
           {title}
         </p>
-        <p className="text-[11px] truncate font-normal mt-0.5" style={{ color: t?.textMuted || '#a3a3a3' }}>
+        <p className="text-[14px] truncate font-normal mt-0.5" style={{ color: t?.textMuted || '#a3a3a3' }}>
           {hostname}
         </p>
       </div>

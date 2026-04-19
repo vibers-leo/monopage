@@ -196,8 +196,8 @@ export default function Onboarding() {
                         {done ? <Check size={13} /> : active ? <Loader2 size={13} className="animate-spin" /> : step}
                       </div>
                       <div className="flex-1">
-                        <p className={`text-[13px] font-semibold ${active ? 'text-white' : done ? 'text-[#0a0a0a]' : 'text-[#a3a3a3]'}`}>{label}</p>
-                        {active && <p className="text-[11px] text-[#525252] font-medium mt-0.5">{sub}</p>}
+                        <p className={`text-[14px] font-semibold ${active ? 'text-white' : done ? 'text-[#0a0a0a]' : 'text-[#a3a3a3]'}`}>{label}</p>
+                        {active && <p className="text-[14px] text-[#525252] font-medium mt-0.5">{sub}</p>}
                       </div>
                     </div>
                   );
@@ -216,7 +216,7 @@ export default function Onboarding() {
 
               {/* Link input */}
               <div>
-                <p className="text-[11px] font-semibold text-[#a3a3a3] uppercase tracking-[0.15em] mb-2">링크 추가</p>
+                <p className="text-[14px] font-semibold text-[#a3a3a3] uppercase tracking-[0.15em] mb-2">링크 추가</p>
                 <div className="flex gap-2.5">
                   <div className="flex-1 flex items-center gap-3 p-4 border border-[#e5e5e5] rounded-xl bg-[#f5f5f5] focus-within:border-[#0a0a0a] focus-within:bg-white transition-all">
                     <LinkIcon size={16} className="text-[#a3a3a3] shrink-0" />
@@ -250,12 +250,12 @@ export default function Onboarding() {
                       className="flex items-center gap-3 px-4 py-3 bg-[#f5f5f5] rounded-xl group animate-in fade-in slide-in-from-left-2 duration-200"
                     >
                       <span className="text-sm shrink-0">{getLinkIcon(link.type)}</span>
-                      <p className="text-[13px] font-medium truncate flex-1">{link.handle ? `@${link.handle}` : link.label}</p>
+                      <p className="text-[14px] font-medium truncate flex-1">{link.handle ? `@${link.handle}` : link.label}</p>
                       {isSnsLink(link.type) && (
-                        <span className="text-[9px] font-semibold text-[#0a0a0a] bg-[#e5e5e5] px-2 py-0.5 rounded-full shrink-0">SNS</span>
+                        <span className="text-[14px] font-semibold text-[#0a0a0a] bg-[#e5e5e5] px-2 py-0.5 rounded-full shrink-0">SNS</span>
                       )}
                       {link.type === 'naver_place' && (
-                        <span className="text-[9px] font-semibold text-green-700 bg-green-50 px-2 py-0.5 rounded-full shrink-0">플레이스</span>
+                        <span className="text-[14px] font-semibold text-green-700 bg-green-50 px-2 py-0.5 rounded-full shrink-0">플레이스</span>
                       )}
                       <button
                         onClick={() => handleRemoveLink(index)}
@@ -269,10 +269,10 @@ export default function Onboarding() {
               )}
 
               {snsLinks.length > 0 && (
-                <p className="text-[11px] font-medium text-[#525252]">SNS {snsLinks.length}개 감지 — 어드민에서 피드 연동 가능</p>
+                <p className="text-[14px] font-medium text-[#525252]">SNS {snsLinks.length}개를 감지했어요 — 어드민에서 피드 연동할 수 있어요</p>
               )}
               {hasNaverPlace && (
-                <p className="text-[11px] font-medium text-green-700">네이버 플레이스 감지 — 업체 정보 자동 표시</p>
+                <p className="text-[14px] font-medium text-green-700">네이버 플레이스를 감지했어요 — 업체 정보가 자동으로 표시돼요</p>
               )}
 
               <div className="border-t border-[#e5e5e5]" />
@@ -299,8 +299,8 @@ export default function Onboarding() {
                   </div>
                 )}
                 <div>
-                  <p className="text-[13px] font-semibold">{photo ? '사진 변경하기' : '프로필 사진 추가'}</p>
-                  <p className="text-[11px] text-[#a3a3a3]">선택사항</p>
+                  <p className="text-[14px] font-semibold">{photo ? '사진 변경하기' : '프로필 사진 추가'}</p>
+                  <p className="text-[14px] text-[#a3a3a3]">선택사항이에요</p>
                 </div>
               </div>
 
@@ -309,11 +309,11 @@ export default function Onboarding() {
                 <div className="flex flex-col gap-3">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-[11px] font-semibold text-[#a3a3a3] uppercase tracking-[0.15em]">페이지 주소</p>
-                      <p className="text-[11px] font-medium text-[#a3a3a3]">영문·숫자·_ 만 가능</p>
+                      <p className="text-[14px] font-semibold text-[#a3a3a3] uppercase tracking-[0.15em]">페이지 주소</p>
+                      <p className="text-[14px] font-medium text-[#a3a3a3]">영문·숫자·_ 만 가능</p>
                     </div>
                     <div className="flex items-center gap-0 border border-[#e5e5e5] rounded-xl bg-[#f5f5f5] focus-within:border-[#0a0a0a] focus-within:bg-white transition-all overflow-hidden">
-                      <span className="text-[12px] font-medium text-[#a3a3a3] pl-4 shrink-0">monopage.kr/</span>
+                      <span className="text-[14px] font-medium text-[#a3a3a3] pl-4 shrink-0">monopage.kr/</span>
                       <input
                         type="text"
                         placeholder="my_page"
@@ -322,12 +322,12 @@ export default function Onboarding() {
                         onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') })}
                       />
                     </div>
-                    <p className="text-[11px] text-[#a3a3a3] font-medium mt-2">
-                      나중에 내 도메인으로도 연결할 수 있어요 (예: mybrand.com)
+                    <p className="text-[14px] text-[#a3a3a3] font-medium mt-2">
+                      나중에 내 도메인으로 연결할 수도 있어요 (예: mybrand.com)
                     </p>
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold text-[#a3a3a3] uppercase tracking-[0.15em] mb-2">이메일</p>
+                    <p className="text-[14px] font-semibold text-[#a3a3a3] uppercase tracking-[0.15em] mb-2">이메일</p>
                     <input
                       type="email"
                       placeholder="email@example.com"
@@ -337,7 +337,7 @@ export default function Onboarding() {
                     />
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold text-[#a3a3a3] uppercase tracking-[0.15em] mb-2">비밀번호</p>
+                    <p className="text-[14px] font-semibold text-[#a3a3a3] uppercase tracking-[0.15em] mb-2">비밀번호</p>
                     <input
                       type="password"
                       placeholder="6자 이상"
@@ -350,7 +350,7 @@ export default function Onboarding() {
                 </div>
               )}
 
-              {error && <p className="text-red-500 text-[12px] font-medium text-center">{error}</p>}
+              {error && <p className="text-red-500 text-[14px] font-medium text-center">{error}</p>}
 
               {/* CTA */}
               <button
@@ -361,8 +361,8 @@ export default function Onboarding() {
                 {links.length > 0 ? '페이지 만들기' : '내 페이지 만들기'}
               </button>
 
-              <p className="text-[11px] text-[#a3a3a3] text-center font-medium">
-                링크는 나중에 어드민에서 추가/수정할 수 있어요
+              <p className="text-[14px] text-[#a3a3a3] text-center font-medium">
+                링크는 나중에 어드민에서 자유롭게 수정할 수 있어요
               </p>
             </div>
           )}

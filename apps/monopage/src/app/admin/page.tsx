@@ -322,7 +322,7 @@ export default function AdminDashboard() {
             >
               ☕ Buy Me a Coffee
             </a>
-            <p className="text-[10px] text-gray-300 font-medium">후원 후 vibers@vibers.co.kr 로 문의해주세요</p>
+            <p className="text-[14px] text-gray-300 font-medium">후원 후 vibers@vibers.co.kr 로 문의해주시면 돼요</p>
             <button onClick={() => setShowSupportModal(false)} className="mt-4 text-xs text-gray-300 hover:text-black transition-colors">닫기</button>
           </div>
         </div>
@@ -350,7 +350,7 @@ export default function AdminDashboard() {
               <div className="relative">
                 <button
                   onClick={() => setShowUserMenu(v => !v)}
-                  className="flex items-center gap-2 text-[10px] font-bold text-gray-300 hover:text-black transition-colors"
+                  className="flex items-center gap-2 text-[14px] font-bold text-gray-300 hover:text-black transition-colors"
                 >
                   <span>monopage.kr/{profile.username}</span>
                   <ChevronDown size={12} />
@@ -370,7 +370,7 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em] mb-2">내 모노페이지</p>
+            <p className="text-[14px] font-black text-gray-300 uppercase tracking-[0.3em] mb-2">내 모노페이지</p>
             <h1 className="text-2xl font-black mb-6">페이지 목록</h1>
 
             <div className="grid grid-cols-2 gap-3 flex-1 content-start">
@@ -392,10 +392,10 @@ export default function AdminDashboard() {
                   <div>
                     <div className="flex items-center gap-1.5 mb-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0"></span>
-                      <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest">Active</span>
+                      <span className="text-[14px] font-black text-gray-300 uppercase tracking-widest">Active</span>
                     </div>
                     <p className="font-black text-xs">@{profile.username}</p>
-                    <p className="text-[10px] text-gray-400 font-medium mt-0.5 truncate">{profile.bio || '소개 없음'}</p>
+                    <p className="text-[14px] text-gray-400 font-medium mt-0.5 truncate">{profile.bio || '소개 없음'}</p>
                   </div>
                 </div>
               </button>
@@ -410,7 +410,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="text-center">
                   <p className="text-xs font-black text-gray-300">새 페이지</p>
-                  <p className="text-[10px] text-gray-200 font-medium mt-0.5">후원 후 문의</p>
+                  <p className="text-[14px] text-gray-200 font-medium mt-0.5">후원 후 문의</p>
                 </div>
               </button>
             </div>
@@ -439,7 +439,7 @@ export default function AdminDashboard() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[14px] font-black uppercase tracking-widest transition-all ${
                 activeTab === tab.key
                   ? 'bg-black text-white shadow-sm'
                   : 'text-gray-300 hover:text-black'
@@ -456,7 +456,7 @@ export default function AdminDashboard() {
           {activeTab === 'profile' && (
             <>
               <section>
-                <label className="block text-[10px] font-black text-gray-300 uppercase mb-3 tracking-widest">Profile Photo</label>
+                <label className="block text-[14px] font-black text-gray-300 uppercase mb-3 tracking-widest">Profile Photo</label>
                 <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
                 <div
                   onClick={() => avatarInputRef.current?.click()}
@@ -478,7 +478,7 @@ export default function AdminDashboard() {
               </section>
 
               <section>
-                <label className="block text-[10px] font-black text-gray-300 uppercase mb-3 tracking-widest">내 페이지 주소</label>
+                <label className="block text-[14px] font-black text-gray-300 uppercase mb-3 tracking-widest">내 페이지 주소</label>
                 <div className="flex items-center border border-gray-100 rounded-2xl focus-within:border-black transition-colors overflow-hidden">
                   <span className="px-3 py-4 text-xs text-gray-300 font-bold bg-gray-50 border-r border-gray-100 shrink-0">monopage.kr/</span>
                   <input
@@ -492,11 +492,11 @@ export default function AdminDashboard() {
                     maxLength={30}
                   />
                 </div>
-                <p className="text-[10px] text-gray-300 font-medium mt-1.5">영문, 숫자, -, _ 만 사용 가능</p>
+                <p className="text-[14px] text-gray-300 font-medium mt-1.5">영문, 숫자, -, _ 만 사용할 수 있어요</p>
               </section>
 
               <section>
-                <label className="block text-[10px] font-black text-gray-300 uppercase mb-3 tracking-widest">Bio</label>
+                <label className="block text-[14px] font-black text-gray-300 uppercase mb-3 tracking-widest">Bio</label>
                 <textarea
                   value={profile.bio}
                   onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
@@ -506,7 +506,7 @@ export default function AdminDashboard() {
               </section>
 
               <section>
-                <label className="block text-[10px] font-black text-gray-300 uppercase mb-3 tracking-widest">SNS 연결</label>
+                <label className="block text-[14px] font-black text-gray-300 uppercase mb-3 tracking-widest">SNS 연결</label>
                 <div className="flex flex-col gap-2">
                   {(() => {
                     const igAccount = socialAccounts.find(a => a.provider === 'instagram');
@@ -518,7 +518,7 @@ export default function AdminDashboard() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-black">Instagram 연결됨</p>
-                            <p className="text-[10px] text-pink-500 font-bold">@{igAccount.metadata?.username || igAccount.uid}</p>
+                            <p className="text-[14px] text-pink-500 font-bold">@{igAccount.metadata?.username || igAccount.uid}</p>
                           </div>
                           <button
                             onClick={async () => {
@@ -526,7 +526,7 @@ export default function AdminDashboard() {
                               await deleteSocialAccount(igAccount.id);
                               setSocialAccounts(sa => sa.filter(a => a.id !== igAccount.id));
                             }}
-                            className="text-[10px] font-bold text-gray-300 hover:text-red-500 transition-colors"
+                            className="text-[14px] font-bold text-gray-300 hover:text-red-500 transition-colors"
                           >
                             해제
                           </button>
@@ -544,12 +544,12 @@ export default function AdminDashboard() {
                           </div>
                           <div className="flex-1">
                             <p className="text-xs font-black">Instagram 연결하기</p>
-                            <p className="text-[10px] text-gray-400">게시물이 자동으로 페이지에 표시돼요</p>
+                            <p className="text-[14px] text-gray-400">게시물이 자동으로 페이지에 표시돼요</p>
                           </div>
                           <ArrowRight size={14} className="text-gray-300 group-hover:text-pink-400 transition-colors" />
                         </a>
-                        <p className="text-[9px] text-gray-300 px-1">
-                          Instagram 앱에서 "허용"을 누르면 최근 게시물 20개가 자동으로 동기화됩니다.
+                        <p className="text-[14px] text-gray-300 px-1">
+                          Instagram 앱에서 "허용"을 누르면 최근 게시물 20개가 자동으로 동기화돼요.
                         </p>
                       </>
                     );
@@ -563,10 +563,10 @@ export default function AdminDashboard() {
           {activeTab === 'links' && (
             <section>
               <div className="flex justify-between items-center mb-4">
-                <label className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Links</label>
+                <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest">Links</label>
                 <button
                   onClick={() => setNewLink({ title: '', url: '' })}
-                  className="flex items-center gap-1 text-[10px] font-black text-black hover:opacity-50 transition-opacity uppercase tracking-widest"
+                  className="flex items-center gap-1 text-[14px] font-black text-black hover:opacity-50 transition-opacity uppercase tracking-widest"
                 >
                   <Plus size={12} /> Add
                 </button>
@@ -599,13 +599,13 @@ export default function AdminDashboard() {
                         <div className="flex gap-2 justify-end">
                           <button
                             onClick={() => handleDeleteLink(link.id)}
-                            className="flex items-center gap-1 text-[10px] font-black text-red-400 hover:text-red-600 transition-colors"
+                            className="flex items-center gap-1 text-[14px] font-black text-red-400 hover:text-red-600 transition-colors"
                           >
                             <Trash2 size={10} /> 없애기
                           </button>
                           <button
                             onClick={() => handleUpdateLink(link.id)}
-                            className="flex items-center gap-1 text-[10px] font-black text-black hover:opacity-50 transition-opacity"
+                            className="flex items-center gap-1 text-[14px] font-black text-black hover:opacity-50 transition-opacity"
                           >
                             <Check size={10} /> 완료했어요
                           </button>
@@ -646,13 +646,13 @@ export default function AdminDashboard() {
                       className="text-xs font-medium bg-white border border-gray-100 rounded-xl px-3 py-2 outline-none focus:border-black transition-colors"
                     />
                     <div className="flex gap-2 justify-end">
-                      <button onClick={() => setNewLink(null)} className="flex items-center gap-1 text-[10px] font-black text-gray-400 hover:text-black transition-colors">
+                      <button onClick={() => setNewLink(null)} className="flex items-center gap-1 text-[14px] font-black text-gray-400 hover:text-black transition-colors">
                         <X size={10} /> 취소
                       </button>
                       <button
                         onClick={handleAddLink}
                         disabled={!newLink.title || !newLink.url}
-                        className="flex items-center gap-1 text-[10px] font-black text-black disabled:opacity-30 hover:opacity-50 transition-opacity"
+                        className="flex items-center gap-1 text-[14px] font-black text-black disabled:opacity-30 hover:opacity-50 transition-opacity"
                       >
                         <Check size={10} /> 추가
                       </button>
@@ -667,11 +667,11 @@ export default function AdminDashboard() {
           {activeTab === 'portfolio' && (
             <section>
               <div className="flex justify-between items-center mb-4">
-                <label className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Portfolio</label>
+                <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest">Portfolio</label>
                 <button
                   onClick={() => portfolioInputRef.current?.click()}
                   disabled={uploadingPortfolio}
-                  className="flex items-center gap-1 text-[10px] font-black text-black hover:opacity-50 transition-opacity uppercase tracking-widest disabled:opacity-30"
+                  className="flex items-center gap-1 text-[14px] font-black text-black hover:opacity-50 transition-opacity uppercase tracking-widest disabled:opacity-30"
                 >
                   {uploadingPortfolio ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />} Add
                 </button>
@@ -684,7 +684,7 @@ export default function AdminDashboard() {
                   className="w-full py-12 border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center gap-3 cursor-pointer hover:border-black transition-colors"
                 >
                   <Image size={24} className="text-gray-200" />
-                  <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">이미지를 올려보세요</p>
+                  <p className="text-[14px] font-black text-gray-300 uppercase tracking-widest">이미지를 올려보세요</p>
                 </div>
               )}
 
@@ -719,13 +719,13 @@ export default function AdminDashboard() {
                         <div className="flex gap-2 justify-end">
                           <button
                             onClick={() => handleDeletePortfolio(item.id)}
-                            className="flex items-center gap-1 text-[10px] font-black text-red-400 hover:text-red-600 transition-colors"
+                            className="flex items-center gap-1 text-[14px] font-black text-red-400 hover:text-red-600 transition-colors"
                           >
                             <Trash2 size={10} /> 없애기
                           </button>
                           <button
                             onClick={() => handleUpdatePortfolio(item.id)}
-                            className="flex items-center gap-1 text-[10px] font-black text-black hover:opacity-50 transition-opacity"
+                            className="flex items-center gap-1 text-[14px] font-black text-black hover:opacity-50 transition-opacity"
                           >
                             <Check size={10} /> 완료했어요
                           </button>
@@ -759,7 +759,7 @@ export default function AdminDashboard() {
             <section>
               {/* 테마 선택 */}
               <div className="mb-6">
-                <label className="text-[10px] font-black text-gray-300 uppercase tracking-widest flex items-center gap-1 mb-3">
+                <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest flex items-center gap-1 mb-3">
                   <Palette size={10} /> 테마
                 </label>
                 <div className="grid grid-cols-5 gap-2">
@@ -785,7 +785,7 @@ export default function AdminDashboard() {
                           </div>
                         )}
                       </div>
-                      <span className="text-[9px] font-bold text-gray-500 group-hover:text-black transition-colors">
+                      <span className="text-[14px] font-bold text-gray-500 group-hover:text-black transition-colors">
                         {theme.label}
                       </span>
                     </button>
@@ -796,7 +796,7 @@ export default function AdminDashboard() {
               <div className="h-px bg-gray-100 mb-5" />
 
               <div className="flex justify-between items-center mb-4">
-                <label className="text-[10px] font-black text-gray-300 uppercase tracking-widest">페이지 섹션</label>
+                <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest">페이지 섹션</label>
                 <div className="flex gap-1">
                   {[
                     { type: 'text' as const, label: 'Text', icon: <Type size={10} /> },
@@ -808,7 +808,7 @@ export default function AdminDashboard() {
                         const id = `${block.type}_${Date.now()}`;
                         setSections([...sections, { id, type: block.type, order: sections.length, content: block.type === 'text' ? { text: '' } : {} }]);
                       }}
-                      className="flex items-center gap-1 px-2 py-1 text-[9px] font-black text-gray-400 border border-gray-100 rounded-lg hover:border-black hover:text-black transition-colors"
+                      className="flex items-center gap-1 px-2 py-1 text-[14px] font-black text-gray-400 border border-gray-100 rounded-lg hover:border-black hover:text-black transition-colors"
                     >
                       {block.icon} {block.label}
                     </button>
@@ -860,7 +860,7 @@ export default function AdminDashboard() {
                         value={section.content?.text || ''}
                         onChange={(e) => setSections(sections.map(s => s.id === section.id ? { ...s, content: { text: e.target.value } } : s))}
                         placeholder="텍스트 입력..."
-                        className="text-[10px] bg-white border border-gray-100 rounded-lg px-2 py-1 w-32 outline-none focus:border-black transition-colors"
+                        className="text-[14px] bg-white border border-gray-100 rounded-lg px-2 py-1 w-32 outline-none focus:border-black transition-colors"
                       />
                     )}
                     {!['header', 'links', 'portfolio'].includes(section.type) && (
@@ -874,7 +874,7 @@ export default function AdminDashboard() {
                   </div>
                 ))}
               </div>
-              <p className="text-[9px] text-gray-300 mt-3 text-center">섹션 순서를 변경하면 퍼블릭 페이지에 반영돼요. 저장 버튼을 눌러주세요.</p>
+              <p className="text-[14px] text-gray-300 mt-3 text-center">섹션 순서를 변경하면 퍼블릭 페이지에 반영돼요. 저장 버튼을 눌러주세요</p>
             </section>
           )}
 
@@ -891,21 +891,21 @@ export default function AdminDashboard() {
                   <div className="grid grid-cols-3 gap-3">
                     <div className="p-4 bg-gray-50 rounded-2xl text-center">
                       <p className="text-2xl font-black">{analytics.total_views}</p>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">총 조회</p>
+                      <p className="text-[14px] font-black text-gray-400 uppercase tracking-widest mt-1">총 조회</p>
                     </div>
                     <div className="p-4 bg-gray-50 rounded-2xl text-center">
                       <p className="text-2xl font-black">{analytics.today_views}</p>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">오늘</p>
+                      <p className="text-[14px] font-black text-gray-400 uppercase tracking-widest mt-1">오늘</p>
                     </div>
                     <div className="p-4 bg-gray-50 rounded-2xl text-center">
                       <p className="text-2xl font-black">{analytics.total_clicks}</p>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">클릭</p>
+                      <p className="text-[14px] font-black text-gray-400 uppercase tracking-widest mt-1">클릭</p>
                     </div>
                   </div>
 
                   {/* Daily Chart (7 days) */}
                   <div>
-                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3">최근 7일</p>
+                    <p className="text-[14px] font-black text-gray-300 uppercase tracking-widest mb-3">최근 7일</p>
                     <div className="flex items-end gap-1 h-24">
                       {(() => {
                         const days = [];
@@ -934,7 +934,7 @@ export default function AdminDashboard() {
                   {/* Link Clicks Ranking */}
                   {analytics.link_clicks.length > 0 && (
                     <div>
-                      <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3">
+                      <p className="text-[14px] font-black text-gray-300 uppercase tracking-widest mb-3">
                         <MousePointerClick size={10} className="inline mr-1" />
                         링크별 클릭
                       </p>
@@ -953,7 +953,7 @@ export default function AdminDashboard() {
                   {analytics.total_views === 0 && analytics.total_clicks === 0 && (
                     <div className="text-center py-8">
                       <p className="text-sm text-gray-300 font-bold">아직 방문자가 없어요</p>
-                      <p className="text-[10px] text-gray-200 mt-1">페이지를 공유하면 여기에 통계가 나타나요</p>
+                      <p className="text-[14px] text-gray-200 mt-1">페이지를 공유하면 여기에 통계가 나타나요</p>
                     </div>
                   )}
                 </div>
@@ -966,13 +966,13 @@ export default function AdminDashboard() {
           {/* ===== SETTINGS TAB ===== */}
           {activeTab === 'settings' && (
             <section>
-              <label className="block text-[10px] font-black text-gray-300 uppercase mb-4 tracking-widest flex items-center gap-1.5">
+              <label className="block text-[14px] font-black text-gray-300 uppercase mb-4 tracking-widest flex items-center gap-1.5">
                 <Shield size={10} /> Account
               </label>
 
               {connections && (
                 <div className="mb-4 p-3 bg-gray-50 rounded-2xl">
-                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">소셜 로그인 연동</p>
+                  <p className="text-[14px] font-black text-gray-400 uppercase tracking-widest mb-2">소셜 로그인 연동</p>
                   {connections.provider ? (
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold capitalize">
@@ -990,13 +990,13 @@ export default function AdminDashboard() {
                             finally { setDisconnecting(false); }
                           }}
                           disabled={disconnecting}
-                          className="flex items-center gap-1 text-[10px] font-black text-red-400 hover:text-red-600 transition-colors"
+                          className="flex items-center gap-1 text-[14px] font-black text-red-400 hover:text-red-600 transition-colors"
                         >
                           {disconnecting ? <Loader2 size={10} className="animate-spin" /> : <Unlink size={10} />} 해제
                         </button>
                       )}
                       {!connections.has_password && (
-                        <span className="text-[9px] text-gray-400">(비밀번호 설정 후 해제 가능)</span>
+                        <span className="text-[14px] text-gray-400">(비밀번호 설정 후 해제 가능)</span>
                       )}
                     </div>
                   ) : (
@@ -1007,7 +1007,7 @@ export default function AdminDashboard() {
                           { provider: 'kakao', label: '카카오', url: `https://kauth.kakao.com/oauth/authorize?client_id=3a4930ab39652ad5f387496697bf66ba&redirect_uri=${encodeURIComponent('https://monopage.kr/auth/kakao/callback')}&response_type=code` },
                           { provider: 'google', label: '구글', url: `https://accounts.google.com/o/oauth2/v2/auth?client_id=534035148832-6b2lf74coj33s9m9cmdh509tktcaa7fn.apps.googleusercontent.com&redirect_uri=${encodeURIComponent('https://monopage.kr/auth/google/callback')}&response_type=code&scope=openid%20email%20profile` },
                         ].map(s => (
-                          <a key={s.provider} href={s.url} className="px-3 py-1.5 border border-gray-200 rounded-xl text-[10px] font-black hover:border-black transition-colors">
+                          <a key={s.provider} href={s.url} className="px-3 py-1.5 border border-gray-200 rounded-xl text-[14px] font-black hover:border-black transition-colors">
                             {s.label}로 연동하기
                           </a>
                         ))}
@@ -1019,7 +1019,7 @@ export default function AdminDashboard() {
 
               {connections && (connections.has_password || !connections.provider) && (
                 <div className="mb-4">
-                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">비밀번호 변경</p>
+                  <p className="text-[14px] font-black text-gray-400 uppercase tracking-widest mb-2">비밀번호 변경</p>
                   <div className="flex flex-col gap-2">
                     <input
                       type="password"
@@ -1042,20 +1042,20 @@ export default function AdminDashboard() {
                       onChange={e => setPwForm({ ...pwForm, confirm: e.target.value })}
                       className="w-full px-3 py-2.5 text-xs font-medium border border-gray-100 rounded-xl outline-none focus:border-black transition-colors"
                     />
-                    {pwMsg && <p className={`text-[10px] font-bold ${pwMsg.includes('변경') ? 'text-green-500' : 'text-red-500'}`}>{pwMsg}</p>}
+                    {pwMsg && <p className={`text-[14px] font-bold ${pwMsg.includes('변경') ? 'text-green-500' : 'text-red-500'}`}>{pwMsg}</p>}
                     <button
                       onClick={async () => {
-                        if (pwForm.next !== pwForm.confirm) { setPwMsg('새 비밀번호가 일치하지 않습니다'); return; }
+                        if (pwForm.next !== pwForm.confirm) { setPwMsg('새 비밀번호가 일치하지 않아요'); return; }
                         setPwSaving(true); setPwMsg(null);
                         try {
                           await changePassword(pwForm.current, pwForm.next);
-                          setPwMsg('비밀번호가 변경되었습니다');
+                          setPwMsg('비밀번호가 변경됐어요');
                           setPwForm({ current: '', next: '', confirm: '' });
                         } catch (e: any) { setPwMsg(e.message); }
                         finally { setPwSaving(false); }
                       }}
                       disabled={pwSaving || !pwForm.current || !pwForm.next || !pwForm.confirm}
-                      className="w-full py-2.5 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-xl disabled:opacity-30 flex items-center justify-center gap-1"
+                      className="w-full py-2.5 bg-black text-white text-[14px] font-black uppercase tracking-widest rounded-xl disabled:opacity-30 flex items-center justify-center gap-1"
                     >
                       {pwSaving ? <Loader2 size={10} className="animate-spin" /> : '변경하기'}
                     </button>
@@ -1064,21 +1064,21 @@ export default function AdminDashboard() {
               )}
 
               <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1">
+                <p className="text-[14px] font-black text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1">
                   <AlertTriangle size={10} /> 위험 구역
                 </p>
                 {!deleteConfirm ? (
                   <button
                     onClick={() => setDeleteConfirm(true)}
-                    className="w-full py-2.5 border border-red-200 text-red-400 text-[10px] font-black uppercase tracking-widest rounded-xl hover:border-red-400 hover:text-red-600 transition-colors"
+                    className="w-full py-2.5 border border-red-200 text-red-400 text-[14px] font-black uppercase tracking-widest rounded-xl hover:border-red-400 hover:text-red-600 transition-colors"
                   >
                     회원 탈퇴
                   </button>
                 ) : (
                   <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
-                    <p className="text-xs font-bold text-red-600 mb-3">정말 탈퇴할까요? 페이지·링크·모든 데이터가 삭제되며 복구할 수 없어요.</p>
+                    <p className="text-xs font-bold text-red-600 mb-3">정말 탈퇴하시겠어요? 페이지·링크·모든 데이터가 삭제되고 복구할 수 없어요.</p>
                     <div className="flex gap-2">
-                      <button onClick={() => setDeleteConfirm(false)} className="flex-1 py-2 border border-gray-200 text-[10px] font-black rounded-xl hover:border-black transition-colors">취소</button>
+                      <button onClick={() => setDeleteConfirm(false)} className="flex-1 py-2 border border-gray-200 text-[14px] font-black rounded-xl hover:border-black transition-colors">취소</button>
                       <button
                         onClick={async () => {
                           setDeleting(true);
@@ -1089,7 +1089,7 @@ export default function AdminDashboard() {
                           } catch (e: any) { setError(e.message); setDeleting(false); }
                         }}
                         disabled={deleting}
-                        className="flex-1 py-2 bg-red-500 text-white text-[10px] font-black rounded-xl hover:bg-red-600 transition-colors flex items-center justify-center gap-1"
+                        className="flex-1 py-2 bg-red-500 text-white text-[14px] font-black rounded-xl hover:bg-red-600 transition-colors flex items-center justify-center gap-1"
                       >
                         {deleting ? <Loader2 size={10} className="animate-spin" /> : '탈퇴 확인'}
                       </button>

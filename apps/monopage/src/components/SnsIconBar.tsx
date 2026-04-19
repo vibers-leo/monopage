@@ -60,9 +60,9 @@ export function SnsIconBar({ links, style = 'circle', theme }: SnsIconBarProps) 
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
             }}
           >
-            <span className="text-[14px] leading-none">{sns.icon}</span>
+            <span className="text-[16px] leading-none">{sns.icon}</span>
             {style === 'pill' && (
-              <span className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: t?.textMuted || '#a3a3a3' }}>
+              <span className="text-[14px] font-semibold uppercase tracking-wide" style={{ color: t?.textMuted || '#a3a3a3' }}>
                 {link.snsType}
               </span>
             )}
