@@ -67,7 +67,7 @@ export function ProfileView({ username }: ProfileViewProps) {
         <div className="fixed inset-0 pointer-events-none" style={{ background: t.bgGradient }} />
       )}
 
-      <div className="relative max-w-[420px] mx-auto px-5 sm:px-6 pt-12 pb-16 flex flex-col items-center">
+      <div className="relative max-w-[440px] mx-auto px-6 sm:px-8 pt-12 pb-20 flex flex-col items-center">
         <SectionRenderer
           sections={sections}
           profile={profile}

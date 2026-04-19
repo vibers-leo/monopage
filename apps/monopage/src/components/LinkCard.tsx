@@ -76,7 +76,7 @@ export const LinkCard: React.FC<LinkCardProps> = ({ title, url, favicon, domain,
 
       {/* Text */}
       <div className="flex-1 min-w-0">
-        <p className="text-[14px] font-semibold truncate leading-tight" style={{ color: t?.text || '#0a0a0a' }}>
+        <p className="text-[15px] font-semibold truncate leading-tight" style={{ color: t?.text || '#0a0a0a' }}>
           {title}
         </p>
         <p className="text-[14px] truncate font-normal mt-0.5" style={{ color: t?.textMuted || '#a3a3a3' }}>

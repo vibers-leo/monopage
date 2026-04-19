@@ -177,8 +177,8 @@ export default function Onboarding() {
           {isGenerating ? (
             <div className="flex flex-col gap-8 animate-in fade-in zoom-in-95 duration-300">
               <div>
-                <h2 className="font-paperlogy text-[22px] font-extrabold tracking-tight leading-tight mb-1">페이지 만드는 중<span className="animate-pulse">...</span></h2>
-                <p className="text-[#a3a3a3] text-[14px] font-medium">잠깐만요, 금방 돼요</p>
+                <h2 className="font-paperlogy text-[26px] font-extrabold tracking-tight leading-tight mb-1">페이지 만드는 중<span className="animate-pulse">...</span></h2>
+                <p className="text-[#a3a3a3] text-[16px] font-medium">잠깐만요, 금방 돼요</p>
               </div>
 
               <div className="flex flex-col gap-3">
@@ -208,10 +208,10 @@ export default function Onboarding() {
             <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
               {/* Header */}
               <div className="flex flex-col gap-2">
-                <h1 className="font-paperlogy text-[26px] font-extrabold tracking-tight leading-snug">
+                <h1 className="font-paperlogy text-[28px] sm:text-[32px] font-extrabold tracking-tight leading-snug">
                   내 페이지 만들기
                 </h1>
-                <p className="text-[14px] text-[#a3a3a3]">링크 추가하고, 주소만 정하면 바로 완성돼요.</p>
+                <p className="text-[16px] text-[#a3a3a3]">링크 추가하고, 주소만 정하면 바로 완성돼요.</p>
               </div>
 
               {/* Link input */}
@@ -250,7 +250,7 @@ export default function Onboarding() {
                       className="flex items-center gap-3 px-4 py-3 bg-[#f5f5f5] rounded-xl group animate-in fade-in slide-in-from-left-2 duration-200"
                     >
                       <span className="text-sm shrink-0">{getLinkIcon(link.type)}</span>
-                      <p className="text-[14px] font-medium truncate flex-1">{link.handle ? `@${link.handle}` : link.label}</p>
+                      <p className="text-[15px] font-medium truncate flex-1">{link.handle ? `@${link.handle}` : link.label}</p>
                       {isSnsLink(link.type) && (
                         <span className="text-[14px] font-semibold text-[#0a0a0a] bg-[#e5e5e5] px-2 py-0.5 rounded-full shrink-0">SNS</span>
                       )}
@@ -299,7 +299,7 @@ export default function Onboarding() {
                   </div>
                 )}
                 <div>
-                  <p className="text-[14px] font-semibold">{photo ? '사진 변경하기' : '프로필 사진 추가'}</p>
+                  <p className="text-[15px] font-semibold">{photo ? '사진 변경하기' : '프로필 사진 추가'}</p>
                   <p className="text-[14px] text-[#a3a3a3]">선택사항이에요</p>
                 </div>
               </div>
@@ -355,7 +355,7 @@ export default function Onboarding() {
               {/* CTA */}
               <button
                 onClick={handleCreate}
-                className="w-full py-4.5 bg-[#0a0a0a] text-white rounded-full font-semibold text-[14px] flex items-center justify-center gap-2 hover:bg-[#262626] active:scale-[0.98] transition-all"
+                className="w-full py-4 bg-[#0a0a0a] text-white rounded-full font-semibold text-[16px] flex items-center justify-center gap-2 hover:bg-[#262626] active:scale-[0.98] transition-all"
               >
                 <Sparkles size={16} />
                 {links.length > 0 ? '페이지 만들기' : '내 페이지 만들기'}

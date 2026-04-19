@@ -100,23 +100,23 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-white text-[#0a0a0a]">
       {/* Navbar */}
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-[#e5e5e5] px-5 sm:px-8 py-4 flex justify-between items-center">
-        <Link href="/" className="font-paperlogy font-extrabold text-[17px] tracking-tight text-[#0a0a0a]">
+        <Link href="/" className="font-paperlogy font-extrabold text-[18px] tracking-tight text-[#0a0a0a]">
           Monopage
         </Link>
         <div className="flex items-center gap-3 sm:gap-5">
-          <Link href="/about" className="text-[14px] font-medium text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors hidden sm:inline">
+          <Link href="/about" className="text-[15px] font-medium text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors hidden sm:inline">
             소개
           </Link>
           {isLoggedIn ? (
-            <Link href="/admin" className="px-5 py-2.5 bg-[#0a0a0a] text-white rounded-full text-[14px] font-semibold hover:bg-[#262626] transition-colors">
+            <Link href="/admin" className="px-5 py-2.5 bg-[#0a0a0a] text-white rounded-full text-[15px] font-semibold hover:bg-[#262626] transition-colors">
               내 페이지
             </Link>
           ) : (
             <>
-              <Link href="/login" className="text-[14px] font-medium text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors">
+              <Link href="/login" className="text-[15px] font-medium text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors">
                 로그인
               </Link>
-              <Link href="/onboard" className="px-5 py-2.5 bg-[#0a0a0a] text-white rounded-full text-[14px] font-semibold hover:bg-[#262626] transition-colors">
+              <Link href="/onboard" className="px-5 py-2.5 bg-[#0a0a0a] text-white rounded-full text-[15px] font-semibold hover:bg-[#262626] transition-colors">
                 시작하기
               </Link>
             </>
@@ -125,40 +125,40 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16 px-5 sm:px-8 py-16 sm:py-20 lg:py-0 max-w-[1100px] mx-auto w-full lg:min-h-[calc(100vh-65px)]">
+      <section className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20 px-5 sm:px-8 py-14 sm:py-20 lg:py-0 max-w-[1100px] mx-auto w-full lg:min-h-[calc(100vh-65px)]">
         {/* Left: Copy + Input */}
         <div className="flex-1 max-w-lg w-full">
-          <div className="flex items-center gap-3 mb-8">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#f5f5f5] rounded-full text-[14px] font-medium text-[#a3a3a3] tracking-wide">
-              <Sparkles size={12} className="text-[#a3a3a3]" /> Open Beta
+          <div className="flex items-center gap-3 mb-6">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#f5f5f5] rounded-full text-[13px] font-medium text-[#a3a3a3]">
+              <Sparkles size={13} className="text-[#a3a3a3]" /> Open Beta
             </span>
             {pageCount !== null && pageCount > 0 && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0a0a0a] text-white rounded-full text-[14px] font-medium">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0a0a0a] text-white rounded-full text-[13px] font-medium">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
                 {pageCount}명 참여 중
               </span>
             )}
           </div>
 
-          <h1 className="font-paperlogy text-[32px] sm:text-[40px] lg:text-[48px] font-extrabold tracking-tight leading-[1.1] mb-5" style={{ wordBreak: 'keep-all' }}>
+          <h1 className="font-paperlogy text-[36px] sm:text-[44px] lg:text-[52px] font-extrabold tracking-tight leading-[1.08] mb-5" style={{ wordBreak: 'keep-all' }}>
             링크 하나로,<br />
-            <span className="text-[#a3a3a3]">나만의 페이지.</span>
+            <span className="text-[#c4c4c4]">나만의 페이지.</span>
           </h1>
 
-          <p className="text-[15px] sm:text-[16px] text-[#525252] font-normal leading-[1.7] mb-10 max-w-[380px]" style={{ wordBreak: 'keep-all' }}>
+          <p className="text-[16px] sm:text-[17px] text-[#525252] font-normal leading-[1.7] mb-10 max-w-[400px]" style={{ wordBreak: 'keep-all' }}>
             SNS, 포트폴리오, 네이버 플레이스 —<br className="hidden sm:block" />
-            어떤 링크든 하나의 페이지로 정리할 수 있어���.
+            어떤 링크든 하나의 페이지로 정리할 수 있어요.
           </p>
 
           {/* Link Input */}
           <div className="flex gap-2.5 mb-4">
-            <div className="flex-1 flex items-center gap-3 px-4 py-3.5 border border-[#e5e5e5] rounded-xl focus-within:border-[#0a0a0a] transition-colors bg-white">
-              <LinkIcon size={16} className="text-[#a3a3a3] shrink-0" />
+            <div className="flex-1 flex items-center gap-3 px-4 py-4 border border-[#e5e5e5] rounded-2xl focus-within:border-[#0a0a0a] transition-colors bg-white">
+              <LinkIcon size={18} className="text-[#a3a3a3] shrink-0" />
               <input
                 ref={inputRef}
                 type="text"
                 placeholder="링크를 붙여넣어 보세요"
-                className="flex-1 text-[14px] font-medium outline-none bg-transparent placeholder:text-[#a3a3a3]"
+                className="flex-1 text-[15px] font-medium outline-none bg-transparent placeholder:text-[#a3a3a3]"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
@@ -168,9 +168,9 @@ export default function Home() {
             <button
               onClick={handleAdd}
               disabled={!input.trim()}
-              className="w-12 h-12 bg-[#0a0a0a] text-white rounded-xl flex items-center justify-center shrink-0 disabled:opacity-20 hover:bg-[#262626] active:scale-95 transition-all"
+              className="w-[52px] h-[52px] bg-[#0a0a0a] text-white rounded-2xl flex items-center justify-center shrink-0 disabled:opacity-20 hover:bg-[#262626] active:scale-95 transition-all"
             >
-              <Plus size={18} />
+              <Plus size={20} />
             </button>
           </div>
 
@@ -178,11 +178,11 @@ export default function Home() {
           {links.length > 0 && (
             <div className="flex flex-col gap-1.5 mb-5">
               {links.map((link, i) => (
-                <div key={`${link.url}-${i}`} className="flex items-center gap-3 px-4 py-3 bg-[#f5f5f5] rounded-xl group">
-                  <span className="text-sm shrink-0">{getLinkIcon(link.type)}</span>
-                  <p className="text-[14px] font-medium truncate flex-1">{link.handle ? `@${link.handle}` : link.label}</p>
+                <div key={`${link.url}-${i}`} className="flex items-center gap-3 px-4 py-3.5 bg-[#f5f5f5] rounded-xl group">
+                  <span className="text-base shrink-0">{getLinkIcon(link.type)}</span>
+                  <p className="text-[15px] font-medium truncate flex-1">{link.handle ? `@${link.handle}` : link.label}</p>
                   <button onClick={() => handleRemove(i)} className="text-[#a3a3a3] hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
-                    <Trash2 size={12} />
+                    <Trash2 size={14} />
                   </button>
                 </div>
               ))}
@@ -191,14 +191,14 @@ export default function Home() {
 
           {/* AI Comment */}
           {links.length > 0 && (aiLoading || aiComment) && (
-            <div className="mb-5 p-4 bg-[#0a0a0a] rounded-xl">
+            <div className="mb-5 p-5 bg-[#0a0a0a] rounded-2xl">
               {aiLoading ? (
                 <div className="flex items-center gap-2">
-                  <Loader2 size={14} className="animate-spin text-white" />
-                  <span className="text-[14px] font-medium text-[#a3a3a3]">분석하고 있어요...</span>
+                  <Loader2 size={16} className="animate-spin text-white" />
+                  <span className="text-[15px] font-medium text-[#a3a3a3]">분석하고 있어요...</span>
                 </div>
               ) : (
-                <p className="text-[14px] font-medium text-white leading-relaxed">{aiComment}</p>
+                <p className="text-[15px] font-medium text-white leading-relaxed">{aiComment}</p>
               )}
             </div>
           )}
@@ -207,10 +207,10 @@ export default function Home() {
           <Link
             href="/onboard"
             onClick={handleStartWithLinks}
-            className="inline-flex items-center gap-2 px-7 py-4 bg-[#0a0a0a] text-white rounded-full text-[14px] font-semibold hover:bg-[#262626] active:scale-[0.98] transition-all"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-[#0a0a0a] text-white rounded-full text-[16px] font-semibold hover:bg-[#262626] active:scale-[0.98] transition-all"
           >
             {links.length > 0 ? `${links.length}개 링크로 시작` : '무료로 시작하기'}
-            <ArrowRight size={16} />
+            <ArrowRight size={18} />
           </Link>
 
           {/* Quick hints */}
@@ -220,7 +220,7 @@ export default function Home() {
                 <button
                   key={hint}
                   onClick={() => { setInput(hint); inputRef.current?.focus(); }}
-                  className="px-3 py-1.5 border border-[#e5e5e5] rounded-full text-[14px] font-medium text-[#a3a3a3] hover:border-[#a3a3a3] hover:text-[#525252] transition-colors"
+                  className="px-3 py-1.5 border border-[#e5e5e5] rounded-full text-[13px] font-medium text-[#a3a3a3] hover:border-[#a3a3a3] hover:text-[#525252] transition-colors"
                 >
                   {hint}
                 </button>
@@ -229,57 +229,76 @@ export default function Home() {
           )}
         </div>
 
-        {/* Right: iPhone Preview — hidden on mobile */}
-        <div className="shrink-0 hidden lg:block">
-          <div className="w-[300px] h-[620px] bg-white border-[7px] border-[#0a0a0a] rounded-[48px] shadow-[0_16px_40px_rgba(0,0,0,0.12)] relative overflow-hidden">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-5 bg-[#0a0a0a] rounded-b-2xl z-20" />
-            <div className="h-full overflow-y-auto scrollbar-hide px-5 pt-14 pb-8 flex flex-col items-center">
-              {links.length === 0 ? (
-                <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center">
-                  <div className="w-16 h-16 rounded-full bg-[#f5f5f5] flex items-center justify-center">
-                    <span className="text-[#a3a3a3] text-xl font-semibold">M</span>
-                  </div>
-                  <div>
-                    <p className="text-[13px] font-semibold text-[#a3a3a3]">@username</p>
-                    <p className="text-[11px] text-[#d4d4d4] mt-1">링크를 추가해보세요</p>
-                  </div>
-                  <div className="w-full space-y-2 mt-4">
-                    {[1, 2, 3].map(i => (
-                      <div key={i} className="w-full h-12 bg-[#f5f5f5] rounded-xl" />
-                    ))}
-                  </div>
+        {/* Right: Phone Preview — mini on mobile, full on desktop */}
+        <div className="shrink-0 w-full lg:w-auto flex justify-center">
+          {/* Mobile: compact card preview */}
+          <div className="lg:hidden w-full max-w-[320px] p-6 bg-[#f5f5f5] rounded-3xl flex flex-col items-center gap-3">
+            <div className="w-14 h-14 rounded-full bg-[#0a0a0a] flex items-center justify-center text-white text-lg font-bold">M</div>
+            <p className="text-[15px] font-semibold">@my_page</p>
+            <div className="w-full space-y-2">
+              {['Instagram', 'YouTube', 'Blog'].map(name => (
+                <div key={name} className="w-full flex items-center gap-3 px-4 py-3 bg-white rounded-xl">
+                  <div className="w-8 h-8 bg-[#f5f5f5] rounded-lg" />
+                  <span className="text-[14px] font-medium text-[#525252]">{name}</span>
+                  <ArrowRight size={12} className="ml-auto text-[#d4d4d4]" />
                 </div>
-              ) : (
-                <>
-                  <div className="w-16 h-16 rounded-full bg-[#0a0a0a] flex items-center justify-center text-white text-lg font-bold mb-3">
-                    M
+              ))}
+            </div>
+            <p className="text-[13px] text-[#a3a3a3] mt-1">이렇게 보여요</p>
+          </div>
+
+          {/* Desktop: full iPhone mock */}
+          <div className="hidden lg:block">
+            <div className="w-[300px] h-[620px] bg-white border-[7px] border-[#0a0a0a] rounded-[48px] shadow-[0_16px_40px_rgba(0,0,0,0.12)] relative overflow-hidden">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-5 bg-[#0a0a0a] rounded-b-2xl z-20" />
+              <div className="h-full overflow-y-auto scrollbar-hide px-5 pt-14 pb-8 flex flex-col items-center">
+                {links.length === 0 ? (
+                  <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center">
+                    <div className="w-16 h-16 rounded-full bg-[#f5f5f5] flex items-center justify-center">
+                      <span className="text-[#a3a3a3] text-xl font-semibold">M</span>
+                    </div>
+                    <div>
+                      <p className="text-[13px] font-semibold text-[#a3a3a3]">@username</p>
+                      <p className="text-[11px] text-[#d4d4d4] mt-1">링크를 추가해보세요</p>
+                    </div>
+                    <div className="w-full space-y-2 mt-4">
+                      {[1, 2, 3].map(i => (
+                        <div key={i} className="w-full h-12 bg-[#f5f5f5] rounded-xl" />
+                      ))}
+                    </div>
                   </div>
-                  <p className="text-[13px] font-semibold mb-0.5">@my_page</p>
-                  <p className="text-[11px] text-[#a3a3a3] mb-6">나만의 모노페이지</p>
-                  <div className="w-full space-y-2">
-                    {links.map((link, i) => {
-                      const hostname = link.domain || (() => { try { return new URL(link.url).hostname.replace(/^www\./, ''); } catch { return link.url; } })();
-                      return (
-                        <div key={`preview-${link.url}-${i}`} className="w-full flex items-center gap-2.5 px-3 py-2.5 bg-white rounded-xl border border-[#e5e5e5]">
-                          <div className="w-7 h-7 bg-[#f5f5f5] flex items-center justify-center shrink-0 overflow-hidden" style={{ borderRadius: '28%' }}>
-                            {link.favicon ? (
-                              <img src={link.favicon} alt="" className="w-4 h-4 object-contain" />
-                            ) : (
-                              <span className="text-[10px] text-[#a3a3a3]">{getLinkIcon(link.type)}</span>
-                            )}
+                ) : (
+                  <>
+                    <div className="w-16 h-16 rounded-full bg-[#0a0a0a] flex items-center justify-center text-white text-lg font-bold mb-3">
+                      M
+                    </div>
+                    <p className="text-[13px] font-semibold mb-0.5">@my_page</p>
+                    <p className="text-[11px] text-[#a3a3a3] mb-6">나만의 모노페이지</p>
+                    <div className="w-full space-y-2">
+                      {links.map((link, i) => {
+                        const hostname = link.domain || (() => { try { return new URL(link.url).hostname.replace(/^www\./, ''); } catch { return link.url; } })();
+                        return (
+                          <div key={`preview-${link.url}-${i}`} className="w-full flex items-center gap-2.5 px-3 py-2.5 bg-white rounded-xl border border-[#e5e5e5]">
+                            <div className="w-7 h-7 bg-[#f5f5f5] flex items-center justify-center shrink-0 overflow-hidden" style={{ borderRadius: '28%' }}>
+                              {link.favicon ? (
+                                <img src={link.favicon} alt="" className="w-4 h-4 object-contain" />
+                              ) : (
+                                <span className="text-[10px] text-[#a3a3a3]">{getLinkIcon(link.type)}</span>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[10px] font-semibold truncate leading-tight">{link.handle ? `@${link.handle}` : link.label}</p>
+                              <p className="text-[9px] text-[#a3a3a3] truncate">{hostname}</p>
+                            </div>
+                            <ArrowRight size={10} className="text-[#d4d4d4] shrink-0" />
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[10px] font-semibold truncate leading-tight">{link.handle ? `@${link.handle}` : link.label}</p>
-                            <p className="text-[9px] text-[#a3a3a3] truncate">{hostname}</p>
-                          </div>
-                          <ArrowRight size={10} className="text-[#d4d4d4] shrink-0" />
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <p className="mt-auto pt-8 opacity-15 text-[8px] font-medium uppercase tracking-[0.2em]">Monopage</p>
-                </>
-              )}
+                        );
+                      })}
+                    </div>
+                    <p className="mt-auto pt-8 opacity-15 text-[8px] font-medium uppercase tracking-[0.2em]">Monopage</p>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -288,20 +307,20 @@ export default function Home() {
       {/* Features — inverted dark section */}
       <section className="py-20 sm:py-28 bg-[#0a0a0a] text-white">
         <div className="max-w-[960px] mx-auto px-5 sm:px-8">
-          <p className="text-[14px] font-medium text-[#525252] uppercase tracking-[0.3em] text-center mb-3">Why Monopage</p>
-          <h2 className="font-paperlogy text-[24px] sm:text-[30px] font-extrabold text-center mb-14 tracking-tight text-white">
+          <p className="text-[13px] font-semibold text-[#525252] uppercase tracking-[0.3em] text-center mb-3">Why Monopage</p>
+          <h2 className="font-paperlogy text-[26px] sm:text-[32px] font-extrabold text-center mb-14 tracking-tight text-white">
             한 페이지로 충분한 이유
           </h2>
-          <div className="grid sm:grid-cols-3 gap-5">
+          <div className="grid sm:grid-cols-3 gap-5 sm:gap-6">
             {[
               { num: '01', title: '링크만 넣으면 끝이에요', desc: 'SNS, 블로그, 네이버 플레이스까지 자동으로 감지하고 정리해드려요.' },
               { num: '02', title: '어디서든 수정할 수 있어요', desc: '스마트폰에서도 바로 편집하고, 변경 사항이 실시간으로 반영돼요.' },
               { num: '03', title: '방문자 통계를 볼 수 있어요', desc: '누가 언제 어떤 링크를 눌렀는지 한눈에 확인할 수 있어요.' },
             ].map((f) => (
-              <div key={f.num} className="p-6 rounded-2xl border border-white/10 hover:border-white/20 transition-all bg-white/[0.03]">
-                <p className="text-[14px] font-medium text-[#525252] mb-4 tracking-[0.2em]">{f.num}</p>
-                <h3 className="font-paperlogy text-[15px] font-bold mb-2 text-white">{f.title}</h3>
-                <p className="text-[14px] text-[#a3a3a3] leading-[1.7]">{f.desc}</p>
+              <div key={f.num} className="p-6 sm:p-7 rounded-2xl border border-white/10 hover:border-white/20 transition-all bg-white/[0.03]">
+                <p className="text-[13px] font-semibold text-[#525252] mb-4 tracking-[0.2em]">{f.num}</p>
+                <h3 className="font-paperlogy text-[18px] font-bold mb-3 text-white leading-snug">{f.title}</h3>
+                <p className="text-[15px] text-[#a3a3a3] leading-[1.7]">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -311,18 +330,18 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-20 sm:py-24">
         <div className="max-w-[560px] mx-auto px-5 sm:px-8 text-center">
-          <h2 className="font-paperlogy text-[24px] sm:text-[28px] font-extrabold tracking-tight mb-4">
+          <h2 className="font-paperlogy text-[26px] sm:text-[32px] font-extrabold tracking-tight mb-5">
             지금 바로 시작해보세요
           </h2>
-          <p className="text-[15px] text-[#525252] mb-8 leading-[1.7]">
+          <p className="text-[16px] text-[#525252] mb-8 leading-[1.7]">
             무료로 만들고, 원하는 대로 꾸밀 수 있어요.<br />
             나만의 페이지가 1분이면 완성돼요.
           </p>
           <Link
             href="/onboard"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-[#0a0a0a] text-white rounded-full text-[14px] font-semibold hover:bg-[#262626] transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-[#0a0a0a] text-white rounded-full text-[16px] font-semibold hover:bg-[#262626] transition-colors"
           >
-            무료로 시작하기 <ArrowRight size={16} />
+            무료로 시작하기 <ArrowRight size={18} />
           </Link>
         </div>
       </section>
