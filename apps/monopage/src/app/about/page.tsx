@@ -129,9 +129,9 @@ export default function AboutPage() {
             </p>
           </blockquote>
           <p className="text-sm text-gray-400 leading-relaxed" style={{ wordBreak: 'keep-all' }}>
-            모노페이지는 2024년 아트페이지(ArtPage)라는 이름으로 아티스트를 위해 시작됐습니다.
+            모노페이지는 2024년 아트페이지(ArtPage)라는 이름으로 아티스트를 위해 시작됐어요.
             <br />
-            지금은 아티스트뿐만 아니라 누구나 자신만의 페이지를 가질 수 있도록 확장됐습니다.
+            지금은 아티스트뿐만 아니라 누구나 자신만의 페이지를 가질 수 있도록 확장됐어요.
           </p>
         </div>
       </section>
@@ -156,7 +156,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { icon: Globe, title: '링크 모음', desc: 'SNS, 유튜브, 블로그, 쇼핑몰 — 모든 링크를 한 곳에. 파비콘과 함께 앱 아이콘처럼 깔끔하게.' },
-              { icon: Palette, title: '5가지 테마', desc: 'Minimal, Dark, Warm, Forest, Sky — 내 분위기에 맞는 테마를 골라 나만의 공간으로 꾸미세요.' },
+              { icon: Palette, title: '5가지 테마', desc: 'Minimal, Dark, Warm, Forest, Sky — 내 분위기에 맞는 테마를 골라 나만의 공간으로 꾸밀 수 있어요.' },
               { icon: Share2, title: 'SNS 연동', desc: '인스타그램 계정을 연결하면 최신 피드가 페이지에 자동으로 반영돼요.' },
               { icon: BarChart3, title: '방문 통계', desc: '내 페이지를 누가 얼마나 봤는지, 어떤 링크를 클릭했는지 한눈에 확인할 수 있어요.' },
             ].map((feature) => (
@@ -200,7 +200,7 @@ export default function AboutPage() {
               {
                 subtitle: 'BEAUTIFUL',
                 title: '하나의 링크로\n모든 것을 연결',
-                desc: '인스타 바이오에 링크 하나만 넣으세요. 방문자는 당신의 유튜브, 블로그, 쇼핑몰, SNS를 한 곳에서 모두 만날 수 있습니다.',
+                desc: '인스타 바이오에 링크 하나만 넣어보세요. 방문자는 유튜브, 블로그, 쇼핑몰, SNS를 한 곳에서 모두 만날 수 있어요.',
                 image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2968&auto=format&fit=crop',
                 align: 'left' as const,
               },
@@ -255,7 +255,7 @@ export default function AboutPage() {
           >
             무료로 시작하기 <ArrowRight size={16} />
           </Link>
-          <p className="mt-6 text-xs text-gray-300">이미 계정이 있으신가요? <Link href="/login" className="underline hover:text-black transition-colors">로그인</Link></p>
+          <p className="mt-6 text-xs text-gray-300">이미 계정이 있나요? <Link href="/login" className="underline hover:text-black transition-colors">로그인</Link></p>
         </div>
       </section>
 

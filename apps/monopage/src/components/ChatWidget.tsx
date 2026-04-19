@@ -51,7 +51,7 @@ export default function ChatWidget() {
       const data = await res.json();
       setMessages((prev) => [...prev, { role: 'ai', text: data.response || '응답을 받지 못했어요.' }]);
     } catch {
-      setMessages((prev) => [...prev, { role: 'ai', text: '네트워크 오류가 발생했어요. 다시 시도해주세요.' }]);
+      setMessages((prev) => [...prev, { role: 'ai', text: '네트워크가 불안정해요. 잠시 후 다시 시도해볼게요.' }]);
     } finally {
       setLoading(false);
     }
@@ -192,7 +192,7 @@ export default function ChatWidget() {
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && send()}
-                      placeholder="메시지를 입력하세요..."
+                      placeholder="메시지를 입력해보세요"
                       className="flex-1 px-4 py-3 bg-gray-50 rounded-full text-sm font-medium outline-none focus:bg-gray-100 transition-colors"
                     />
                     <button
@@ -210,11 +210,11 @@ export default function ChatWidget() {
               <div className="flex-1 px-5 py-6 flex flex-col gap-4">
                 {contactStep === 'content' && (
                   <>
-                    <p className="text-sm font-bold text-gray-600">어떤 내용으로 문의하시나요?</p>
+                    <p className="text-sm font-bold text-gray-600">어떤 내용을 문의할까요?</p>
                     <textarea
                       value={contactContent}
                       onChange={(e) => setContactContent(e.target.value)}
-                      placeholder="문의 내용을 자유롭게 적어주세요..."
+                      placeholder="문의 내용을 자유롭게 적어주세요"
                       rows={4}
                       className="w-full px-4 py-3 bg-gray-50 rounded-2xl text-sm font-medium outline-none focus:bg-gray-100 transition-colors resize-none"
                     />
@@ -229,7 +229,7 @@ export default function ChatWidget() {
                 )}
                 {contactStep === 'email' && (
                   <>
-                    <p className="text-sm font-bold text-gray-600">연락받으실 이메일을 알려주세요</p>
+                    <p className="text-sm font-bold text-gray-600">연락받을 이메일을 알려주세요</p>
                     <div className="p-3 bg-gray-50 rounded-2xl text-xs text-gray-400 font-medium">
                       "{contactContent.length > 50 ? contactContent.slice(0, 50) + '...' : contactContent}"
                     </div>
@@ -253,8 +253,8 @@ export default function ChatWidget() {
                 {contactStep === 'done' && (
                   <div className="flex-1 flex flex-col items-center justify-center text-center py-8 gap-3">
                     <div className="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center text-2xl">✅</div>
-                    <p className="text-sm font-black">문의가 접수되었어요</p>
-                    <p className="text-xs text-gray-400 font-medium">빠른 시일 내 입력하신 이메일로<br />연락드리겠습니다.</p>
+                    <p className="text-sm font-black">문의를 접수했어요</p>
+                    <p className="text-xs text-gray-400 font-medium">빠른 시일 내 이메일로<br />연락드릴게요.</p>
                     <button
                       onClick={resetContact}
                       className="mt-2 px-5 py-2.5 bg-gray-100 rounded-full text-xs font-black hover:bg-gray-200 transition-colors"

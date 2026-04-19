@@ -22,7 +22,7 @@ export default function ForgotPasswordPage() {
       });
       setSent(true);
     } catch {
-      setError('요청에 실패했어요. 다시 시도해주세요.');
+      setError('요청을 처리하지 못했어요. 다시 시도해볼게요.');
     } finally {
       setLoading(false);
     }
@@ -38,7 +38,7 @@ export default function ForgotPasswordPage() {
         {sent ? (
           <div className="flex flex-col gap-4">
             <div className="w-14 h-14 bg-black rounded-2xl flex items-center justify-center text-2xl">📬</div>
-            <h1 className="text-3xl font-black tracking-tight">이메일을 확인해주세요</h1>
+            <h1 className="text-3xl font-black tracking-tight">이메일을 확인해보세요</h1>
             <p className="text-gray-400 font-medium leading-relaxed">
               <span className="text-black font-black">{email}</span>로<br />
               비밀번호 재설정 링크를 보냈어요.<br />

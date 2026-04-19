@@ -53,12 +53,12 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(() => {
     const e = searchParams.get('error');
-    if (e === 'kakao_cancelled') return '카카오 로그인이 취소되었습니다.';
-    if (e === 'kakao_failed') return '카카오 로그인에 실패했습니다. 다시 시도해주세요.';
-    if (e === 'naver_cancelled') return '네이버 로그인이 취소되었습니다.';
-    if (e === 'naver_failed') return '네이버 로그인에 실패했습니다. 다시 시도해주세요.';
-    if (e === 'google_cancelled') return '구글 로그인이 취소되었습니다.';
-    if (e === 'google_failed') return '구글 로그인에 실패했습니다. 다시 시도해주세요.';
+    if (e === 'kakao_cancelled') return '카카오 로그인이 취소됐어요.';
+    if (e === 'kakao_failed') return '카카오 로그인에 실패했어요. 다시 시도해볼게요.';
+    if (e === 'naver_cancelled') return '네이버 로그인이 취소됐어요.';
+    if (e === 'naver_failed') return '네이버 로그인에 실패했어요. 다시 시도해볼게요.';
+    if (e === 'google_cancelled') return '구글 로그인이 취소됐어요.';
+    if (e === 'google_failed') return '구글 로그인에 실패했어요. 다시 시도해볼게요.';
     return null;
   });
 
@@ -87,8 +87,8 @@ function LoginForm() {
         <Link href="/" className="font-extrabold text-xl tracking-tighter">
           Monopage<span className="text-gray-300">.</span>
         </Link>
-        <h1 className="text-3xl font-black tracking-tightest mt-6">다시 돌아오셨군요.</h1>
-        <p className="text-gray-400 text-sm font-medium mt-2">로그인하고 내 페이지를 관리하세요.</p>
+        <h1 className="text-3xl font-black tracking-tightest mt-6">다시 와주셨네요.</h1>
+        <p className="text-gray-400 text-sm font-medium mt-2">로그인하고 내 페이지를 관리해보세요.</p>
       </div>
 
       <div className="flex flex-col gap-3">
@@ -119,7 +119,7 @@ function LoginForm() {
 
       <div className="flex items-center justify-between text-sm">
         <Link href="/forgot-password" className="text-gray-400 font-bold hover:text-black transition-colors">
-          비밀번호를 잊으셨나요?
+          비밀번호를 잊었나요?
         </Link>
         <Link href="/onboard" className="font-black text-black hover:underline">무료로 시작하기</Link>
       </div>

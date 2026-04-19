@@ -51,8 +51,8 @@ function ResetPasswordInner() {
     return (
       <div className="flex flex-col gap-4">
         <div className="w-14 h-14 bg-black rounded-2xl flex items-center justify-center text-2xl">✅</div>
-        <h1 className="text-3xl font-black">비밀번호 변경 완료!</h1>
-        <p className="text-gray-400 font-medium">로그인 페이지로 이동합니다...</p>
+        <h1 className="text-3xl font-black">비밀번호를 변경했어요</h1>
+        <p className="text-gray-400 font-medium">로그인 페이지로 이동할게요...</p>
       </div>
     );
   }
@@ -61,7 +61,7 @@ function ResetPasswordInner() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-3xl font-black tracking-tight mb-2">새 비밀번호 설정</h1>
-        <p className="text-gray-400 text-sm font-medium">6자 이상으로 입력해주세요.</p>
+        <p className="text-gray-400 text-sm font-medium">6자 이상으로 입력해주세요</p>
       </div>
 
       <div className="flex flex-col gap-3">

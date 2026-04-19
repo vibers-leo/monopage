@@ -117,7 +117,7 @@ export default function AdminDashboard() {
       addToast('instagram', `Instagram @${params.get('username') || ''} 연결 완료!`);
       window.history.replaceState({}, '', '/admin');
     } else if (igResult === 'error') {
-      addToast('error', 'Instagram 연결에 실패했어요. 다시 시도해주세요.');
+      addToast('error', 'Instagram 연결에 실패했어요. 다시 시도해볼게요.');
       window.history.replaceState({}, '', '/admin');
     }
   }, []);
@@ -185,7 +185,7 @@ export default function AdminDashboard() {
       const formData = new FormData();
       formData.append('file', file);
       const res = await fetch('/api/upload', { method: 'POST', body: formData, headers: { Authorization: `Bearer ${getToken() || ''}` } });
-      if (!res.ok) throw new Error('올리기 실패');
+      if (!res.ok) throw new Error('올리지 못했어요');
       const { url } = await res.json();
       await updateProfile({ avatar_url: url });
       setProfile(p => ({ ...p, avatar_url: url }));
@@ -206,7 +206,7 @@ export default function AdminDashboard() {
       const formData = new FormData();
       formData.append('file', file);
       const res = await fetch('/api/upload', { method: 'POST', body: formData, headers: { Authorization: `Bearer ${getToken() || ''}` } });
-      if (!res.ok) throw new Error('올리기 실패');
+      if (!res.ok) throw new Error('올리지 못했어요');
       const { url } = await res.json();
       const item = await createPortfolioItem({ image_url: url });
       setPortfolioItems([...portfolioItems, item]);
@@ -395,7 +395,7 @@ export default function AdminDashboard() {
                       <span className="text-[14px] font-black text-gray-300 uppercase tracking-widest">Active</span>
                     </div>
                     <p className="font-black text-xs">@{profile.username}</p>
-                    <p className="text-[14px] text-gray-400 font-medium mt-0.5 truncate">{profile.bio || '소개 없음'}</p>
+                    <p className="text-[14px] text-gray-400 font-medium mt-0.5 truncate">{profile.bio || '소개가 없어요'}</p>
                   </div>
                 </div>
               </button>
@@ -958,7 +958,7 @@ export default function AdminDashboard() {
                   )}
                 </div>
               ) : (
-                <p className="text-sm text-gray-400 text-center py-8">통계를 불러올 수 없어요</p>
+                <p className="text-sm text-gray-400 text-center py-8">통계를 불러오지 못했어요</p>
               )}
             </section>
           )}
@@ -996,12 +996,12 @@ export default function AdminDashboard() {
                         </button>
                       )}
                       {!connections.has_password && (
-                        <span className="text-[14px] text-gray-400">(비밀번호 설정 후 해제 가능)</span>
+                        <span className="text-[14px] text-gray-400">(비밀번호를 설정하면 해제할 수 있어요)</span>
                       )}
                     </div>
                   ) : (
                     <div className="flex flex-col gap-2">
-                      <p className="text-xs text-gray-400">연동된 소셜 계정 없음</p>
+                      <p className="text-xs text-gray-400">연동된 소셜 계정이 없어요</p>
                       <div className="flex gap-2 flex-wrap">
                         {[
                           { provider: 'kakao', label: '카카오', url: `https://kauth.kakao.com/oauth/authorize?client_id=3a4930ab39652ad5f387496697bf66ba&redirect_uri=${encodeURIComponent('https://monopage.kr/auth/kakao/callback')}&response_type=code` },

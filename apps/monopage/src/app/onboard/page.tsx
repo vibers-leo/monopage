@@ -14,7 +14,7 @@ async function uploadPhoto(file: File, token?: string): Promise<string> {
     body: formData,
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
-  if (!res.ok) throw new Error('사진 올리기 실패');
+  if (!res.ok) throw new Error('사진을 올리지 못했어요');
   const data = await res.json();
   return data.url;
 }
@@ -121,7 +121,7 @@ export default function Onboarding() {
         router.push('/admin');
       } catch (e: any) {
         setIsGenerating(false);
-        setError(e.message || '링크 추가에 실패했어요');
+        setError(e.message || '링크를 추가하지 못했어요');
       }
       return;
     }
@@ -162,9 +162,9 @@ export default function Onboarding() {
     } catch (e: any) {
       setIsGenerating(false);
       const msg = e.message || '';
-      if (msg.includes('Email has already been taken')) setError('이미 사용 중인 이메일이에요. 다른 이메일을 사용해주세요.');
-      else if (msg.includes('Username has already been taken') || msg.includes('already been taken')) setError('이미 사용 중인 사용자명이에요. 다른 주소를 선택해주세요.');
-      else setError(msg || '페이지 만들기에 실패했어요. 다시 시도해주세요.');
+      if (msg.includes('Email has already been taken')) setError('이미 사용 중인 이메일이에요. 다른 이메일로 시도해보세요.');
+      else if (msg.includes('Username has already been taken') || msg.includes('already been taken')) setError('이미 사용 중인 주소예요. 다른 주소로 시도해보세요.');
+      else setError(msg || '페이지를 만들지 못했어요. 다시 시도해볼게요.');
     }
   };
 
