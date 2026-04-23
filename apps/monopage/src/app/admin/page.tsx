@@ -11,7 +11,7 @@ import {
   Plus, Save, Link as LinkIcon, ArrowRight,
   ChevronLeft, Trash2, GripVertical, Check, X, Loader2, LogOut, Camera,
   Shield, AlertTriangle, Unlink, Image, User, Settings, Eye, EyeOff, BarChart3, MousePointerClick,
-  Layout, Type, ChevronUp, ChevronDown, Palette,
+  Layout, Type, ChevronUp, ChevronDown, Palette, RefreshCw, Clock, ExternalLink,
 } from 'lucide-react';
 import { THEMES, type ThemeKey } from '@/lib/themes';
 import Link from 'next/link';
@@ -38,7 +38,7 @@ const SUPER_ADMINS = [
   'vibers.leo@gmail.com',
 ];
 
-type Tab = 'profile' | 'links' | 'portfolio' | 'layout' | 'analytics' | 'settings';
+type Tab = 'profile' | 'links' | 'portfolio' | 'sns' | 'layout' | 'analytics' | 'settings';
 
 interface AnalyticsData {
   total_views: number;
@@ -284,6 +284,7 @@ export default function AdminDashboard() {
     { key: 'profile', label: 'Profile', icon: <User size={14} /> },
     { key: 'links', label: 'Links', icon: <LinkIcon size={14} /> },
     { key: 'portfolio', label: 'Portfolio', icon: <Image size={14} /> },
+    { key: 'sns', label: 'SNS', icon: <Camera size={14} /> },
     { key: 'layout', label: 'Layout', icon: <Layout size={14} /> },
     { key: 'analytics', label: 'Stats', icon: <BarChart3 size={14} /> },
     { key: 'settings', label: 'Settings', icon: <Settings size={14} /> },
@@ -615,54 +616,23 @@ export default function AdminDashboard() {
 
               <section>
                 <label className="block text-[14px] font-black text-gray-300 uppercase mb-3 tracking-widest">SNS 연결</label>
-                <div className="flex flex-col gap-2">
-                  {(() => {
-                    const igAccount = socialAccounts.find(a => a.provider === 'instagram');
-                    if (igAccount) {
-                      return (
-                        <div className="flex items-center gap-3 p-4 border border-pink-200 rounded-2xl bg-pink-50/50">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white shrink-0">
-                            <Camera size={18} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-black">Instagram 연결됨</p>
-                            <p className="text-[14px] text-pink-500 font-bold">@{igAccount.metadata?.username || igAccount.uid}</p>
-                          </div>
-                          <button
-                            onClick={async () => {
-                              if (!confirm('Instagram 연결을 해제할까요?')) return;
-                              await deleteSocialAccount(igAccount.id);
-                              setSocialAccounts(sa => sa.filter(a => a.id !== igAccount.id));
-                            }}
-                            className="text-[14px] font-bold text-gray-300 hover:text-red-500 transition-colors"
-                          >
-                            해제
-                          </button>
-                        </div>
-                      );
-                    }
-                    return (
-                      <>
-                        <a
-                          href={`/api/instagram/login?token=${getToken() || ''}`}
-                          className="flex items-center gap-3 p-4 border border-gray-100 rounded-2xl hover:border-pink-300 transition-colors group"
-                        >
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white shrink-0">
-                            <Camera size={18} />
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-xs font-black">Instagram 연결하기</p>
-                            <p className="text-[14px] text-gray-400">게시물이 자동으로 페이지에 표시돼요</p>
-                          </div>
-                          <ArrowRight size={14} className="text-gray-300 group-hover:text-pink-400 transition-colors" />
-                        </a>
-                        <p className="text-[14px] text-gray-300 px-1">
-                          Instagram 앱에서 "허용"을 누르면 최근 게시물 20개가 자동으로 동기화돼요.
-                        </p>
-                      </>
-                    );
-                  })()}
-                </div>
+                <button
+                  onClick={() => setActiveTab('sns')}
+                  className="w-full flex items-center gap-3 p-4 border border-gray-100 rounded-2xl hover:border-gray-300 transition-colors group"
+                >
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white shrink-0">
+                    <Camera size={18} />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <p className="text-[14px] font-bold">
+                      {socialAccounts.find(a => a.provider === 'instagram')
+                        ? `Instagram @${socialAccounts.find(a => a.provider === 'instagram')?.metadata?.username || '연결됨'}`
+                        : 'SNS 연결 관리하기'}
+                    </p>
+                    <p className="text-[14px] text-gray-400 mt-0.5">SNS 탭에서 연동·피드·토큰을 관리할 수 있어요</p>
+                  </div>
+                  <ArrowRight size={14} className="text-gray-300 group-hover:text-black transition-colors" />
+                </button>
               </section>
             </>
           )}
@@ -862,6 +832,164 @@ export default function AdminDashboard() {
             </section>
           )}
 
+          {/* ===== SNS TAB ===== */}
+          {activeTab === 'sns' && (
+            <section className="flex flex-col gap-6">
+              {/* Instagram 연동 상태 */}
+              {(() => {
+                const igAccount = socialAccounts.find(a => a.provider === 'instagram');
+                const tokenExpiry = igAccount?.metadata?.token_expires_at;
+                const expiresAt = tokenExpiry ? new Date(tokenExpiry) : null;
+                const now = new Date();
+                const daysLeft = expiresAt ? Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
+                const isExpiringSoon = daysLeft !== null && daysLeft <= 7;
+                const isExpired = daysLeft !== null && daysLeft <= 0;
+
+                return (
+                  <div className="flex flex-col gap-4">
+                    <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest">Instagram</label>
+
+                    {igAccount ? (
+                      <>
+                        {/* 연동 상태 카드 */}
+                        <div className="p-5 border border-pink-200 rounded-2xl bg-pink-50/30">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white shrink-0">
+                              <Camera size={20} />
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-[15px] font-bold">@{igAccount.metadata?.username || igAccount.uid}</p>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className={`w-1.5 h-1.5 rounded-full ${isExpired ? 'bg-red-400' : isExpiringSoon ? 'bg-yellow-400' : 'bg-green-400'}`} />
+                                <span className={`text-[14px] font-medium ${isExpired ? 'text-red-500' : isExpiringSoon ? 'text-yellow-600' : 'text-green-600'}`}>
+                                  {isExpired ? '토큰 만료됨' : isExpiringSoon ? `${daysLeft}일 후 만료` : daysLeft ? `${daysLeft}일 남음` : '연결됨'}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 토큰 정보 */}
+                          {expiresAt && (
+                            <div className="flex items-center gap-2 p-3 bg-white rounded-xl mb-3">
+                              <Clock size={14} className="text-gray-400 shrink-0" />
+                              <div className="flex-1">
+                                <p className="text-[14px] text-gray-500">토큰 만료일</p>
+                                <p className="text-[14px] font-semibold">{expiresAt.toLocaleDateString('ko', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                              </div>
+                              {(isExpiringSoon || isExpired) && (
+                                <a
+                                  href={`/api/instagram/login?token=${getToken() || ''}`}
+                                  className="flex items-center gap-1.5 px-3 py-2 bg-pink-500 text-white rounded-lg text-[14px] font-semibold hover:bg-pink-600 transition-colors"
+                                >
+                                  <RefreshCw size={13} /> 갱신하기
+                                </a>
+                              )}
+                            </div>
+                          )}
+
+                          {/* 액션 버튼 */}
+                          <div className="flex gap-2">
+                            <a
+                              href={`/api/instagram/login?token=${getToken() || ''}`}
+                              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 border border-pink-200 rounded-xl text-[14px] font-semibold text-pink-600 hover:bg-pink-50 transition-colors"
+                            >
+                              <RefreshCw size={13} /> 재연동하기
+                            </a>
+                            <button
+                              onClick={async () => {
+                                if (!confirm('Instagram 연결을 해제할까요?')) return;
+                                await deleteSocialAccount(igAccount.id);
+                                setSocialAccounts(sa => sa.filter(a => a.id !== igAccount.id));
+                                addToast('success', 'Instagram 연결을 해제했어요');
+                              }}
+                              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 border border-gray-200 rounded-xl text-[14px] font-semibold text-gray-500 hover:border-red-300 hover:text-red-500 transition-colors"
+                            >
+                              <Unlink size={13} /> 연결 해제
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Instagram 피드 미리보기 */}
+                        {igAccount.metadata?.posts && igAccount.metadata.posts.length > 0 && (
+                          <div>
+                            <div className="flex items-center justify-between mb-3">
+                              <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest">최근 게시물</label>
+                              <span className="text-[14px] text-gray-400">{igAccount.metadata.posts.length}개</span>
+                            </div>
+                            <div className="grid grid-cols-3 gap-1.5">
+                              {igAccount.metadata.posts.slice(0, 9).map((post: any, i: number) => (
+                                <a
+                                  key={i}
+                                  href={post.permalink || '#'}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="aspect-square rounded-lg overflow-hidden bg-gray-100 hover:opacity-80 transition-opacity"
+                                >
+                                  {post.media_url || post.image_url ? (
+                                    <img src={post.media_url || post.image_url} alt="" className="w-full h-full object-cover" />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                      <Camera size={16} />
+                                    </div>
+                                  )}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      /* 미연동 상태 */
+                      <div className="p-6 border border-dashed border-gray-200 rounded-2xl flex flex-col items-center gap-4 text-center">
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white">
+                          <Camera size={24} />
+                        </div>
+                        <div>
+                          <p className="text-[16px] font-bold mb-1">Instagram을 연결해보세요</p>
+                          <p className="text-[14px] text-gray-400 leading-relaxed">
+                            연결하면 최근 게시물이 자동으로<br />내 모노페이지에 표시돼요
+                          </p>
+                        </div>
+                        <a
+                          href={`/api/instagram/login?token=${getToken() || ''}`}
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full text-[15px] font-semibold hover:opacity-90 transition-opacity"
+                        >
+                          <Camera size={16} /> Instagram 연결하기
+                        </a>
+                        <p className="text-[14px] text-gray-300">
+                          Instagram 앱에서 "허용"을 누르면 동기화돼요
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              {/* 다른 SNS 연결 (향후 확장) */}
+              <div>
+                <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest mb-3 block">다른 SNS</label>
+                <div className="flex flex-col gap-2">
+                  {[
+                    { name: 'YouTube', icon: '▶️', color: 'from-red-500 to-red-600', soon: true },
+                    { name: 'TikTok', icon: '🎵', color: 'from-gray-800 to-black', soon: true },
+                    { name: 'Twitter / X', icon: '𝕏', color: 'from-gray-700 to-black', soon: true },
+                  ].map(sns => (
+                    <div key={sns.name} className="flex items-center gap-3 p-4 border border-gray-100 rounded-2xl opacity-60">
+                      <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${sns.color} flex items-center justify-center text-white shrink-0 text-sm`}>
+                        {sns.icon}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-[14px] font-bold">{sns.name}</p>
+                        <p className="text-[14px] text-gray-400">곧 지원할 예정이에요</p>
+                      </div>
+                      <span className="px-2.5 py-1 bg-gray-100 rounded-full text-[13px] font-semibold text-gray-400">Soon</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
           {/* ===== LAYOUT TAB ===== */}
           {activeTab === 'layout' && (
             <section>
@@ -995,73 +1123,93 @@ export default function AdminDashboard() {
                 </div>
               ) : analytics ? (
                 <div className="flex flex-col gap-6">
-                  {/* Stats Cards */}
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="p-4 bg-gray-50 rounded-2xl text-center">
-                      <p className="text-2xl font-black">{analytics.total_views}</p>
-                      <p className="text-[14px] font-black text-gray-400 uppercase tracking-widest mt-1">총 조회</p>
+                  {/* Stats Cards — 4칸 */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-4 bg-gray-50 rounded-2xl">
+                      <p className="text-[14px] text-gray-400 font-semibold mb-1">전체 방문</p>
+                      <p className="text-[24px] font-black">{analytics.total_views.toLocaleString()}</p>
                     </div>
-                    <div className="p-4 bg-gray-50 rounded-2xl text-center">
-                      <p className="text-2xl font-black">{analytics.today_views}</p>
-                      <p className="text-[14px] font-black text-gray-400 uppercase tracking-widest mt-1">오늘</p>
+                    <div className="p-4 bg-gray-50 rounded-2xl">
+                      <p className="text-[14px] text-gray-400 font-semibold mb-1">오늘 방문</p>
+                      <p className="text-[24px] font-black">{analytics.today_views.toLocaleString()}</p>
                     </div>
-                    <div className="p-4 bg-gray-50 rounded-2xl text-center">
-                      <p className="text-2xl font-black">{analytics.total_clicks}</p>
-                      <p className="text-[14px] font-black text-gray-400 uppercase tracking-widest mt-1">클릭</p>
+                    <div className="p-4 bg-gray-50 rounded-2xl">
+                      <p className="text-[14px] text-gray-400 font-semibold mb-1">전체 클릭</p>
+                      <p className="text-[24px] font-black">{analytics.total_clicks.toLocaleString()}</p>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-2xl">
+                      <p className="text-[14px] text-gray-400 font-semibold mb-1">클릭 전환율</p>
+                      <p className="text-[24px] font-black">
+                        {analytics.total_views > 0
+                          ? `${((analytics.total_clicks / analytics.total_views) * 100).toFixed(1)}%`
+                          : '—'}
+                      </p>
                     </div>
                   </div>
 
-                  {/* Daily Chart (7 days) */}
+                  {/* Daily Chart (14 days) */}
                   <div>
-                    <p className="text-[14px] font-black text-gray-300 uppercase tracking-widest mb-3">최근 7일</p>
-                    <div className="flex items-end gap-1 h-24">
+                    <p className="text-[14px] font-black text-gray-300 uppercase tracking-widest mb-3">최근 14일</p>
+                    <div className="flex items-end gap-0.5 h-28">
                       {(() => {
                         const days = [];
-                        for (let i = 6; i >= 0; i--) {
+                        for (let i = 13; i >= 0; i--) {
                           const d = new Date();
                           d.setDate(d.getDate() - i);
                           const key = d.toISOString().split('T')[0];
-                          days.push({ date: key, count: analytics.daily[key] || 0 });
+                          days.push({ date: key, count: analytics.daily[key] || 0, day: d.getDate() });
                         }
                         const max = Math.max(...days.map(d => d.count), 1);
-                        return days.map(day => (
-                          <div key={day.date} className="flex-1 flex flex-col items-center gap-1">
+                        return days.map((day, idx) => (
+                          <div key={day.date} className="flex-1 flex flex-col items-center gap-1 group relative">
+                            <div className="absolute -top-6 left-1/2 -translate-x-1/2 px-1.5 py-0.5 bg-black text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                              {day.count}
+                            </div>
                             <div
-                              className="w-full bg-black rounded-t-lg transition-all"
-                              style={{ height: `${(day.count / max) * 80}px`, minHeight: day.count > 0 ? '4px' : '1px' }}
-                            ></div>
-                            <span className="text-[8px] text-gray-400 font-bold">
-                              {new Date(day.date).toLocaleDateString('ko', { weekday: 'narrow' })}
-                            </span>
+                              className="w-full bg-black rounded-t transition-all hover:bg-gray-700"
+                              style={{ height: `${(day.count / max) * 96}px`, minHeight: day.count > 0 ? '4px' : '1px' }}
+                            />
+                            {idx % 2 === 0 && (
+                              <span className="text-[10px] text-gray-400 font-semibold">{day.day}</span>
+                            )}
                           </div>
                         ));
                       })()}
                     </div>
                   </div>
 
-                  {/* Link Clicks Ranking */}
+                  {/* Link Clicks Ranking with bars */}
                   {analytics.link_clicks.length > 0 && (
                     <div>
                       <p className="text-[14px] font-black text-gray-300 uppercase tracking-widest mb-3">
-                        <MousePointerClick size={10} className="inline mr-1" />
+                        <MousePointerClick size={12} className="inline mr-1" />
                         링크별 클릭
                       </p>
-                      <div className="flex flex-col gap-1.5">
-                        {analytics.link_clicks.map((lc, i) => (
-                          <div key={lc.link_id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                            <span className="text-xs font-black text-gray-300 w-5">{i + 1}</span>
-                            <span className="text-xs font-bold flex-1 truncate">{lc.title || '(제목 없음)'}</span>
-                            <span className="text-xs font-black">{lc.clicks}</span>
-                          </div>
-                        ))}
+                      <div className="flex flex-col gap-2">
+                        {(() => {
+                          const maxClicks = Math.max(...analytics.link_clicks.map(lc => lc.clicks), 1);
+                          return analytics.link_clicks.map((lc, i) => (
+                            <div key={lc.link_id} className="relative p-3 bg-gray-50 rounded-xl overflow-hidden">
+                              <div
+                                className="absolute inset-y-0 left-0 bg-black/[0.04] rounded-xl"
+                                style={{ width: `${(lc.clicks / maxClicks) * 100}%` }}
+                              />
+                              <div className="relative flex items-center gap-3">
+                                <span className="text-[14px] font-black text-gray-300 w-5">{i + 1}</span>
+                                <span className="text-[14px] font-semibold flex-1 truncate">{lc.title || '(제목 없음)'}</span>
+                                <span className="text-[14px] font-black">{lc.clicks}</span>
+                              </div>
+                            </div>
+                          ));
+                        })()}
                       </div>
                     </div>
                   )}
 
                   {analytics.total_views === 0 && analytics.total_clicks === 0 && (
                     <div className="text-center py-8">
-                      <p className="text-sm text-gray-300 font-bold">아직 방문자가 없어요</p>
-                      <p className="text-[14px] text-gray-200 mt-1">페이지를 공유하면 여기에 통계가 나타나요</p>
+                      <p className="text-[16px] text-gray-400 font-bold">아직 방문자가 없어요</p>
+                      <p className="text-[14px] text-gray-300 mt-1">페이지를 공유하면 여기에 통계가 나타나요</p>
                     </div>
                   )}
                 </div>
