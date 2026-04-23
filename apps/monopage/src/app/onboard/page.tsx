@@ -29,6 +29,10 @@ export default function Onboarding() {
   const [progressStep, setProgressStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [requestForm, setRequestForm] = useState({ username: '', purpose: '', email: '' });
+  const [requestSubmitting, setRequestSubmitting] = useState(false);
+  const [requestDone, setRequestDone] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const linkInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -172,6 +176,25 @@ export default function Onboarding() {
   const hasNaverPlace = links.some(l => l.type === 'naver_place');
 
   // 이미 로그인한 유저 → 추가 페이지 신청 안내
+  const handleRequestSubmit = async () => {
+    if (!requestForm.username.trim() || !requestForm.email.trim()) return;
+    setRequestSubmitting(true);
+    try {
+      await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `[추가 페이지 개설 신청]\n희망 주소: monopage.kr/${requestForm.username}\n용도: ${requestForm.purpose || '미입력'}\n연락처: ${requestForm.email}`,
+        }),
+      });
+      setRequestDone(true);
+    } catch {
+      setRequestDone(true);
+    } finally {
+      setRequestSubmitting(false);
+    }
+  };
+
   if (isLoggedIn && !isGenerating) {
     return (
       <div className="min-h-screen bg-white text-[#0a0a0a] flex items-center justify-center p-5 sm:p-8">
@@ -197,14 +220,110 @@ export default function Onboarding() {
               rel="noopener noreferrer"
               className="w-full py-4 bg-[#FFDD00] text-[#0a0a0a] rounded-full text-[16px] font-semibold hover:brightness-95 transition-all text-center"
             >
-              ☕ 후원하고 추가 페이지 신청하기
+              ☕ 후원하기
             </a>
+            <button
+              onClick={() => setShowRequestModal(true)}
+              className="w-full py-4 border border-[#e5e5e5] text-[#525252] rounded-full text-[16px] font-semibold hover:border-[#0a0a0a] hover:text-[#0a0a0a] transition-colors"
+            >
+              추가 페이지 개설 신청하기
+            </button>
           </div>
 
           <p className="text-[14px] text-[#a3a3a3]">
-            후원 후 vibers@vibers.co.kr 로 문의해주시면 추가 페이지를 개설해드려요
+            후원해주신 분께 추가 페이지 개설 권한을 드려요
           </p>
         </div>
+
+        {/* 추가 페이지 신청 모달 */}
+        {showRequestModal && (
+          <div
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
+            onClick={() => !requestSubmitting && setShowRequestModal(false)}
+          >
+            <div
+              className="bg-white rounded-2xl w-full max-w-[420px] p-6 sm:p-8"
+              onClick={e => e.stopPropagation()}
+            >
+              {requestDone ? (
+                <div className="flex flex-col items-center gap-4 text-center py-4">
+                  <div className="w-14 h-14 bg-[#f5f5f5] rounded-full flex items-center justify-center text-2xl">✅</div>
+                  <h3 className="font-paperlogy text-[20px] font-bold">신청을 접수했어요</h3>
+                  <p className="text-[15px] text-[#525252] leading-relaxed">
+                    확인 후 입력하신 이메일로 연락드릴게요.
+                  </p>
+                  <button
+                    onClick={() => { setShowRequestModal(false); setRequestDone(false); }}
+                    className="w-full py-3.5 bg-[#0a0a0a] text-white rounded-full text-[15px] font-semibold hover:bg-[#262626] transition-colors mt-2"
+                  >
+                    확인
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-5">
+                  <div>
+                    <h3 className="font-paperlogy text-[20px] font-bold mb-1">추가 페이지 개설 신청</h3>
+                    <p className="text-[15px] text-[#a3a3a3]">후원 확인 후 개설해드려요</p>
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <label className="block text-[14px] font-semibold text-[#525252] mb-1.5">희망 페이지 주소</label>
+                      <div className="flex items-center border border-[#e5e5e5] rounded-xl overflow-hidden focus-within:border-[#0a0a0a] transition-colors">
+                        <span className="text-[14px] text-[#a3a3a3] pl-4 shrink-0">monopage.kr/</span>
+                        <input
+                          type="text"
+                          placeholder="my_brand"
+                          className="flex-1 py-3.5 pr-4 text-[15px] font-medium outline-none bg-transparent"
+                          value={requestForm.username}
+                          onChange={e => setRequestForm({ ...requestForm, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') })}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[14px] font-semibold text-[#525252] mb-1.5">용도 (선택)</label>
+                      <input
+                        type="text"
+                        placeholder="브랜드 페이지, 팀 소개 등"
+                        className="w-full py-3.5 px-4 border border-[#e5e5e5] rounded-xl text-[15px] font-medium outline-none focus:border-[#0a0a0a] transition-colors"
+                        value={requestForm.purpose}
+                        onChange={e => setRequestForm({ ...requestForm, purpose: e.target.value })}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[14px] font-semibold text-[#525252] mb-1.5">연락받을 이메일</label>
+                      <input
+                        type="email"
+                        placeholder="email@example.com"
+                        className="w-full py-3.5 px-4 border border-[#e5e5e5] rounded-xl text-[15px] font-medium outline-none focus:border-[#0a0a0a] transition-colors"
+                        value={requestForm.email}
+                        onChange={e => setRequestForm({ ...requestForm, email: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setShowRequestModal(false)}
+                      className="flex-1 py-3.5 border border-[#e5e5e5] rounded-full text-[15px] font-semibold text-[#525252] hover:border-[#0a0a0a] transition-colors"
+                    >
+                      취소
+                    </button>
+                    <button
+                      onClick={handleRequestSubmit}
+                      disabled={requestSubmitting || !requestForm.username.trim() || !requestForm.email.trim()}
+                      className="flex-1 py-3.5 bg-[#0a0a0a] text-white rounded-full text-[15px] font-semibold hover:bg-[#262626] transition-colors disabled:opacity-30 flex items-center justify-center gap-2"
+                    >
+                      {requestSubmitting ? <Loader2 size={16} className="animate-spin" /> : '신청하기'}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     );
   }
