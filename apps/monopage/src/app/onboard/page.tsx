@@ -171,6 +171,44 @@ export default function Onboarding() {
   const snsLinks = links.filter(l => isSnsLink(l.type));
   const hasNaverPlace = links.some(l => l.type === 'naver_place');
 
+  // 이미 로그인한 유저 → 추가 페이지 신청 안내
+  if (isLoggedIn && !isGenerating) {
+    return (
+      <div className="min-h-screen bg-white text-[#0a0a0a] flex items-center justify-center p-5 sm:p-8">
+        <div className="max-w-[440px] w-full flex flex-col items-center gap-6 text-center">
+          <div className="w-16 h-16 bg-[#f5f5f5] rounded-full flex items-center justify-center text-2xl">📄</div>
+          <div>
+            <h1 className="font-paperlogy text-[24px] font-extrabold tracking-tight mb-2">이미 페이지가 있어요</h1>
+            <p className="text-[16px] text-[#525252] leading-relaxed">
+              현재 오픈 베타 기간으로<br />1인 1페이지만 지원하고 있어요.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 w-full">
+            <button
+              onClick={() => router.push('/admin')}
+              className="w-full py-4 bg-[#0a0a0a] text-white rounded-full text-[16px] font-semibold hover:bg-[#262626] transition-colors"
+            >
+              내 페이지 관리하기
+            </button>
+            <a
+              href="https://buymeacoffee.com/vibers"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-4 bg-[#FFDD00] text-[#0a0a0a] rounded-full text-[16px] font-semibold hover:brightness-95 transition-all text-center"
+            >
+              ☕ 후원하고 추가 페이지 신청하기
+            </a>
+          </div>
+
+          <p className="text-[14px] text-[#a3a3a3]">
+            후원 후 vibers@vibers.co.kr 로 문의해주시면 추가 페이지를 개설해드려요
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white text-[#0a0a0a] flex items-center justify-center p-5 sm:p-8">
       <div className="max-w-[440px] w-full">
