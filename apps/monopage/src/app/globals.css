@@ -94,14 +94,7 @@
   --shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.8);
 }
 
-/* Smooth Color Transitions */
-@media (prefers-reduced-motion: no-preference) {
-  * {
-    transition: background-color var(--transition-base) var(--ease-in-out),
-                color var(--transition-base) var(--ease-in-out),
-                border-color var(--transition-base) var(--ease-in-out);
-  }
-}
+/* transitions handled by Tailwind utility classes */
 
 /* ──────────── BASE STYLES ──────────── */
 
@@ -132,31 +125,10 @@ h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
 }
 
-h1 {
-  font-size: clamp(2rem, 6vw, 4rem);
-  margin-bottom: var(--spacing-lg);
-}
-
-h2 {
-  font-size: clamp(1.75rem, 4vw, 3rem);
-  margin-bottom: var(--spacing-md);
-}
-
-h3 {
-  font-size: clamp(1.25rem, 3vw, 2rem);
-  margin-bottom: var(--spacing-sm);
-}
-
-h4, h5, h6 {
-  font-size: 1.125rem;
-  margin-bottom: var(--spacing-sm);
-}
+/* heading sizes controlled by Tailwind classes */
 
 p {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-md);
+  color: inherit;
 }
 
 a {
@@ -187,21 +159,7 @@ a:focus-visible {
 
 input, textarea, select {
   font-family: inherit;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-light);
-  background: var(--surface-primary);
-  color: var(--text-primary);
-  padding: var(--spacing-sm) var(--spacing-md);
-  transition: border-color var(--transition-base),
-              box-shadow var(--transition-base);
-}
-
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-light);
+  color: inherit;
 }
 
 button {
@@ -289,11 +247,7 @@ button:focus-visible {
   padding: 0 var(--spacing-lg);
 }
 
-/* ──────────── SECTIONS ──────────── */
-
-section {
-  padding: var(--spacing-3xl) 0;
-}
+/* section padding controlled by Tailwind */
 
 /* ──────────── ANIMATIONS ──────────── */
 
@@ -356,24 +310,7 @@ section {
 
 /* ──────────── RESPONSIVE ──────────── */
 
-@media (max-width: 768px) {
-  section {
-    padding: var(--spacing-2xl) 0;
-  }
-
-  .container {
-    padding: 0 var(--spacing-md);
-  }
-
-  h1 {
-    font-size: 2rem;
-    margin-bottom: var(--spacing-md);
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
-}
+/* responsive overrides handled by Tailwind */
 
 /* ──────────── ACCESSIBILITY ──────────── */
 
