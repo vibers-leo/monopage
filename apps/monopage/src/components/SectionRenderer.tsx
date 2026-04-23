@@ -73,7 +73,7 @@ export function SectionRenderer({ sections, profile, links, portfolioItems, post
 
           case 'portfolio':
             return portfolioItems.length > 0 ? (
-              <PortfolioGallery key={section.id} items={portfolioItems} />
+              <PortfolioGallery key={section.id} items={portfolioItems} theme={theme} />
             ) : null;
 
           case 'text':

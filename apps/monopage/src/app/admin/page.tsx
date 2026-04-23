@@ -763,13 +763,40 @@ export default function AdminDashboard() {
             <section>
               <div className="flex justify-between items-center mb-4">
                 <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest">Portfolio</label>
-                <button
-                  onClick={() => portfolioInputRef.current?.click()}
-                  disabled={uploadingPortfolio}
-                  className="flex items-center gap-1 text-[14px] font-black text-black hover:opacity-50 transition-opacity uppercase tracking-widest disabled:opacity-30"
-                >
-                  {uploadingPortfolio ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />} Add
-                </button>
+                <div className="flex gap-2">
+                  {/* Instagram에서 가져오기 */}
+                  {socialAccounts.find(a => a.provider === 'instagram')?.metadata?.posts?.length > 0 && (
+                    <button
+                      onClick={async () => {
+                        const igPosts = socialAccounts.find(a => a.provider === 'instagram')?.metadata?.posts || [];
+                        const existingUrls = new Set(portfolioItems.map(i => i.image_url));
+                        let added = 0;
+                        for (const post of igPosts.slice(0, 9)) {
+                          const url = post.media_url || post.image_url;
+                          if (url && !existingUrls.has(url)) {
+                            try {
+                              const item = await createPortfolioItem({ image_url: url, title: post.caption?.slice(0, 50) || '', source: 'instagram' });
+                              setPortfolioItems(prev => [...prev, item]);
+                              added++;
+                            } catch { /* skip */ }
+                          }
+                        }
+                        if (added > 0) addToast('success', `Instagram에서 ${added}개 가져왔어요`);
+                        else addToast('error', '새로 가져올 게시물이 없어요');
+                      }}
+                      className="flex items-center gap-1 text-[14px] font-bold text-pink-500 hover:text-pink-600 transition-colors"
+                    >
+                      <Camera size={12} /> IG 가져오기
+                    </button>
+                  )}
+                  <button
+                    onClick={() => portfolioInputRef.current?.click()}
+                    disabled={uploadingPortfolio}
+                    className="flex items-center gap-1 text-[14px] font-black text-black hover:opacity-50 transition-opacity uppercase tracking-widest disabled:opacity-30"
+                  >
+                    {uploadingPortfolio ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />} Add
+                  </button>
+                </div>
               </div>
               <input ref={portfolioInputRef} type="file" accept="image/*" className="hidden" onChange={handlePortfolioUpload} />
 
@@ -783,69 +810,102 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              <div className="flex flex-col gap-2">
+              {/* 그리드 뷰 — 드래그 정렬 + 핀 고정 */}
+              <div className="grid grid-cols-3 gap-2">
                 {portfolioItems.map((item, index) => (
                   <div
                     key={item.id}
-                    draggable={editingPortfolio !== item.id}
+                    draggable
                     onDragStart={() => handleDragStart(index)}
                     onDragOver={(e) => handleDragOver(e, index)}
                     onDrop={handlePortfolioDrop}
-                    className="transition-opacity"
+                    className="relative aspect-square rounded-xl overflow-hidden bg-gray-100 group cursor-grab active:cursor-grabbing"
                   >
-                    {editingPortfolio === item.id ? (
-                      <div className="flex flex-col gap-2 p-3 border border-black rounded-2xl bg-gray-50">
-                        <div className="w-full h-32 rounded-xl overflow-hidden bg-gray-100">
-                          <img src={item.image_url} alt="" className="w-full h-full object-cover" />
-                        </div>
-                        <input
-                          value={item.title || ''}
-                          onChange={(e) => patchPortfolio(item.id, 'title', e.target.value)}
-                          placeholder="제목 (선택)"
-                          className="text-xs font-bold bg-white border border-gray-100 rounded-xl px-3 py-2 outline-none focus:border-black transition-colors"
-                        />
-                        <textarea
-                          value={item.description || ''}
-                          onChange={(e) => patchPortfolio(item.id, 'description', e.target.value)}
-                          placeholder="설명 (선택)"
-                          rows={2}
-                          className="text-xs font-medium bg-white border border-gray-100 rounded-xl px-3 py-2 outline-none focus:border-black transition-colors resize-none"
-                        />
-                        <div className="flex gap-2 justify-end">
-                          <button
-                            onClick={() => handleDeletePortfolio(item.id)}
-                            className="flex items-center gap-1 text-[14px] font-black text-red-400 hover:text-red-600 transition-colors"
-                          >
-                            <Trash2 size={10} /> 없애기
-                          </button>
-                          <button
-                            onClick={() => handleUpdatePortfolio(item.id)}
-                            className="flex items-center gap-1 text-[14px] font-black text-black hover:opacity-50 transition-opacity"
-                          >
-                            <Check size={10} /> 완료했어요
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-between p-3 border border-gray-50 rounded-xl bg-gray-50/50 group">
-                        <div className="flex items-center gap-3 min-w-0">
-                          <GripVertical size={14} className="text-gray-200 shrink-0" />
-                          <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0">
-                            <img src={item.image_url} alt="" className="w-full h-full object-cover" />
-                          </div>
-                          <span className="text-xs font-bold truncate">{item.title || '제목 없음'}</span>
-                        </div>
-                        <button
-                          onClick={() => setEditingPortfolio(item.id)}
-                          className="text-gray-200 hover:text-black transition-colors opacity-0 group-hover:opacity-100 shrink-0 ml-2"
-                        >
-                          <Settings size={12} />
-                        </button>
-                      </div>
+                    <img src={item.image_url} alt="" className="w-full h-full object-cover" />
+
+                    {/* 핀 배지 */}
+                    {(item as any).pinned && (
+                      <div className="absolute top-1.5 left-1.5 w-5 h-5 bg-black text-white rounded-full flex items-center justify-center text-[10px]">📌</div>
                     )}
+
+                    {/* 소스 배지 */}
+                    {(item as any).source === 'instagram' && (
+                      <div className="absolute top-1.5 right-1.5 w-5 h-5 bg-pink-500 text-white rounded-full flex items-center justify-center text-[10px]">📸</div>
+                    )}
+
+                    {/* 호버 오버레이 */}
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setEditingPortfolio(item.id); }}
+                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-black hover:scale-110 transition-transform"
+                      >
+                        <Settings size={12} />
+                      </button>
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          const newPinned = !(item as any).pinned;
+                          await updatePortfolioItem(item.id, { pinned: newPinned });
+                          setPortfolioItems(prev => prev.map(i => i.id === item.id ? { ...i, pinned: newPinned } : i));
+                        }}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition-transform ${(item as any).pinned ? 'bg-yellow-400 text-black' : 'bg-white text-black'}`}
+                      >
+                        <span className="text-[10px]">📌</span>
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleDeletePortfolio(item.id); }}
+                        className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
+
+              {/* 편집 모달 */}
+              {editingPortfolio && (() => {
+                const item = portfolioItems.find(i => i.id === editingPortfolio);
+                if (!item) return null;
+                return (
+                  <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setEditingPortfolio(null)}>
+                    <div className="bg-white rounded-2xl max-w-sm w-full p-5 flex flex-col gap-3" onClick={e => e.stopPropagation()}>
+                      <div className="w-full h-40 rounded-xl overflow-hidden bg-gray-100">
+                        <img src={item.image_url} alt="" className="w-full h-full object-cover" />
+                      </div>
+                      <input
+                        value={item.title || ''}
+                        onChange={(e) => patchPortfolio(item.id, 'title', e.target.value)}
+                        placeholder="제목 (선택)"
+                        className="text-[14px] font-semibold bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 outline-none focus:border-black transition-colors"
+                      />
+                      <textarea
+                        value={item.description || ''}
+                        onChange={(e) => patchPortfolio(item.id, 'description', e.target.value)}
+                        placeholder="설명 (선택)"
+                        rows={2}
+                        className="text-[14px] font-medium bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 outline-none focus:border-black transition-colors resize-none"
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleDeletePortfolio(item.id)}
+                          className="flex-1 py-3 border border-red-200 text-red-500 rounded-xl text-[14px] font-semibold hover:bg-red-50 transition-colors"
+                        >
+                          삭제
+                        </button>
+                        <button
+                          onClick={() => handleUpdatePortfolio(item.id)}
+                          className="flex-1 py-3 bg-black text-white rounded-xl text-[14px] font-semibold hover:bg-gray-800 transition-colors"
+                        >
+                          저장
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              <p className="text-[13px] text-gray-300 mt-3 text-center">드래그해서 순서를 바꿀 수 있어요. 📌 핀으로 위치를 고정할 수 있어요.</p>
             </section>
           )}
 

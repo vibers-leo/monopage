@@ -106,13 +106,13 @@ export const disconnectSocial = () =>
 export const getPortfolioItems = () =>
   request<any[]>('/api/v1/portfolio_items');
 
-export const createPortfolioItem = (data: { image_url: string; title?: string; description?: string; category?: string }) =>
+export const createPortfolioItem = (data: { image_url: string; title?: string; description?: string; category?: string; source?: string }) =>
   request<any>('/api/v1/portfolio_items', {
     method: 'POST',
     body: JSON.stringify(data),
   });
 
-export const updatePortfolioItem = (id: number, data: { title?: string; description?: string; category?: string; position?: number }) =>
+export const updatePortfolioItem = (id: number, data: { title?: string; description?: string; category?: string; position?: number; pinned?: boolean; source?: string }) =>
   request<any>(`/api/v1/portfolio_items/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(data),

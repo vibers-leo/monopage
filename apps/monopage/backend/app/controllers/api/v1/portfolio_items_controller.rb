@@ -39,6 +39,6 @@ class Api::V1::PortfolioItemsController < ApplicationController
   private
 
   def portfolio_item_params
-    params.permit(:image_url, :title, :description, :category, :position)
+    params.permit(:image_url, :title, :description, :category, :position, :pinned, :source)
   end
 end
