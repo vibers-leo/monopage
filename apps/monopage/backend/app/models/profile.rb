@@ -10,5 +10,6 @@ class Profile < ApplicationRecord
   store_accessor :theme_config, :primary_color, :neon_color, :bg_tone
   store_accessor :ai_metadata, :one_liner, :category, :tags
 
-  validates :username, presence: true, uniqueness: true
+  validates :username, presence: true, uniqueness: true,
+            format: { with: /\A[a-z0-9_-]+\z/, message: '영문 소문자, 숫자, -, _ 만 사용할 수 있어요' }
 end

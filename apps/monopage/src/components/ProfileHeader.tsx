@@ -36,7 +36,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ username, bio, ava
       {/* Text */}
       <div className="flex flex-col items-center gap-1">
         <h1
-          className="text-[18px] font-bold tracking-tight leading-tight"
+          className="text-[16px] font-bold tracking-tight leading-tight"
           style={{ color: t?.text || '#0a0a0a', fontFamily: "'Paperlogy', 'Pretendard', sans-serif" }}
         >
           {displayName || username}
