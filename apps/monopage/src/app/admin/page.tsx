@@ -88,6 +88,9 @@ export default function AdminDashboard() {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [disconnecting, setDisconnecting] = useState(false);
+  const [showPageMenu, setShowPageMenu] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   const loadData = useCallback(async () => {
     if (!getToken()) { router.push('/login'); return; }
@@ -373,47 +376,152 @@ export default function AdminDashboard() {
             <p className="text-[14px] font-black text-gray-300 uppercase tracking-[0.3em] mb-2">내 모노페이지</p>
             <h1 className="text-2xl font-black mb-6">페이지 목록</h1>
 
-            <div className="grid grid-cols-2 gap-3 flex-1 content-start">
+            <div className="flex flex-col gap-4 flex-1">
               {/* 내 페이지 카드 */}
-              <button
-                onClick={() => setView('editor')}
-                className="aspect-[3/4] border border-gray-200 rounded-2xl p-5 flex flex-col text-left hover:border-black transition-colors group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98]"
-              >
-                {profile.avatar_url && (
-                  <img src={profile.avatar_url} className="absolute inset-0 w-full h-full object-cover opacity-5 group-hover:opacity-10 transition-opacity" alt="" />
-                )}
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden mb-auto shrink-0">
+              <div className="border border-gray-200 rounded-2xl p-5 relative group">
+                {/* 우측 상단 메뉴 */}
+                <div className="absolute top-4 right-4 z-10">
+                  <button
+                    onClick={() => setShowPageMenu(v => !v)}
+                    className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-300 hover:text-black hover:bg-gray-100 transition-colors"
+                  >
+                    <Settings size={14} />
+                  </button>
+                  {showPageMenu && (
+                    <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-100 rounded-xl shadow-lg py-1 z-50" onClick={() => setShowPageMenu(false)}>
+                      <button
+                        onClick={() => setView('editor')}
+                        className="flex items-center gap-2 w-full px-4 py-2.5 text-[14px] font-medium hover:bg-gray-50 transition-colors"
+                      >
+                        <Settings size={13} /> 페이지 편집
+                      </button>
+                      <a
+                        href={`/${profile.username}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 w-full px-4 py-2.5 text-[14px] font-medium hover:bg-gray-50 transition-colors"
+                      >
+                        <Eye size={13} /> 페이지 보기
+                      </a>
+                      <div className="h-px bg-gray-100 my-1" />
+                      <button
+                        onClick={() => setShowResetConfirm(true)}
+                        className="flex items-center gap-2 w-full px-4 py-2.5 text-[14px] font-medium text-red-500 hover:bg-red-50 transition-colors"
+                      >
+                        <Trash2 size={13} /> 페이지 초기화
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-4 cursor-pointer" onClick={() => setView('editor')}>
+                  <div className="w-14 h-14 rounded-full bg-gray-100 overflow-hidden shrink-0">
                     {profile.avatar_url
                       ? <img src={profile.avatar_url} className="w-full h-full object-cover" alt="" />
-                      : <div className="w-full h-full flex items-center justify-center text-base">👤</div>
+                      : <div className="w-full h-full flex items-center justify-center text-lg font-bold text-gray-300">{(profile.username?.[0] || '?').toUpperCase()}</div>
                     }
                   </div>
-                  <div>
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0"></span>
-                      <span className="text-[14px] font-black text-gray-300 uppercase tracking-widest">Active</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
+                      <span className="text-[13px] font-semibold text-gray-400">Active</span>
                     </div>
-                    <p className="font-black text-xs">@{profile.username}</p>
+                    <p className="font-bold text-[15px]">@{profile.username}</p>
                     <p className="text-[14px] text-gray-400 font-medium mt-0.5 truncate">{profile.bio || '소개가 없어요'}</p>
                   </div>
+                  <ArrowRight size={16} className="text-gray-300 shrink-0" />
                 </div>
-              </button>
+
+                {/* 하단 빠른 액션 */}
+                <div className="flex gap-2 mt-4 pt-4 border-t border-gray-100">
+                  <button
+                    onClick={() => setView('editor')}
+                    className="flex-1 py-2.5 bg-[#0a0a0a] text-white rounded-xl text-[14px] font-semibold hover:bg-[#262626] transition-colors"
+                  >
+                    편집하기
+                  </button>
+                  <a
+                    href={`/${profile.username}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-2.5 border border-gray-200 rounded-xl text-[14px] font-semibold text-center hover:border-black transition-colors"
+                  >
+                    미리보기
+                  </a>
+                </div>
+              </div>
 
               {/* + 추가 카드 */}
               <button
                 onClick={() => setShowSupportModal(true)}
-                className="aspect-[3/4] border border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center gap-3 hover:border-gray-400 transition-colors group hover:scale-[1.02] active:scale-[0.98]"
+                className="border border-dashed border-gray-200 rounded-2xl p-5 flex items-center gap-4 hover:border-gray-400 transition-colors group"
               >
-                <div className="w-10 h-10 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center group-hover:border-gray-400 transition-colors">
-                  <Plus size={18} className="text-gray-300 group-hover:text-gray-500 transition-colors" />
+                <div className="w-10 h-10 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center group-hover:border-gray-400 transition-colors shrink-0">
+                  <Plus size={16} className="text-gray-300 group-hover:text-gray-500 transition-colors" />
                 </div>
-                <div className="text-center">
-                  <p className="text-xs font-black text-gray-300">새 페이지</p>
-                  <p className="text-[14px] text-gray-200 font-medium mt-0.5">후원 후 문의</p>
+                <div className="text-left">
+                  <p className="text-[14px] font-semibold text-gray-400">새 페이지 추가하기</p>
+                  <p className="text-[13px] text-gray-300 font-medium mt-0.5">후원 후 신청할 수 있어요</p>
                 </div>
               </button>
             </div>
+
+            {/* 페이지 초기화 확인 모달 */}
+            {showResetConfirm && (
+              <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-6" onClick={() => !resetting && setShowResetConfirm(false)}>
+                <div className="bg-white rounded-2xl p-6 max-w-sm w-full" onClick={e => e.stopPropagation()}>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center shrink-0">
+                      <AlertTriangle size={18} className="text-red-500" />
+                    </div>
+                    <div>
+                      <h3 className="text-[16px] font-bold">페이지를 초기화할까요?</h3>
+                      <p className="text-[14px] text-gray-400 mt-0.5">모든 링크, 프로필 사진, 소개글이 삭제돼요.</p>
+                    </div>
+                  </div>
+                  <p className="text-[14px] text-red-500 font-medium mb-5">계정은 유지되고, 페이지 주소(@{profile.username})도 그대로예요.</p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setShowResetConfirm(false)}
+                      className="flex-1 py-3 border border-gray-200 rounded-xl text-[14px] font-semibold hover:border-black transition-colors"
+                    >
+                      취소
+                    </button>
+                    <button
+                      onClick={async () => {
+                        setResetting(true);
+                        try {
+                          // 모든 링크 삭제
+                          for (const link of links) {
+                            await deleteLink(link.id);
+                          }
+                          // 모든 포트폴리오 삭제
+                          for (const item of portfolioItems) {
+                            await deletePortfolioItem(item.id);
+                          }
+                          // 프로필 초기화
+                          await updateProfile({ bio: '', avatar_url: '' });
+                          // 상태 리셋
+                          setLinks([]);
+                          setPortfolioItems([]);
+                          setProfile(p => ({ ...p, bio: '', avatar_url: '' }));
+                          setShowResetConfirm(false);
+                          addToast('success', '페이지를 초기화했어요');
+                        } catch (e: any) {
+                          setError(e.message);
+                        } finally {
+                          setResetting(false);
+                        }
+                      }}
+                      disabled={resetting}
+                      className="flex-1 py-3 bg-red-500 text-white rounded-xl text-[14px] font-semibold hover:bg-red-600 transition-colors flex items-center justify-center gap-1.5"
+                    >
+                      {resetting ? <Loader2 size={14} className="animate-spin" /> : '초기화하기'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
         ) : (
