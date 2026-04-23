@@ -11,7 +11,7 @@ import {
   Plus, Save, Link as LinkIcon, ArrowRight,
   ChevronLeft, Trash2, GripVertical, Check, X, Loader2, LogOut, Camera,
   Shield, AlertTriangle, Unlink, Image, User, Settings, Eye, EyeOff, BarChart3, MousePointerClick,
-  Layout, Type, ChevronUp, ChevronDown, Palette, RefreshCw, Clock, ExternalLink,
+  Layout, Type, ChevronUp, ChevronDown, Palette, RefreshCw, Clock, ExternalLink, MessageCircle, Mail,
 } from 'lucide-react';
 import { THEMES, type ThemeKey } from '@/lib/themes';
 import Link from 'next/link';
@@ -23,6 +23,7 @@ import {
   changePassword, deleteAccount, getSocialConnections, disconnectSocial,
   getSocialAccounts, deleteSocialAccount,
   getAnalytics,
+  getInquiries, getInquiryStats, updateInquiry, deleteInquiry,
   clearToken, getToken,
 } from '@/lib/api';
 
@@ -38,7 +39,7 @@ const SUPER_ADMINS = [
   'vibers.leo@gmail.com',
 ];
 
-type Tab = 'profile' | 'links' | 'portfolio' | 'sns' | 'layout' | 'analytics' | 'settings';
+type Tab = 'profile' | 'links' | 'portfolio' | 'sns' | 'layout' | 'inquiries' | 'analytics' | 'settings';
 
 interface AnalyticsData {
   total_views: number;
@@ -88,6 +89,11 @@ export default function AdminDashboard() {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [disconnecting, setDisconnecting] = useState(false);
+  const [inquiries, setInquiries] = useState<any[]>([]);
+  const [inquiryStats, setInquiryStats] = useState<{ total: number; received: number; today: number } | null>(null);
+  const [inquiryFilter, setInquiryFilter] = useState<string>('all');
+  const [inquiriesLoading, setInquiriesLoading] = useState(false);
+  const [selectedInquiry, setSelectedInquiry] = useState<any | null>(null);
   const [showPageMenu, setShowPageMenu] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [resetting, setResetting] = useState(false);
@@ -131,6 +137,16 @@ export default function AdminDashboard() {
       getAnalytics().then(setAnalytics).catch(() => {}).finally(() => setAnalyticsLoading(false));
     }
   }, [activeTab, analytics]);
+
+  useEffect(() => {
+    if (activeTab === 'inquiries' && inquiries.length === 0) {
+      setInquiriesLoading(true);
+      Promise.all([getInquiries(), getInquiryStats()])
+        .then(([inqs, stats]) => { setInquiries(inqs); setInquiryStats(stats); })
+        .catch(() => {})
+        .finally(() => setInquiriesLoading(false));
+    }
+  }, [activeTab]);
 
   const save = async () => {
     setSaving(true);
@@ -286,6 +302,7 @@ export default function AdminDashboard() {
     { key: 'portfolio', label: 'Portfolio', icon: <Image size={14} /> },
     { key: 'sns', label: 'SNS', icon: <Camera size={14} /> },
     { key: 'layout', label: 'Layout', icon: <Layout size={14} /> },
+    { key: 'inquiries', label: 'Inbox', icon: <MessageCircle size={14} /> },
     { key: 'analytics', label: 'Stats', icon: <BarChart3 size={14} /> },
     { key: 'settings', label: 'Settings', icon: <Settings size={14} /> },
   ];
@@ -1037,7 +1054,8 @@ export default function AdminDashboard() {
                   {[
                     { type: 'text' as const, label: 'Text', icon: <Type size={10} /> },
                     { type: 'sns_icons' as const, label: 'SNS', icon: <Camera size={10} /> },
-                  ].filter(b => !sections.some(s => s.type === b.type && b.type === 'sns_icons')).map(block => (
+                    { type: 'inquiry' as const, label: '문의폼', icon: <Plus size={10} /> },
+                  ].filter(b => !sections.some(s => s.type === b.type && (b.type === 'sns_icons' || b.type === 'inquiry'))).map(block => (
                     <button
                       key={block.type}
                       onClick={() => {
@@ -1089,7 +1107,8 @@ export default function AdminDashboard() {
                        section.type === 'portfolio' ? '포트폴리오' :
                        section.type === 'sns_icons' ? 'SNS 아이콘' :
                        section.type === 'sns_feed' ? 'SNS 피드' :
-                       section.type === 'text' ? '텍스트' : section.type}
+                       section.type === 'text' ? '텍스트' :
+                       section.type === 'inquiry' ? '문의폼' : section.type}
                     </span>
                     {section.type === 'text' && (
                       <input
@@ -1111,6 +1130,174 @@ export default function AdminDashboard() {
                 ))}
               </div>
               <p className="text-[14px] text-gray-300 mt-3 text-center">섹션 순서를 변경하면 퍼블릭 페이지에 반영돼요. 저장 버튼을 눌러주세요</p>
+            </section>
+          )}
+
+          {/* ===== INQUIRIES TAB ===== */}
+          {activeTab === 'inquiries' && (
+            <section className="flex flex-col gap-5">
+              {inquiriesLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
+                </div>
+              ) : (
+                <>
+                  {/* 문의 통계 */}
+                  {inquiryStats && (
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="p-4 bg-gray-50 rounded-2xl text-center">
+                        <p className="text-[22px] font-black">{inquiryStats.total}</p>
+                        <p className="text-[14px] text-gray-400 font-semibold mt-0.5">전체</p>
+                      </div>
+                      <div className="p-4 bg-gray-50 rounded-2xl text-center">
+                        <p className="text-[22px] font-black text-orange-500">{inquiryStats.received}</p>
+                        <p className="text-[14px] text-gray-400 font-semibold mt-0.5">미확인</p>
+                      </div>
+                      <div className="p-4 bg-gray-50 rounded-2xl text-center">
+                        <p className="text-[22px] font-black">{inquiryStats.today}</p>
+                        <p className="text-[14px] text-gray-400 font-semibold mt-0.5">오늘</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 필터 */}
+                  <div className="flex gap-1.5 p-1 bg-gray-50 rounded-xl">
+                    {[
+                      { key: 'all', label: '전체' },
+                      { key: 'received', label: '접수' },
+                      { key: 'checked', label: '확인' },
+                      { key: 'completed', label: '완료' },
+                    ].map(f => (
+                      <button
+                        key={f.key}
+                        onClick={() => setInquiryFilter(f.key)}
+                        className={`flex-1 py-2 rounded-lg text-[14px] font-semibold transition-colors ${
+                          inquiryFilter === f.key ? 'bg-black text-white' : 'text-gray-400 hover:text-black'
+                        }`}
+                      >
+                        {f.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* 문의 목록 */}
+                  <div className="flex flex-col gap-2">
+                    {inquiries
+                      .filter(inq => inquiryFilter === 'all' || inq.status === inquiryFilter)
+                      .map(inq => (
+                        <div
+                          key={inq.id}
+                          onClick={() => setSelectedInquiry(selectedInquiry?.id === inq.id ? null : inq)}
+                          className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                            selectedInquiry?.id === inq.id ? 'border-black bg-gray-50' : 'border-gray-100 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${
+                              inq.status === 'received' ? 'bg-orange-400' :
+                              inq.status === 'checked' ? 'bg-blue-400' : 'bg-green-400'
+                            }`} />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <p className="text-[15px] font-bold truncate">{inq.name}</p>
+                                <span className={`px-2 py-0.5 rounded-full text-[12px] font-semibold shrink-0 ${
+                                  inq.status === 'received' ? 'bg-orange-50 text-orange-500' :
+                                  inq.status === 'checked' ? 'bg-blue-50 text-blue-500' : 'bg-green-50 text-green-500'
+                                }`}>
+                                  {inq.status === 'received' ? '접수' : inq.status === 'checked' ? '확인' : '완료'}
+                                </span>
+                              </div>
+                              <p className="text-[14px] text-gray-500 line-clamp-2">{inq.message}</p>
+                              <p className="text-[13px] text-gray-300 mt-1">{new Date(inq.created_at).toLocaleDateString('ko', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                            </div>
+                          </div>
+
+                          {/* 상세 펼침 */}
+                          {selectedInquiry?.id === inq.id && (
+                            <div className="mt-4 pt-4 border-t border-gray-200 flex flex-col gap-3">
+                              {inq.email && (
+                                <div className="flex items-center gap-2 text-[14px]">
+                                  <Mail size={14} className="text-gray-400" />
+                                  <a href={`mailto:${inq.email}`} className="text-blue-500 hover:underline">{inq.email}</a>
+                                </div>
+                              )}
+                              {inq.phone && (
+                                <div className="flex items-center gap-2 text-[14px]">
+                                  <ExternalLink size={14} className="text-gray-400" />
+                                  <a href={`tel:${inq.phone}`} className="text-blue-500 hover:underline">{inq.phone}</a>
+                                </div>
+                              )}
+                              <p className="text-[14px] text-gray-600 leading-relaxed whitespace-pre-wrap">{inq.message}</p>
+
+                              {/* 메모 */}
+                              {inq.admin_note && (
+                                <div className="p-3 bg-yellow-50 rounded-xl">
+                                  <p className="text-[13px] font-semibold text-yellow-700 mb-1">메모</p>
+                                  <p className="text-[14px] text-yellow-800">{inq.admin_note}</p>
+                                </div>
+                              )}
+
+                              {/* 상태 변경 + 삭제 */}
+                              <div className="flex gap-2 mt-1">
+                                {inq.status === 'received' && (
+                                  <button
+                                    onClick={async (e) => {
+                                      e.stopPropagation();
+                                      const updated = await updateInquiry(inq.id, { status: 'checked' });
+                                      setInquiries(prev => prev.map(i => i.id === inq.id ? updated : i));
+                                      if (inquiryStats) setInquiryStats({ ...inquiryStats, received: inquiryStats.received - 1 });
+                                    }}
+                                    className="flex-1 py-2.5 bg-blue-500 text-white rounded-xl text-[14px] font-semibold hover:bg-blue-600 transition-colors"
+                                  >
+                                    확인 처리
+                                  </button>
+                                )}
+                                {inq.status === 'checked' && (
+                                  <button
+                                    onClick={async (e) => {
+                                      e.stopPropagation();
+                                      const updated = await updateInquiry(inq.id, { status: 'completed' });
+                                      setInquiries(prev => prev.map(i => i.id === inq.id ? updated : i));
+                                    }}
+                                    className="flex-1 py-2.5 bg-green-500 text-white rounded-xl text-[14px] font-semibold hover:bg-green-600 transition-colors"
+                                  >
+                                    완료 처리
+                                  </button>
+                                )}
+                                <button
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    if (!confirm('이 문의를 삭제할까요?')) return;
+                                    await deleteInquiry(inq.id);
+                                    setInquiries(prev => prev.filter(i => i.id !== inq.id));
+                                    setSelectedInquiry(null);
+                                    if (inquiryStats) setInquiryStats({ ...inquiryStats, total: inquiryStats.total - 1 });
+                                  }}
+                                  className="py-2.5 px-4 border border-gray-200 rounded-xl text-[14px] font-semibold text-gray-400 hover:text-red-500 hover:border-red-300 transition-colors"
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    }
+
+                    {inquiries.filter(inq => inquiryFilter === 'all' || inq.status === inquiryFilter).length === 0 && (
+                      <div className="text-center py-12">
+                        <MessageCircle size={24} className="mx-auto text-gray-200 mb-3" />
+                        <p className="text-[16px] text-gray-400 font-semibold">
+                          {inquiryFilter === 'all' ? '아직 문의가 없어요' : `${inquiryFilter === 'received' ? '미확인' : inquiryFilter === 'checked' ? '확인 중' : '완료된'} 문의가 없어요`}
+                        </p>
+                        <p className="text-[14px] text-gray-300 mt-1">
+                          Layout 탭에서 문의폼을 추가하면 방문자가 문의를 보낼 수 있어요
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </section>
           )}
 

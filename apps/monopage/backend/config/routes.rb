@@ -25,6 +25,10 @@ Rails.application.routes.draw do
         get 'sync', on: :member
       end
 
+      resources :inquiries, only: [:index, :create, :update, :destroy] do
+        get 'stats', on: :collection
+      end
+
       # Analytics (authenticated)
       get 'analytics', to: 'analytics#index'
       # Analytics (public - no auth)

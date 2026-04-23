@@ -6,12 +6,13 @@ import { LinkCard } from './LinkCard';
 import { SnsIconBar } from './SnsIconBar';
 import { PortfolioGallery } from './PortfolioGallery';
 import { SnsGallery } from './SnsGallery';
+import { InquiryForm } from './InquiryForm';
 import { trackClick } from '@/lib/api';
 import type { Theme } from '@/lib/themes';
 
 export interface Section {
   id: string;
-  type: 'header' | 'sns_icons' | 'links' | 'portfolio' | 'text' | 'sns_feed';
+  type: 'header' | 'sns_icons' | 'links' | 'portfolio' | 'text' | 'sns_feed' | 'inquiry';
   order: number;
   content?: any;
 }
@@ -88,6 +89,13 @@ export function SectionRenderer({ sections, profile, links, portfolioItems, post
             return posts.length > 0 ? (
               <SnsGallery key={section.id} posts={posts} />
             ) : null;
+
+          case 'inquiry':
+            return (
+              <div key={section.id} className="w-full mt-6">
+                <InquiryForm profileId={profile.id} username={profile.username} theme={theme} />
+              </div>
+            );
 
           default:
             return null;

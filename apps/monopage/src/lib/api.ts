@@ -150,6 +150,28 @@ export const trackView = (profileId: number) =>
     body: JSON.stringify({ profile_id: profileId }),
   });
 
+// ---------- inquiries ----------
+export const getInquiries = (status?: string) =>
+  request<any[]>(`/api/v1/inquiries${status ? `?status=${status}` : ''}`);
+
+export const getInquiryStats = () =>
+  request<{ total: number; received: number; today: number }>('/api/v1/inquiries/stats');
+
+export const updateInquiry = (id: number, data: { status?: string; admin_note?: string }) =>
+  request<any>(`/api/v1/inquiries/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+
+export const deleteInquiry = (id: number) =>
+  request<void>(`/api/v1/inquiries/${id}`, { method: 'DELETE' });
+
+export const createInquiry = (data: { profile_id?: number; username?: string; name: string; email?: string; phone?: string; message: string }) =>
+  request<any>('/api/v1/inquiries', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+
 export const trackClick = (profileId: number, linkId: number) =>
   request<void>('/api/v1/analytics/click', {
     method: 'POST',
