@@ -157,7 +157,7 @@ class Api::V1::SocialAuthController < ApplicationController
   end
 
   def generate_username(name)
-    base = name.gsub(/[^a-zA-Z0-9가-힣]/, '').downcase.presence || 'user'
+    base = name.gsub(/[^a-zA-Z0-9_-]/, '').downcase.presence || "user_#{SecureRandom.hex(3)}"
     candidate = base
     i = 1
     while Profile.exists?(username: candidate)

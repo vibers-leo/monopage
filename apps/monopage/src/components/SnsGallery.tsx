@@ -54,7 +54,7 @@ export function SnsGallery({ posts, className }: SnsGalleryProps) {
         ))}
       </div>
 
-      <PostModal post={selectedPost} onClose={() => setSelectedPost(null)} />
+      {selectedPost && <PostModal post={selectedPost} onClose={() => setSelectedPost(null)} />}
     </>
   );
 }
