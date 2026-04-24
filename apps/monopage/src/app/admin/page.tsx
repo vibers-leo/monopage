@@ -1170,6 +1170,26 @@ export default function AdminDashboard() {
                        section.type === 'text' ? '텍스트' :
                        section.type === 'inquiry' ? '문의폼' : section.type}
                     </span>
+                    {section.type === 'portfolio' && (
+                      <div className="flex gap-1">
+                        <select
+                          value={section.content?.ratio || '1:1'}
+                          onChange={(e) => setSections(sections.map(s => s.id === section.id ? { ...s, content: { ...s.content, ratio: e.target.value } } : s))}
+                          className="text-[13px] bg-white border border-gray-100 rounded-lg px-1.5 py-1 outline-none focus:border-black transition-colors"
+                        >
+                          <option value="1:1">1:1</option>
+                          <option value="4:5">4:5</option>
+                        </select>
+                        <select
+                          value={section.content?.count || 9}
+                          onChange={(e) => setSections(sections.map(s => s.id === section.id ? { ...s, content: { ...s.content, count: Number(e.target.value) } } : s))}
+                          className="text-[13px] bg-white border border-gray-100 rounded-lg px-1.5 py-1 outline-none focus:border-black transition-colors"
+                        >
+                          <option value={9}>9개</option>
+                          <option value={12}>12개</option>
+                        </select>
+                      </div>
+                    )}
                     {section.type === 'text' && (
                       <input
                         value={section.content?.text || ''}

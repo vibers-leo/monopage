@@ -73,7 +73,13 @@ export function SectionRenderer({ sections, profile, links, portfolioItems, post
 
           case 'portfolio':
             return portfolioItems.length > 0 ? (
-              <PortfolioGallery key={section.id} items={portfolioItems} theme={theme} />
+              <PortfolioGallery
+                key={section.id}
+                items={portfolioItems}
+                theme={theme}
+                ratio={section.content?.ratio || '1:1'}
+                count={section.content?.count || 9}
+              />
             ) : null;
 
           case 'text':
