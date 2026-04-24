@@ -30,6 +30,17 @@ Rails.application.routes.draw do
       end
       resources :password_resets, only: [:create, :update], param: :token
 
+      # Super Admin — 다른 유저의 데이터 조회/수정
+      namespace :admin do
+        get 'profiles/:username', to: 'super#profile'
+        get 'profiles/:username/links', to: 'super#links'
+        get 'profiles/:username/portfolio_items', to: 'super#portfolio_items'
+        get 'profiles/:username/inquiries', to: 'super#inquiries'
+        patch 'profiles/:username', to: 'super#update_profile'
+        get 'all_inquiries', to: 'super#all_inquiries'
+        get 'all_profiles', to: 'super#all_profiles'
+      end
+
       # Analytics (authenticated)
       get 'analytics', to: 'analytics#index'
       # Analytics (public - no auth)

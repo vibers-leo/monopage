@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { THEMES, type ThemeKey } from '@/lib/themes';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   getMyProfile, updateProfile,
   getLinks, createLink, updateLink, deleteLink, reorderLinks,
@@ -24,6 +24,7 @@ import {
   getSocialAccounts, deleteSocialAccount,
   getAnalytics,
   getInquiries, getInquiryStats, updateInquiry, deleteInquiry,
+  adminGetProfile, adminGetLinks, adminGetPortfolioItems, adminGetInquiries,
   clearToken, getToken,
 } from '@/lib/api';
 
@@ -51,6 +52,8 @@ interface AnalyticsData {
 
 export default function AdminDashboard() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const managingUser = searchParams.get('user'); // 슈퍼어드민이 다른 유저 관리 시
   const { toasts, addToast, dismiss } = useToast();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
   const [profile, setProfile] = useState<ProfileData>({ username: '', bio: '', avatar_url: '' });
@@ -101,20 +104,36 @@ export default function AdminDashboard() {
   const loadData = useCallback(async () => {
     if (!getToken()) { router.push('/login'); return; }
     try {
-      const [p, l, pi, c, sa] = await Promise.all([getMyProfile(), getLinks(), getPortfolioItems(), getSocialConnections(), getSocialAccounts().catch(() => [])]);
-      setSocialAccounts(sa as any);
-      setProfile({ username: p.username || '', bio: p.bio || '', avatar_url: p.avatar_url || '', email: p.email || '' });
-      setSections(p.theme_config?.sections || DEFAULT_SECTIONS);
-      setSelectedTheme((p.theme_config?.theme as ThemeKey) || 'minimal');
-      setLinks(l);
-      setPortfolioItems(pi);
-      setConnections(c);
+      if (managingUser) {
+        // 슈퍼어드민 모드: 다른 유저의 데이터 로드
+        const [p, l, pi] = await Promise.all([
+          adminGetProfile(managingUser),
+          adminGetLinks(managingUser),
+          adminGetPortfolioItems(managingUser),
+        ]);
+        setProfile({ username: p.username || '', bio: p.bio || '', avatar_url: p.avatar_url || '', email: p.user?.email || '' });
+        setSections(p.theme_config?.sections || DEFAULT_SECTIONS);
+        setSelectedTheme((p.theme_config?.theme as ThemeKey) || 'minimal');
+        setLinks(l);
+        setPortfolioItems(pi);
+        setConnections(null);
+        setSocialAccounts([]);
+      } else {
+        const [p, l, pi, c, sa] = await Promise.all([getMyProfile(), getLinks(), getPortfolioItems(), getSocialConnections(), getSocialAccounts().catch(() => [])]);
+        setSocialAccounts(sa as any);
+        setProfile({ username: p.username || '', bio: p.bio || '', avatar_url: p.avatar_url || '', email: p.email || '' });
+        setSections(p.theme_config?.sections || DEFAULT_SECTIONS);
+        setSelectedTheme((p.theme_config?.theme as ThemeKey) || 'minimal');
+        setLinks(l);
+        setPortfolioItems(pi);
+        setConnections(c);
+      }
     } catch {
       router.push('/login');
     } finally {
       setLoading(false);
     }
-  }, [router]);
+  }, [router, managingUser]);
 
   useEffect(() => { loadData(); }, [loadData]);
 
@@ -322,7 +341,21 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-white text-[#0a0a0a] overflow-hidden">
+    <div className="flex flex-col h-screen bg-white text-[#0a0a0a] overflow-hidden">
+      {/* 슈퍼어드민 배너 */}
+      {managingUser && (
+        <div className="bg-purple-600 text-white px-4 py-2 flex items-center justify-between text-[14px] font-semibold shrink-0">
+          <div className="flex items-center gap-2">
+            <Shield size={14} />
+            <span>슈퍼어드민 모드 — @{managingUser} 관리 중</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <a href={`/${managingUser}`} target="_blank" className="underline text-white/80 hover:text-white">페이지 보기</a>
+            <button onClick={() => router.push('/admin')} className="underline text-white/80 hover:text-white">내 어드민으로</button>
+          </div>
+        </div>
+      )}
+      <div className="flex flex-1 overflow-hidden">
       <ToastContainer toasts={toasts} onDismiss={dismiss} />
 
       {/* 후원 모달 */}
@@ -1712,6 +1745,7 @@ export default function AdminDashboard() {
           </div>
         </div>
       </main>
+      </div>
     </div>
   );
 }

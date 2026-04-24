@@ -11,8 +11,15 @@ export function proxy(request: NextRequest) {
     hostname.includes('.monopage.') &&
     !['www', 'monopage'].includes(subdomain);
 
-  if (isSubdomain && url.pathname === '/') {
-    return NextResponse.rewrite(new URL(`/${subdomain}`, request.url));
+  if (isSubdomain) {
+    // /admin → 어드민 페이지 (해당 유저 관리)
+    if (url.pathname === '/admin') {
+      return NextResponse.rewrite(new URL(`/admin?user=${subdomain}`, request.url));
+    }
+    // 루트 → 프로필 페이지
+    if (url.pathname === '/') {
+      return NextResponse.rewrite(new URL(`/${subdomain}`, request.url));
+    }
   }
 
   return NextResponse.next();

@@ -105,11 +105,12 @@ export default function AdminConsolePage() {
                 <th className="text-left px-4 py-3 font-black text-gray-400">이메일</th>
                 <th className="text-left px-4 py-3 font-black text-gray-400">로그인</th>
                 <th className="text-left px-4 py-3 font-black text-gray-400">가입일</th>
+                <th className="text-left px-4 py-3 font-black text-gray-400"></th>
               </tr>
             </thead>
             <tbody>
               {users.length === 0 ? (
-                <tr><td colSpan={4} className="text-center py-8 text-gray-300 font-medium">유저가 없어요</td></tr>
+                <tr><td colSpan={5} className="text-center py-8 text-gray-300 font-medium">유저가 없어요</td></tr>
               ) : users.map(u => (
                 <tr key={u.id} className="border-t border-gray-50 hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-3 font-bold">@{u.profile?.username || '-'}</td>
@@ -124,6 +125,16 @@ export default function AdminConsolePage() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-gray-400">{u.created_at?.slice(0, 10) || '-'}</td>
+                  <td className="px-4 py-3">
+                    {u.profile?.username && (
+                      <a
+                        href={`/admin?user=${u.profile.username}`}
+                        className="text-[13px] font-semibold text-purple-500 hover:text-purple-700 transition-colors"
+                      >
+                        관리
+                      </a>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

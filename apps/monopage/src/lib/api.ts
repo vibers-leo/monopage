@@ -172,6 +172,25 @@ export const createInquiry = (data: { profile_id?: number; username?: string; na
     body: JSON.stringify(data),
   });
 
+// ---------- super admin ----------
+export const adminGetProfile = (username: string) =>
+  request<any>(`/api/v1/admin/profiles/${username}`);
+
+export const adminGetLinks = (username: string) =>
+  request<any[]>(`/api/v1/admin/profiles/${username}/links`);
+
+export const adminGetPortfolioItems = (username: string) =>
+  request<any[]>(`/api/v1/admin/profiles/${username}/portfolio_items`);
+
+export const adminGetInquiries = (username: string) =>
+  request<any[]>(`/api/v1/admin/profiles/${username}/inquiries`);
+
+export const adminGetAllInquiries = () =>
+  request<any[]>('/api/v1/admin/all_inquiries');
+
+export const adminGetAllProfiles = () =>
+  request<any[]>('/api/v1/admin/all_profiles');
+
 export const trackClick = (profileId: number, linkId: number) =>
   request<void>('/api/v1/analytics/click', {
     method: 'POST',
