@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { LinkCard } from '@/components/LinkCard';
@@ -50,7 +50,15 @@ interface AnalyticsData {
   link_clicks: { link_id: number; clicks: number; title: string }[];
 }
 
-export default function AdminDashboard() {
+export default function AdminPage() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center"><div className="w-6 h-6 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" /></div>}>
+      <AdminDashboard />
+    </Suspense>
+  );
+}
+
+function AdminDashboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const managingUser = searchParams.get('user'); // 슈퍼어드민이 다른 유저 관리 시
