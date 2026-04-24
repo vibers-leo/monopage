@@ -10,31 +10,34 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const username = (await params).username;
-  
-  // In a real app, you would fetch profile data from API here.
-  // Using mock data for demo:
-  const profile = {
-    username: username,
-    bio: 'Creating digital experiences at the intersection of art and code. 🚀',
-    avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2'
-  };
+
+  try {
+    const apiUrl = process.env.RAILS_API_URL || 'http://monopage-api:80';
+    const res = await fetch(`${apiUrl}/api/v1/profiles/${username}`, { next: { revalidate: 60 } });
+    if (res.ok) {
+      const profile = await res.json();
+      return {
+        title: `@${profile.username} | Monopage`,
+        description: profile.bio || `@${profile.username}의 모노페이지`,
+        openGraph: {
+          title: `@${profile.username} | Monopage`,
+          description: profile.bio || `@${profile.username}의 모노페이지`,
+          images: profile.avatar_url ? [profile.avatar_url] : [],
+          type: 'profile',
+        },
+        twitter: {
+          card: 'summary',
+          title: `@${profile.username} | Monopage`,
+          description: profile.bio || `@${profile.username}의 모노페이지`,
+          images: profile.avatar_url ? [profile.avatar_url] : [],
+        },
+      };
+    }
+  } catch { /* fallback */ }
 
   return {
-    title: `${profile.username} (@${profile.username}) | Monopage`,
-    description: profile.bio,
-    openGraph: {
-      title: `${profile.username} - Monopage Profile`,
-      description: profile.bio,
-      images: [profile.avatar_url],
-      type: 'profile',
-      username: profile.username
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${profile.username} | Monopage`,
-      description: profile.bio,
-      images: [profile.avatar_url],
-    }
+    title: `@${username} | Monopage`,
+    description: `@${username}의 모노페이지`,
   };
 }
 
