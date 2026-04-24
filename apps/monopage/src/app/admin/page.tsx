@@ -418,13 +418,20 @@ function AdminDashboard() {
                   <ChevronDown size={12} />
                 </button>
                 {showUserMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-100 rounded-2xl shadow-lg py-2 z-50" onClick={() => setShowUserMenu(false)}>
+                  <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-lg py-2 z-50" onClick={() => setShowUserMenu(false)}>
+                    <a href={`/${profile.username}`} target="_blank" className="flex items-center gap-2 px-4 py-2.5 text-[14px] font-semibold hover:bg-gray-50 transition-colors text-gray-500">
+                      <Eye size={13} /> 내 페이지 보기
+                    </a>
                     {SUPER_ADMINS.includes(profile.email || '') && (
-                      <Link href="/admin-console" className="flex items-center gap-2 px-4 py-2.5 text-xs font-bold hover:bg-gray-50 transition-colors text-purple-600">
-                        <Shield size={13} /> 관리자 콘솔
-                      </Link>
+                      <>
+                        <div className="h-px bg-gray-100 my-1" />
+                        <Link href="/admin-console" className="flex items-center gap-2 px-4 py-2.5 text-[14px] font-semibold hover:bg-gray-50 transition-colors text-purple-600">
+                          <Shield size={13} /> 관리자 대시보드
+                        </Link>
+                      </>
                     )}
-                    <button onClick={logout} className="flex items-center gap-2 w-full px-4 py-2.5 text-xs font-bold hover:bg-gray-50 transition-colors text-gray-500">
+                    <div className="h-px bg-gray-100 my-1" />
+                    <button onClick={logout} className="flex items-center gap-2 w-full px-4 py-2.5 text-[14px] font-semibold hover:bg-gray-50 transition-colors text-gray-500">
                       <LogOut size={13} /> 로그아웃
                     </button>
                   </div>
