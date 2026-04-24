@@ -1173,10 +1173,26 @@ export default function AdminDashboard() {
                     {section.type === 'text' && (
                       <input
                         value={section.content?.text || ''}
-                        onChange={(e) => setSections(sections.map(s => s.id === section.id ? { ...s, content: { text: e.target.value } } : s))}
+                        onChange={(e) => setSections(sections.map(s => s.id === section.id ? { ...s, content: { ...s.content, text: e.target.value } } : s))}
                         placeholder="텍스트 입력..."
                         className="text-[14px] bg-white border border-gray-100 rounded-lg px-2 py-1 w-32 outline-none focus:border-black transition-colors"
                       />
+                    )}
+                    {section.type === 'inquiry' && (
+                      <div className="flex gap-1">
+                        <input
+                          value={section.content?.title || ''}
+                          onChange={(e) => setSections(sections.map(s => s.id === section.id ? { ...s, content: { ...s.content, title: e.target.value } } : s))}
+                          placeholder="제목"
+                          className="text-[14px] bg-white border border-gray-100 rounded-lg px-2 py-1 w-16 outline-none focus:border-black transition-colors"
+                        />
+                        <input
+                          value={section.content?.ctaText || ''}
+                          onChange={(e) => setSections(sections.map(s => s.id === section.id ? { ...s, content: { ...s.content, ctaText: e.target.value } } : s))}
+                          placeholder="버튼 문구"
+                          className="text-[14px] bg-white border border-gray-100 rounded-lg px-2 py-1 w-20 outline-none focus:border-black transition-colors"
+                        />
+                      </div>
                     )}
                     {!['header', 'links', 'portfolio'].includes(section.type) && (
                       <button

@@ -93,7 +93,13 @@ export function SectionRenderer({ sections, profile, links, portfolioItems, post
           case 'inquiry':
             return (
               <div key={section.id} className="w-full mt-6">
-                <InquiryForm profileId={profile.id} username={profile.username} theme={theme} />
+                <InquiryForm
+                  profileId={profile.id}
+                  username={profile.username}
+                  theme={theme}
+                  ctaText={section.content?.ctaText}
+                  title={section.content?.title}
+                />
               </div>
             );
 

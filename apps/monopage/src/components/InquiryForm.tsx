@@ -9,9 +9,11 @@ interface InquiryFormProps {
   profileId: number;
   username: string;
   theme?: Theme;
+  ctaText?: string;
+  title?: string;
 }
 
-export function InquiryForm({ profileId, username, theme }: InquiryFormProps) {
+export function InquiryForm({ profileId, username, theme, ctaText, title }: InquiryFormProps) {
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -64,7 +66,7 @@ export function InquiryForm({ profileId, username, theme }: InquiryFormProps) {
       <style dangerouslySetInnerHTML={{ __html: `.${cls}-input::placeholder { color: ${t?.textMuted || '#a3a3a3'}; opacity: 0.7; }` }} />
 
       <div className="flex items-center justify-between mb-1">
-        <p className="text-[16px] font-bold" style={{ color: t?.text || '#0a0a0a' }}>문의하기</p>
+        <p className="text-[16px] font-bold" style={{ color: t?.text || '#0a0a0a' }}>{title || '문의하기'}</p>
         <p className="text-[13px]" style={{ color: t?.textMuted || '#a3a3a3' }}>* 필수</p>
       </div>
 
@@ -112,7 +114,7 @@ export function InquiryForm({ profileId, username, theme }: InquiryFormProps) {
         className="w-full py-4 rounded-full text-[15px] font-semibold flex items-center justify-center gap-2 transition-all disabled:opacity-30 active:scale-[0.98]"
         style={{ backgroundColor: t?.text || '#0a0a0a', color: t?.bg || '#ffffff' }}
       >
-        {submitting ? <Loader2 size={16} className="animate-spin" /> : <><Send size={15} /> 문의 보내기</>}
+        {submitting ? <Loader2 size={16} className="animate-spin" /> : <><Send size={15} /> {ctaText || '문의 보내기'}</>}
       </button>
 
       <p className="text-[13px] text-center" style={{ color: t?.textMuted || '#a3a3a3' }}>

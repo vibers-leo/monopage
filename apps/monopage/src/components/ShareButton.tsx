@@ -89,12 +89,21 @@ export function ShareButton({ username, theme }: ShareButtonProps) {
               />
             </div>
 
-            <button
-              onClick={handleCopy}
-              className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#0a0a0a] text-white rounded-full text-[14px] font-semibold hover:bg-[#262626] transition-colors"
-            >
-              {copied ? <><Check size={14} /> 복사됐어요!</> : <><Copy size={14} /> 링크 복사하기</>}
-            </button>
+            <div className="flex gap-2 w-full">
+              <button
+                onClick={handleCopy}
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-[#0a0a0a] text-white rounded-full text-[14px] font-semibold hover:bg-[#262626] transition-colors"
+              >
+                {copied ? <><Check size={14} /> 복사됐어요!</> : <><Copy size={14} /> 링크 복사</>}
+              </button>
+              <a
+                href={`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(url)}&margin=16&format=png`}
+                download={`monopage-${username}-qr.png`}
+                className="py-3.5 px-5 border border-[#e5e5e5] rounded-full text-[14px] font-semibold hover:border-[#0a0a0a] transition-colors"
+              >
+                저장
+              </a>
+            </div>
 
             <p className="text-[14px] text-[#a3a3a3]">{url}</p>
           </div>

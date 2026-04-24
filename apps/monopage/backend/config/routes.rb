@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       resources :inquiries, only: [:index, :create, :update, :destroy] do
         get 'stats', on: :collection
       end
+      resources :password_resets, only: [:create, :update], param: :token
 
       # Analytics (authenticated)
       get 'analytics', to: 'analytics#index'

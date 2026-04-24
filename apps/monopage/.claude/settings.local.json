@@ -63,7 +63,11 @@
       "Bash(grep -A 100 \"Tab Navigation\\\\|탭 네비\" /Users/juuuno/Desktop/macminim4/dev/nextjs/apps/faneasy/app/sites/[site]/admin/page.tsx)",
       "Bash(tail -200 /Users/juuuno/Desktop/macminim4/dev/nextjs/apps/faneasy/app/sites/[site]/admin/page.tsx)",
       "Bash(grep -n \"WORKFLOW\\\\|status\\\\|filter\" /Users/juuuno/Desktop/macminim4/dev/nextjs/apps/faneasy/app/sites/[site]/admin/page.tsx)",
-      "Bash(grep -E \"\\\\.rb$\")"
+      "Bash(grep -E \"\\\\.rb$\")",
+      "Bash(scp:*)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Profile updated: @{d[\\\\\"username\\\\\"]}, theme: {d[\\\\\"theme_config\\\\\"][\\\\\"theme\\\\\"]}'\\)\")",
+      "Bash(python3 -c ':*)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Token:', d.get\\('token','FAILED'\\)[:30]+'...' if d.get\\('token'\\) else 'FAILED:', d\\)\")"
     ]
   }
 }

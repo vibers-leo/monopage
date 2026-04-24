@@ -29,6 +29,7 @@ export default function Onboarding() {
   const [progressStep, setProgressStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [requestForm, setRequestForm] = useState({ username: '', purpose: '', email: '' });
   const [requestSubmitting, setRequestSubmitting] = useState(false);
@@ -507,12 +508,29 @@ export default function Onboarding() {
                 </div>
               )}
 
+              {/* 이용약관 동의 */}
+              {!isLoggedIn && (
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={agreeTerms}
+                    onChange={e => setAgreeTerms(e.target.checked)}
+                    className="mt-1 w-4 h-4 rounded border-[#e5e5e5] accent-[#0a0a0a]"
+                  />
+                  <span className="text-[14px] text-[#525252] leading-relaxed">
+                    <a href="/terms" target="_blank" className="underline hover:text-[#0a0a0a]">이용약관</a> 및{' '}
+                    <a href="/privacy" target="_blank" className="underline hover:text-[#0a0a0a]">개인정보처리방침</a>에 동의해요
+                  </span>
+                </label>
+              )}
+
               {error && <p className="text-red-500 text-[14px] font-medium text-center">{error}</p>}
 
               {/* CTA */}
               <button
                 onClick={handleCreate}
-                className="w-full py-4 bg-[#0a0a0a] text-white rounded-full font-semibold text-[16px] flex items-center justify-center gap-2 hover:bg-[#262626] active:scale-[0.98] transition-all"
+                disabled={!isLoggedIn && !agreeTerms}
+                className="w-full py-4 bg-[#0a0a0a] text-white rounded-full font-semibold text-[16px] flex items-center justify-center gap-2 hover:bg-[#262626] active:scale-[0.98] transition-all disabled:opacity-30"
               >
                 <Sparkles size={16} />
                 {links.length > 0 ? '페이지 만들기' : '내 페이지 만들기'}
