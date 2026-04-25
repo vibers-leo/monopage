@@ -42,14 +42,8 @@ export async function generateMetadata(
 }
 
 import { ProfileView } from '@/components/ProfileView';
-import ChatWidget from '@/components/ChatWidget';
 
 export default async function PublicProfilePage({ params }: Props) {
   const username = (await params).username;
-  return (
-    <>
-      <ProfileView username={username} />
-      <ChatWidget />
-    </>
-  );
+  return <ProfileView username={username} />;
 }
