@@ -33,7 +33,7 @@ export function ShareButton({ username, theme }: ShareButtonProps) {
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2.5">
+      <div className="flex items-center justify-center gap-2.5 sm:gap-3">
         <button
           onClick={handleShare}
           className="flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[14px] font-semibold transition-all hover:opacity-70"

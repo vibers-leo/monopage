@@ -15,10 +15,10 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ username, bio, ava
   const t = theme?.vars;
 
   return (
-    <div className="flex flex-col items-center gap-4 mb-8 w-full">
+    <div className="flex flex-col items-center gap-4 sm:gap-5 mb-8 sm:mb-10 w-full">
       {/* Avatar */}
       <div
-        className="w-[80px] h-[80px] rounded-full overflow-hidden shrink-0"
+        className="w-[80px] h-[80px] sm:w-[88px] sm:h-[88px] rounded-full overflow-hidden shrink-0"
         style={{ boxShadow: `0 0 0 2px ${t?.avatarRing || '#e5e5e5'}` }}
       >
         {avatarUrl ? (
@@ -36,7 +36,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ username, bio, ava
       {/* Text */}
       <div className="flex flex-col items-center gap-1">
         <h1
-          className="text-[16px] font-bold tracking-tight leading-tight"
+          className="text-[16px] sm:text-[18px] font-bold tracking-tight leading-tight"
           style={{ color: t?.text || '#0a0a0a', fontFamily: "'Paperlogy', 'Pretendard', sans-serif" }}
         >
           {displayName || username}
@@ -49,7 +49,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ username, bio, ava
         </p>
         {bio && (
           <p
-            className="text-[15px] max-w-[300px] text-center leading-[1.6] mt-2 font-normal"
+            className="text-[15px] sm:text-[16px] max-w-[360px] text-center leading-[1.6] mt-2 font-normal"
             style={{ color: t?.textSub || '#525252' }}
           >
             {bio}

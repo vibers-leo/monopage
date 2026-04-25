@@ -46,7 +46,7 @@ export const LinkCard: React.FC<LinkCardProps> = ({ title, url, favicon, domain,
       target="_blank"
       rel="noopener noreferrer"
       onClick={onClick}
-      className={cn('flex items-center gap-3 w-full px-4 py-3.5 rounded-xl active:scale-[0.98] transition-all group cursor-pointer', className)}
+      className={cn('flex items-center gap-3 w-full px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl active:scale-[0.98] transition-all group cursor-pointer', className)}
       style={{
         backgroundColor: t?.cardBg || '#ffffff',
         border: `1px solid ${t?.cardBorder || '#e5e5e5'}`,

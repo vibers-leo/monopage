@@ -62,7 +62,7 @@ export function InquiryForm({ profileId, username, theme, ctaText, title }: Inqu
   };
 
   return (
-    <div className="w-full flex flex-col gap-3">
+    <div className="w-full flex flex-col gap-3 sm:gap-4">
       <style dangerouslySetInnerHTML={{ __html: `.${cls}-input::placeholder { color: ${t?.textMuted || '#a3a3a3'}; opacity: 0.7; }` }} />
 
       <div className="flex items-center justify-between mb-1">
