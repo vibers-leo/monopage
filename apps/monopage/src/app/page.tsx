@@ -6,6 +6,7 @@ import { ArrowRight, Sparkles, Plus, Trash2, Link as LinkIcon, Loader2 } from "l
 import { detectLink, getLinkIcon, type DetectedLink } from "@/lib/link-detector";
 import { getToken } from "@/lib/api";
 import ChatWidget from "@/components/ChatWidget";
+import { Navbar } from "@/components/Navbar";
 
 export default function Home() {
   const [links, setLinks] = useState<DetectedLink[]>([]);
@@ -98,31 +99,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white text-[#0a0a0a]">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-[#e5e5e5] px-5 sm:px-8 py-4 flex justify-between items-center">
-        <Link href="/" className="font-paperlogy font-extrabold text-[18px] tracking-tight text-[#0a0a0a]">
-          Monopage
-        </Link>
-        <div className="flex items-center gap-3 sm:gap-5">
-          <Link href="/about" className="text-[15px] font-medium text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors hidden sm:inline">
-            소개
-          </Link>
-          {isLoggedIn ? (
-            <Link href="/admin" className="px-5 py-2.5 bg-[#0a0a0a] text-white rounded-full text-[15px] font-semibold hover:bg-[#262626] transition-colors">
-              내 페이지
-            </Link>
-          ) : (
-            <>
-              <Link href="/login" className="text-[15px] font-medium text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors">
-                로그인
-              </Link>
-              <Link href="/onboard" className="px-5 py-2.5 bg-[#0a0a0a] text-white rounded-full text-[15px] font-semibold hover:bg-[#262626] transition-colors">
-                시작하기
-              </Link>
-            </>
-          )}
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero */}
       <section className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20 px-5 sm:px-8 py-14 sm:py-20 lg:py-0 max-w-[1100px] mx-auto w-full lg:min-h-[calc(100vh-65px)]">
