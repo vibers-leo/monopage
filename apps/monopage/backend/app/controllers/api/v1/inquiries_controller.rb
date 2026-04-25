@@ -17,7 +17,15 @@ class Api::V1::InquiriesController < ApplicationController
 
     inquiry = profile.inquiries.build(inquiry_params)
     if inquiry.save
+      # 메일 알림
       InquiryMailer.new_inquiry(inquiry).deliver_now rescue nil
+      # 인앱 알림
+      profile.user.notifications.create(
+        type_key: 'new_inquiry',
+        title: "#{inquiry.name}님이 문의를 보냈어요",
+        body: inquiry.message.truncate(80),
+        metadata: { inquiry_id: inquiry.id, name: inquiry.name }
+      ) rescue nil
       render json: inquiry, status: :created
     else
       render json: { errors: inquiry.errors.full_messages }, status: :unprocessable_entity

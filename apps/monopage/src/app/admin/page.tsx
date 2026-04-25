@@ -11,7 +11,7 @@ import {
   Plus, Save, Link as LinkIcon, ArrowRight,
   ChevronLeft, Trash2, GripVertical, Check, X, Loader2, LogOut, Camera,
   Shield, AlertTriangle, Unlink, Image, User, Settings, Eye, EyeOff, BarChart3, MousePointerClick,
-  Layout, Type, ChevronUp, ChevronDown, Palette, RefreshCw, Clock, ExternalLink, MessageCircle, Mail,
+  Layout, Type, ChevronUp, ChevronDown, Palette, RefreshCw, Clock, ExternalLink, MessageCircle, Mail, Bell,
 } from 'lucide-react';
 import { THEMES, type ThemeKey } from '@/lib/themes';
 import Link from 'next/link';
@@ -25,6 +25,7 @@ import {
   getAnalytics,
   getInquiries, getInquiryStats, updateInquiry, deleteInquiry,
   adminGetProfile, adminGetLinks, adminGetPortfolioItems, adminGetInquiries,
+  getNotifications, markNotificationRead, markAllNotificationsRead,
   clearToken, getToken,
 } from '@/lib/api';
 
@@ -105,6 +106,9 @@ function AdminDashboard() {
   const [inquiryFilter, setInquiryFilter] = useState<string>('all');
   const [inquiriesLoading, setInquiriesLoading] = useState(false);
   const [selectedInquiry, setSelectedInquiry] = useState<any | null>(null);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
   const [showPageMenu, setShowPageMenu] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [resetting, setResetting] = useState(false);
@@ -144,6 +148,15 @@ function AdminDashboard() {
   }, [router, managingUser]);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  // 알림 로드 + 30초마다 폴링
+  useEffect(() => {
+    if (!getToken() || managingUser) return;
+    const load = () => getNotifications().then(d => { setNotifications(d.notifications); setUnreadCount(d.unread_count); }).catch(() => {});
+    load();
+    const interval = setInterval(load, 30000);
+    return () => clearInterval(interval);
+  }, [managingUser]);
 
   // Instagram 연결 결과 토스트
   useEffect(() => {
@@ -409,6 +422,50 @@ function AdminDashboard() {
             {/* 목록 헤더 */}
             <div className="flex items-center justify-between mb-8">
               <Link href="/" className="font-paperlogy font-extrabold text-[16px] tracking-tight text-[#0a0a0a]">Monopage</Link>
+              <div className="flex items-center gap-3">
+                {/* 알림 벨 */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowNotifications(v => !v)}
+                    className="relative p-2 text-gray-300 hover:text-black transition-colors"
+                  >
+                    <Bell size={16} />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">{unreadCount > 9 ? '9+' : unreadCount}</span>
+                    )}
+                  </button>
+                  {showNotifications && (
+                    <div className="absolute right-0 top-full mt-2 w-72 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 max-h-80 overflow-y-auto" onClick={e => e.stopPropagation()}>
+                      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                        <p className="text-[14px] font-bold">알림</p>
+                        {unreadCount > 0 && (
+                          <button
+                            onClick={async () => { await markAllNotificationsRead(); setUnreadCount(0); setNotifications(n => n.map(x => ({ ...x, read: true }))); }}
+                            className="text-[13px] text-purple-500 font-semibold hover:underline"
+                          >모두 읽음</button>
+                        )}
+                      </div>
+                      {notifications.length === 0 ? (
+                        <p className="text-[14px] text-gray-300 text-center py-8">알림이 없어요</p>
+                      ) : notifications.map(n => (
+                        <div
+                          key={n.id}
+                          onClick={async () => {
+                            if (!n.read) { await markNotificationRead(n.id); setUnreadCount(c => Math.max(0, c - 1)); setNotifications(ns => ns.map(x => x.id === n.id ? { ...x, read: true } : x)); }
+                            if (n.type_key === 'new_inquiry') setActiveTab('inquiries');
+                            setShowNotifications(false);
+                            if (view === 'list') setView('editor');
+                          }}
+                          className={`px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-50 ${!n.read ? 'bg-blue-50/30' : ''}`}
+                        >
+                          <p className={`text-[14px] ${!n.read ? 'font-bold' : 'font-medium text-gray-500'}`}>{n.title}</p>
+                          {n.body && <p className="text-[13px] text-gray-400 mt-0.5 truncate">{n.body}</p>}
+                          <p className="text-[12px] text-gray-300 mt-1">{new Date(n.created_at).toLocaleDateString('ko', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               <div className="relative">
                 <button
                   onClick={() => setShowUserMenu(v => !v)}

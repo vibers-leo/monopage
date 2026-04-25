@@ -29,6 +29,11 @@ Rails.application.routes.draw do
         get 'stats', on: :collection
       end
       resources :password_resets, only: [:create, :update], param: :token
+      post 'notify', to: 'notifications#create'
+      resources :user_notifications, path: 'notifications', only: [:index] do
+        patch 'read', on: :member
+        post 'read_all', on: :collection
+      end
 
       # Super Admin — 다른 유저의 데이터 조회/수정
       namespace :admin do

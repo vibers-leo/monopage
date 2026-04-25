@@ -191,6 +191,16 @@ export const adminGetAllInquiries = () =>
 export const adminGetAllProfiles = () =>
   request<any[]>('/api/v1/admin/all_profiles');
 
+// ---------- notifications ----------
+export const getNotifications = () =>
+  request<{ notifications: any[]; unread_count: number }>('/api/v1/notifications');
+
+export const markNotificationRead = (id: number) =>
+  request<any>(`/api/v1/notifications/${id}/read`, { method: 'PATCH' });
+
+export const markAllNotificationsRead = () =>
+  request<any>('/api/v1/notifications/read_all', { method: 'POST' });
+
 export const trackClick = (profileId: number, linkId: number) =>
   request<void>('/api/v1/analytics/click', {
     method: 'POST',
