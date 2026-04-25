@@ -93,8 +93,8 @@ export function ProfileView({ username }: ProfileViewProps) {
         </a>
       </div>
 
-      {/* 사이트별 AI 챗봇 (knowledge_md가 있을 때만) */}
-      {profile.knowledge_md && profile.knowledge_md.trim().length > 0 && (
+      {/* 사이트별 AI 챗봇 (knowledge_md가 있고 ai_chat_enabled일 때만) */}
+      {profile.knowledge_md && profile.knowledge_md.trim().length > 0 && profile.theme_config?.ai_chat_enabled !== false && (
         <SiteAIChat username={profile.username} theme={theme} />
       )}
     </div>

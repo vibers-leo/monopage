@@ -1613,11 +1613,28 @@ function AdminDashboard() {
             <section>
               {/* AI 도우미 설정 */}
               <div className="mb-6">
-                <label className="block text-[14px] font-black text-gray-300 uppercase mb-3 tracking-widest flex items-center gap-1.5">
-                  <MessageCircle size={10} /> AI 도우미
-                </label>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest flex items-center gap-1.5">
+                    <MessageCircle size={10} /> AI 도우미
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <span className="text-[13px] font-semibold text-gray-400">
+                      {sections.some(s => (s as any).ai_chat_enabled !== false) && (profile as any).knowledge_md?.trim() ? 'ON' : 'OFF'}
+                    </span>
+                    <div
+                      className={`w-10 h-6 rounded-full transition-colors relative ${(profile as any).knowledge_md?.trim() ? 'bg-green-500' : 'bg-gray-200'}`}
+                      onClick={() => {
+                        if ((profile as any).knowledge_md?.trim()) {
+                          setProfile({ ...profile, knowledge_md: '' } as any);
+                        }
+                      }}
+                    >
+                      <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all ${(profile as any).knowledge_md?.trim() ? 'left-[18px]' : 'left-0.5'}`} />
+                    </div>
+                  </label>
+                </div>
                 <p className="text-[14px] text-gray-400 mb-3">
-                  내용을 입력하면 내 페이지에 AI 챗봇이 활성화돼요. 방문자가 질문하면 이 내용을 기반으로 답변해요.
+                  아래 내용을 입력하면 내 페이지에 AI 챗봇이 활성화돼요. 방문자가 질문하면 이 내용만으로 답변해요.
                 </p>
                 <textarea
                   value={(profile as any).knowledge_md || ''}
@@ -1625,20 +1642,9 @@ function AdminDashboard() {
                   className="w-full min-h-[180px] p-4 text-[14px] font-medium border border-gray-100 rounded-2xl focus:border-black outline-none transition-colors resize-none leading-relaxed font-mono"
                   placeholder={"# 우리 가게 정보\n\n- 위치: 수원시 인계동\n- 영업시간: 18:00 ~ 02:00\n- 예약: 0507-1322-4606\n- 메뉴: 시그니처 칵테일, 하이볼, 와인\n\n# 자주 묻는 질문\n\nQ: 주차 가능한가요?\nA: 건물 지하주차장 이용 가능해요."}
                 />
-                <div className="flex items-center justify-between mt-2">
-                  <p className="text-[13px] text-gray-300">
-                    {(profile as any).knowledge_md?.length || 0}자 입력됨
-                    {(profile as any).knowledge_md?.trim() ? ' · AI 챗봇 활성화됨' : ''}
-                  </p>
-                  {(profile as any).knowledge_md?.trim() && (
-                    <button
-                      onClick={() => setProfile({ ...profile, knowledge_md: '' } as any)}
-                      className="text-[13px] text-red-400 font-semibold hover:text-red-500 transition-colors"
-                    >
-                      비활성화
-                    </button>
-                  )}
-                </div>
+                <p className="text-[13px] text-gray-300 mt-2">
+                  {(profile as any).knowledge_md?.length || 0}자 · 놀리지를 비우면 챗봇이 비활성화돼요
+                </p>
               </div>
 
               <div className="h-px bg-gray-100 mb-6" />
