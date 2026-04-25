@@ -532,7 +532,7 @@ function AdminDashboard() {
                         onClick={() => setShowResetConfirm(true)}
                         className="flex items-center gap-2 w-full px-4 py-2.5 text-[14px] font-medium text-red-500 hover:bg-red-50 transition-colors"
                       >
-                        <Trash2 size={13} /> 페이지 초기화
+                        <Trash2 size={13} /> 페이지 삭제
                       </button>
                     </div>
                   )}
@@ -590,24 +590,31 @@ function AdminDashboard() {
               </button>
             </div>
 
-            {/* 페이지 초기화 확인 모달 */}
+            {/* 페이지 삭제 확인 모달 */}
             {showResetConfirm && (
               <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-6" onClick={() => !resetting && setShowResetConfirm(false)}>
                 <div className="bg-white rounded-2xl p-6 max-w-sm w-full" onClick={e => e.stopPropagation()}>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center shrink-0">
-                      <AlertTriangle size={18} className="text-red-500" />
+                  <div className="flex flex-col items-center text-center gap-4 mb-5">
+                    <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center">
+                      <Trash2 size={22} className="text-red-500" />
                     </div>
                     <div>
-                      <h3 className="text-[16px] font-bold">페이지를 초기화할까요?</h3>
-                      <p className="text-[14px] text-gray-400 mt-0.5">모든 링크, 프로필 사진, 소개글이 삭제돼요.</p>
+                      <h3 className="text-[18px] font-bold mb-1">페이지를 삭제할까요?</h3>
+                      <p className="text-[15px] text-gray-400 leading-relaxed">
+                        모든 링크, 포트폴리오, 소개글이 삭제돼요.<br />
+                        삭제 후 새로운 페이지를 다시 만들 수 있어요.
+                      </p>
                     </div>
                   </div>
-                  <p className="text-[14px] text-red-500 font-medium mb-5">계정은 유지되고, 페이지 주소(@{profile.username})도 그대로예요.</p>
+                  <div className="p-3 bg-gray-50 rounded-xl mb-5">
+                    <p className="text-[14px] text-gray-500 text-center">
+                      계정(@{profile.username})은 유지돼요
+                    </p>
+                  </div>
                   <div className="flex gap-3">
                     <button
                       onClick={() => setShowResetConfirm(false)}
-                      className="flex-1 py-3 border border-gray-200 rounded-xl text-[14px] font-semibold hover:border-black transition-colors"
+                      className="flex-1 py-3.5 border border-gray-200 rounded-xl text-[15px] font-semibold hover:border-black transition-colors"
                     >
                       취소
                     </button>
@@ -615,22 +622,14 @@ function AdminDashboard() {
                       onClick={async () => {
                         setResetting(true);
                         try {
-                          // 모든 링크 삭제
-                          for (const link of links) {
-                            await deleteLink(link.id);
-                          }
-                          // 모든 포트폴리오 삭제
-                          for (const item of portfolioItems) {
-                            await deletePortfolioItem(item.id);
-                          }
-                          // 프로필 초기화
-                          await updateProfile({ bio: '', avatar_url: '' });
-                          // 상태 리셋
+                          for (const link of links) { await deleteLink(link.id); }
+                          for (const item of portfolioItems) { await deletePortfolioItem(item.id); }
+                          await updateProfile({ bio: '', avatar_url: '', knowledge_md: '' } as any);
                           setLinks([]);
                           setPortfolioItems([]);
-                          setProfile(p => ({ ...p, bio: '', avatar_url: '' }));
+                          setProfile(p => ({ ...p, bio: '', avatar_url: '', knowledge_md: '' } as any));
                           setShowResetConfirm(false);
-                          addToast('success', '페이지를 초기화했어요');
+                          addToast('success', '페이지를 삭제했어요. 새로 시작해보세요!');
                         } catch (e: any) {
                           setError(e.message);
                         } finally {
@@ -638,9 +637,9 @@ function AdminDashboard() {
                         }
                       }}
                       disabled={resetting}
-                      className="flex-1 py-3 bg-red-500 text-white rounded-xl text-[14px] font-semibold hover:bg-red-600 transition-colors flex items-center justify-center gap-1.5"
+                      className="flex-1 py-3.5 bg-red-500 text-white rounded-xl text-[15px] font-semibold hover:bg-red-600 transition-colors flex items-center justify-center gap-1.5"
                     >
-                      {resetting ? <Loader2 size={14} className="animate-spin" /> : '초기화하기'}
+                      {resetting ? <Loader2 size={14} className="animate-spin" /> : '삭제하기'}
                     </button>
                   </div>
                 </div>
