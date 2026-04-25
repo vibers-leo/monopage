@@ -501,7 +501,8 @@ function AdminDashboard() {
             <h1 className="text-2xl font-black mb-6">페이지 목록</h1>
 
             <div className="flex flex-col gap-4 flex-1">
-              {/* 내 페이지 카드 */}
+              {/* 내 페이지 카드 — 콘텐츠가 있을 때만 */}
+              {(links.length > 0 || profile.bio || profile.avatar_url) ? (
               <div className="border border-gray-200 rounded-2xl p-5 relative group">
                 {/* 우측 상단 메뉴 */}
                 <div className="absolute top-4 right-4 z-10">
@@ -556,7 +557,6 @@ function AdminDashboard() {
                   <ArrowRight size={16} className="text-gray-300 shrink-0" />
                 </div>
 
-                {/* 하단 빠른 액션 */}
                 <div className="flex gap-2 mt-4 pt-4 border-t border-gray-100">
                   <button
                     onClick={() => setView('editor')}
@@ -574,6 +574,22 @@ function AdminDashboard() {
                   </a>
                 </div>
               </div>
+              ) : (
+              /* 빈 상태 — 페이지 삭제 후 */
+              <div className="border border-dashed border-gray-200 rounded-2xl p-8 flex flex-col items-center gap-4 text-center">
+                <div className="w-16 h-16 bg-[#f5f5f5] rounded-full flex items-center justify-center text-2xl">✨</div>
+                <div>
+                  <p className="text-[16px] font-bold mb-1">페이지가 비어있어요</p>
+                  <p className="text-[14px] text-gray-400">새로운 페이지를 만들어보세요</p>
+                </div>
+                <button
+                  onClick={() => setView('editor')}
+                  className="px-6 py-3 bg-[#0a0a0a] text-white rounded-full text-[15px] font-semibold hover:bg-[#262626] transition-colors"
+                >
+                  새로 시작하기
+                </button>
+              </div>
+              )}
 
               {/* + 추가 카드 */}
               <button
