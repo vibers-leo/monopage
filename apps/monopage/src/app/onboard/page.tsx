@@ -181,11 +181,12 @@ export default function Onboarding() {
     if (!requestForm.username.trim() || !requestForm.email.trim()) return;
     setRequestSubmitting(true);
     try {
-      await fetch('/api/chat', {
+      await fetch('/api/notify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: `[추가 페이지 개설 신청]\n희망 주소: monopage.kr/${requestForm.username}\n용도: ${requestForm.purpose || '미입력'}\n연락처: ${requestForm.email}`,
+          type: 'page_request',
+          data: { username: requestForm.username, purpose: requestForm.purpose, email: requestForm.email },
         }),
       });
       setRequestDone(true);

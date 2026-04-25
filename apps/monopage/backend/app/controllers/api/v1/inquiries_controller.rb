@@ -17,6 +17,7 @@ class Api::V1::InquiriesController < ApplicationController
 
     inquiry = profile.inquiries.build(inquiry_params)
     if inquiry.save
+      InquiryMailer.new_inquiry(inquiry).deliver_now rescue nil
       render json: inquiry, status: :created
     else
       render json: { errors: inquiry.errors.full_messages }, status: :unprocessable_entity
