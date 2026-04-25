@@ -1,13 +1,21 @@
 class InquiryMailer < ApplicationMailer
-  ADMIN_EMAIL = 'vibers.leo@gmail.com'.freeze
+  SUPER_ADMIN_EMAIL = 'vibers.leo@gmail.com'.freeze
 
   def new_inquiry(inquiry)
     @inquiry = inquiry
     @profile = inquiry.profile
-    @admin_url = "https://monopage.kr/admin?user=#{@profile.username}"
+    @owner = @profile.user
+    @admin_url = "https://monopage.kr/admin"
+
+    # 페이지 주인에게 발송, 슈퍼어드민은 CC
+    owner_email = @owner&.email
+    recipients = [owner_email].compact
+    cc = owner_email != SUPER_ADMIN_EMAIL ? [SUPER_ADMIN_EMAIL] : []
+
     mail(
-      to: ADMIN_EMAIL,
-      subject: "[Monopage] 새 문의 — @#{@profile.username}에 #{inquiry.name}님"
+      to: recipients,
+      cc: cc,
+      subject: "[Monopage] @#{@profile.username}에 새 문의가 들어왔어요"
     )
   end
 end
