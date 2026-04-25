@@ -494,6 +494,7 @@ function AdminDashboard() {
                   </div>
                 )}
               </div>
+              </div>
             </div>
 
             <p className="text-[14px] font-black text-gray-300 uppercase tracking-[0.3em] mb-2">내 모노페이지</p>
