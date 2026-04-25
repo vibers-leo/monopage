@@ -46,6 +46,9 @@ Rails.application.routes.draw do
         get 'all_profiles', to: 'super#all_profiles'
       end
 
+      # Public stats
+      get 'stats', to: 'analytics#stats'
+
       # Analytics (authenticated)
       get 'analytics', to: 'analytics#index'
       # Analytics (public - no auth)

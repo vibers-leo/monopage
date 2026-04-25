@@ -1,5 +1,5 @@
 class Api::V1::AnalyticsController < ApplicationController
-  skip_before_action :authorized, only: [:track_view, :track_click]
+  skip_before_action :authorized, only: [:track_view, :track_click, :stats]
 
   def index
     profile = current_user.profile
@@ -34,6 +34,11 @@ class Api::V1::AnalyticsController < ApplicationController
       daily: daily,
       link_clicks: link_clicks,
     }
+  end
+
+  # 퍼블릭: 전체 통계 (홈 랜딩용)
+  def stats
+    render json: { pages: Profile.count, views: AnalyticsLog.where(link_id: nil).count }
   end
 
   # 퍼블릭: 페이지 조회 로그
