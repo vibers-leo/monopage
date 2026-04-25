@@ -5,6 +5,7 @@ import { Camera, Sparkles, Loader2, X, Plus, Trash2, Link as LinkIcon, Check } f
 import { useRouter } from 'next/navigation';
 import { signup, setToken, updateProfile, createLink, getToken } from '@/lib/api';
 import { detectLink, getLinkIcon, isSnsLink, type DetectedLink } from '@/lib/link-detector';
+import { Navbar } from '@/components/Navbar';
 
 async function uploadPhoto(file: File, token?: string): Promise<string> {
   const formData = new FormData();
@@ -199,7 +200,9 @@ export default function Onboarding() {
 
   if (isLoggedIn && !isGenerating) {
     return (
-      <div className="min-h-screen bg-white text-[#0a0a0a] flex items-center justify-center p-5 sm:p-8">
+      <div className="min-h-screen bg-white text-[#0a0a0a]">
+        <Navbar />
+        <div className="flex items-center justify-center p-5 sm:p-8" style={{ minHeight: 'calc(100vh - 65px)' }}>
         <div className="max-w-[440px] w-full flex flex-col items-center gap-6 text-center">
           <div className="w-16 h-16 bg-[#f5f5f5] rounded-full flex items-center justify-center text-2xl">📄</div>
           <div>
@@ -331,7 +334,9 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-[#0a0a0a] flex items-center justify-center p-5 sm:p-8">
+    <div className="min-h-screen bg-white text-[#0a0a0a]">
+      <Navbar />
+      <div className="flex items-center justify-center p-5 sm:p-8" style={{ minHeight: 'calc(100vh - 65px)' }}>
       <div className="max-w-[440px] w-full">
           {isGenerating ? (
             <div className="flex flex-col gap-8 animate-in fade-in zoom-in-95 duration-300">
@@ -542,6 +547,7 @@ export default function Onboarding() {
               </p>
             </div>
           )}
+      </div>
       </div>
     </div>
   );

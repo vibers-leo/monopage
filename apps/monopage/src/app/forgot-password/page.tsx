@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Loader2 } from 'lucide-react';
+import { Navbar } from '@/components/Navbar';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -29,7 +30,9 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <div className="flex items-center justify-center p-6" style={{ minHeight: 'calc(100vh - 65px)' }}>
       <div className="max-w-md w-full">
         <Link href="/login" className="inline-flex items-center gap-1.5 text-sm text-gray-400 font-bold hover:text-black transition-colors mb-10">
           <ArrowLeft size={16} /> 로그인으로
@@ -74,6 +77,7 @@ export default function ForgotPasswordPage() {
             </button>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

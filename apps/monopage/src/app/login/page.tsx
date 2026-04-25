@@ -1,6 +1,7 @@
 'use client';
 
 import React, { Suspense, useState } from 'react';
+import { Navbar } from '@/components/Navbar';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2, ArrowRight } from 'lucide-react';
@@ -129,10 +130,13 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-6 font-sans">
-      <Suspense fallback={<Loader2 className="w-8 h-8 animate-spin text-gray-300" />}>
-        <LoginForm />
-      </Suspense>
+    <div className="min-h-screen bg-white font-sans">
+      <Navbar />
+      <div className="flex items-center justify-center p-6" style={{ minHeight: 'calc(100vh - 65px)' }}>
+        <Suspense fallback={<Loader2 className="w-8 h-8 animate-spin text-gray-300" />}>
+          <LoginForm />
+        </Suspense>
+      </div>
     </div>
   );
 }

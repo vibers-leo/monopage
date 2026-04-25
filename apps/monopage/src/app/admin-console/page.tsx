@@ -7,6 +7,7 @@ import {
   Eye, ArrowRight, ExternalLink, Mail,
 } from 'lucide-react';
 import Link from 'next/link';
+import { Navbar } from '@/components/Navbar';
 import { getToken, getMyProfile, adminGetAllProfiles, adminGetAllInquiries, updateInquiry } from '@/lib/api';
 
 const SUPER_ADMINS = [
@@ -59,8 +60,9 @@ export default function AdminConsolePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <div className="sticky top-0 z-40 bg-white border-b border-gray-100">
+      <Navbar />
+      {/* Sub Header */}
+      <div className="sticky top-[57px] z-40 bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/admin" className="text-gray-300 hover:text-black transition-colors">

@@ -1,17 +1,12 @@
-import Link from 'next/link';
-import type { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-  title: '개인정보처리방침 — 모노페이지',
-};
+import Link from 'next/link';
+import { Navbar } from '@/components/Navbar';
 
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-white">
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-[#e5e5e5] px-5 sm:px-8 py-4 flex justify-between items-center">
-        <Link href="/" className="font-paperlogy font-extrabold text-[18px] tracking-tight text-[#0a0a0a]">Monopage</Link>
-        <Link href="/" className="text-[15px] font-medium text-[#a3a3a3] hover:text-[#0a0a0a] transition-colors">홈으로</Link>
-      </nav>
+      <Navbar />
 
       <main className="max-w-[680px] mx-auto px-5 sm:px-8 py-12 sm:py-16">
         <h1 className="font-paperlogy text-[28px] sm:text-[32px] font-extrabold tracking-tight mb-2">개인정보처리방침</h1>

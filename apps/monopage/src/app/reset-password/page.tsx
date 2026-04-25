@@ -3,6 +3,7 @@
 import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { Navbar } from '@/components/Navbar';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 
 function ResetPasswordInner() {
@@ -97,7 +98,9 @@ function ResetPasswordInner() {
 
 export default function ResetPasswordPage() {
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <div className="flex items-center justify-center p-6" style={{ minHeight: 'calc(100vh - 65px)' }}>
       <div className="max-w-md w-full">
         <Link href="/login" className="inline-flex items-center gap-1.5 text-sm text-gray-400 font-bold hover:text-black transition-colors mb-10">
           <ArrowLeft size={16} /> 로그인으로
@@ -105,6 +108,7 @@ export default function ResetPasswordPage() {
         <Suspense fallback={<Loader2 className="animate-spin text-gray-300" />}>
           <ResetPasswordInner />
         </Suspense>
+      </div>
       </div>
     </div>
   );
