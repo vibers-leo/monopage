@@ -1,27 +1,19 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import {
   ArrowRight, ArrowUpRight,
   Globe, Palette, Share2, BarChart3,
 } from 'lucide-react';
+import { Navbar } from '@/components/Navbar';
 
 export default function AboutPage() {
 
   return (
     <div className="bg-white text-gray-900 relative overflow-hidden" style={{ fontFamily: "'Pretendard', system-ui, sans-serif" }}>
 
-      {/* ── Nav ───────────────────────────────────────────── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <Link href="/" className="font-black text-base tracking-tight">
-          Monopage<span className="text-gray-300">.</span>
-        </Link>
-        <div className="flex items-center gap-4">
-          <Link href="/login" className="text-xs font-bold text-gray-400 hover:text-black transition-colors">로그인</Link>
-          <Link href="/onboard" className="px-4 py-2 bg-black text-white text-xs font-bold rounded-full hover:bg-gray-800 transition-colors">
-            시작하기
-          </Link>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* ── 1. Hero ────────────────────────────────────────── */}
       <section className="min-h-[100dvh] relative flex items-center pt-20">

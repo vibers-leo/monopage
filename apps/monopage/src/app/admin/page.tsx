@@ -621,9 +621,14 @@ function AdminDashboard() {
                     <button
                       onClick={async () => {
                         setResetting(true);
+                        setError(null);
                         try {
-                          for (const link of links) { await deleteLink(link.id); }
-                          for (const item of portfolioItems) { await deletePortfolioItem(item.id); }
+                          for (const link of links) {
+                            try { await deleteLink(link.id); } catch { /* skip already deleted */ }
+                          }
+                          for (const item of portfolioItems) {
+                            try { await deletePortfolioItem(item.id); } catch { /* skip */ }
+                          }
                           await updateProfile({ bio: '', avatar_url: '', knowledge_md: '' } as any);
                           setLinks([]);
                           setPortfolioItems([]);
@@ -631,7 +636,7 @@ function AdminDashboard() {
                           setShowResetConfirm(false);
                           addToast('success', '페이지를 삭제했어요. 새로 시작해보세요!');
                         } catch (e: any) {
-                          setError(e.message);
+                          addToast('error', e.message || '삭제 중 문제가 생겼어요');
                         } finally {
                           setResetting(false);
                         }
