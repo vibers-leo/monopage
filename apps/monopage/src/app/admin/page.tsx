@@ -123,7 +123,7 @@ function AdminDashboard() {
           adminGetLinks(managingUser),
           adminGetPortfolioItems(managingUser),
         ]);
-        setProfile({ username: p.username || '', bio: p.bio || '', avatar_url: p.avatar_url || '', email: p.user?.email || '' });
+        setProfile({ username: p.username || '', bio: p.bio || '', avatar_url: p.avatar_url || '', email: p.user?.email || '', knowledge_md: p.knowledge_md || '' } as any);
         setSections(p.theme_config?.sections || DEFAULT_SECTIONS);
         setSelectedTheme((p.theme_config?.theme as ThemeKey) || 'minimal');
         setLinks(l);
@@ -133,7 +133,7 @@ function AdminDashboard() {
       } else {
         const [p, l, pi, c, sa] = await Promise.all([getMyProfile(), getLinks(), getPortfolioItems(), getSocialConnections(), getSocialAccounts().catch(() => [])]);
         setSocialAccounts(sa as any);
-        setProfile({ username: p.username || '', bio: p.bio || '', avatar_url: p.avatar_url || '', email: p.email || '' });
+        setProfile({ username: p.username || '', bio: p.bio || '', avatar_url: p.avatar_url || '', email: p.email || '', knowledge_md: p.knowledge_md || '' } as any);
         setSections(p.theme_config?.sections || DEFAULT_SECTIONS);
         setSelectedTheme((p.theme_config?.theme as ThemeKey) || 'minimal');
         setLinks(l);
@@ -192,7 +192,7 @@ function AdminDashboard() {
     setSaving(true);
     setError(null);
     try {
-      await updateProfile({ bio: profile.bio, username: profile.username, avatar_url: profile.avatar_url, theme_config: { sections, theme: selectedTheme } });
+      await updateProfile({ bio: profile.bio, username: profile.username, avatar_url: profile.avatar_url, knowledge_md: (profile as any).knowledge_md || '', theme_config: { sections, theme: selectedTheme } });
       setSaved(true);
       setTimeout(() => { setSaved(false); setView('list'); }, 1500);
     } catch (e: any) {
@@ -1611,6 +1611,38 @@ function AdminDashboard() {
           {/* ===== SETTINGS TAB ===== */}
           {activeTab === 'settings' && (
             <section>
+              {/* AI 도우미 설정 */}
+              <div className="mb-6">
+                <label className="block text-[14px] font-black text-gray-300 uppercase mb-3 tracking-widest flex items-center gap-1.5">
+                  <MessageCircle size={10} /> AI 도우미
+                </label>
+                <p className="text-[14px] text-gray-400 mb-3">
+                  내용을 입력하면 내 페이지에 AI 챗봇이 활성화돼요. 방문자가 질문하면 이 내용을 기반으로 답변해요.
+                </p>
+                <textarea
+                  value={(profile as any).knowledge_md || ''}
+                  onChange={(e) => setProfile({ ...profile, knowledge_md: e.target.value } as any)}
+                  className="w-full min-h-[180px] p-4 text-[14px] font-medium border border-gray-100 rounded-2xl focus:border-black outline-none transition-colors resize-none leading-relaxed font-mono"
+                  placeholder={"# 우리 가게 정보\n\n- 위치: 수원시 인계동\n- 영업시간: 18:00 ~ 02:00\n- 예약: 0507-1322-4606\n- 메뉴: 시그니처 칵테일, 하이볼, 와인\n\n# 자주 묻는 질문\n\nQ: 주차 가능한가요?\nA: 건물 지하주차장 이용 가능해요."}
+                />
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-[13px] text-gray-300">
+                    {(profile as any).knowledge_md?.length || 0}자 입력됨
+                    {(profile as any).knowledge_md?.trim() ? ' · AI 챗봇 활성화됨' : ''}
+                  </p>
+                  {(profile as any).knowledge_md?.trim() && (
+                    <button
+                      onClick={() => setProfile({ ...profile, knowledge_md: '' } as any)}
+                      className="text-[13px] text-red-400 font-semibold hover:text-red-500 transition-colors"
+                    >
+                      비활성화
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="h-px bg-gray-100 mb-6" />
+
               <label className="block text-[14px] font-black text-gray-300 uppercase mb-4 tracking-widest flex items-center gap-1.5">
                 <Shield size={10} /> Account
               </label>

@@ -72,7 +72,8 @@
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Updated theme: {d[\\\\\"theme_config\\\\\"][\\\\\"theme\\\\\"]}'\\)\")",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Updated: {d[\\\\\"title\\\\\"]} → {d[\\\\\"url\\\\\"]}'\\)\")",
       "Bash(echo \"비밀번호 찾기: $\\(curl -s -X POST https://monopage.kr/api/proxy/api/v1/password_resets -H \"Content-Type: application/json\" -d '{\"email\":\"yahwa@monopage.kr\"}'\\)\")",
-      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Inquiry created: ID={d.get\\(\\\\\"id\\\\\",\\\\\"FAIL\\\\\"\\)}'\\)\")"
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Inquiry created: ID={d.get\\(\\\\\"id\\\\\",\\\\\"FAIL\\\\\"\\)}'\\)\")",
+      "Bash(python3:*)"
     ]
   }
 }

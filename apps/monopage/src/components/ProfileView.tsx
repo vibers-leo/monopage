@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { ShareButton } from '@/components/ShareButton';
 import { SectionRenderer, DEFAULT_SECTIONS } from '@/components/SectionRenderer';
+import { SiteAIChat } from '@/components/SiteAIChat';
 import { getPublicProfile, trackView } from '@/lib/api';
 import { getTheme } from '@/lib/themes';
 
@@ -91,6 +92,11 @@ export function ProfileView({ username }: ProfileViewProps) {
           Made with Monopage
         </a>
       </div>
+
+      {/* 사이트별 AI 챗봇 (knowledge_md가 있을 때만) */}
+      {profile.knowledge_md && profile.knowledge_md.trim().length > 0 && (
+        <SiteAIChat username={profile.username} theme={theme} />
+      )}
     </div>
   );
 }
