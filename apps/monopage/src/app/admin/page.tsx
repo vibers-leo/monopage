@@ -1305,19 +1305,27 @@ function AdminDashboard() {
                       />
                     )}
                     {section.type === 'inquiry' && (
-                      <div className="flex gap-1">
+                      <div className="flex gap-1 items-center">
                         <input
                           value={section.content?.title || ''}
                           onChange={(e) => setSections(sections.map(s => s.id === section.id ? { ...s, content: { ...s.content, title: e.target.value } } : s))}
                           placeholder="제목"
-                          className="text-[14px] bg-white border border-gray-100 rounded-lg px-2 py-1 w-16 outline-none focus:border-black transition-colors"
+                          className="text-[13px] bg-white border border-gray-100 rounded-lg px-2 py-1 w-14 outline-none focus:border-black transition-colors"
                         />
                         <input
                           value={section.content?.ctaText || ''}
                           onChange={(e) => setSections(sections.map(s => s.id === section.id ? { ...s, content: { ...s.content, ctaText: e.target.value } } : s))}
-                          placeholder="버튼 문구"
-                          className="text-[14px] bg-white border border-gray-100 rounded-lg px-2 py-1 w-20 outline-none focus:border-black transition-colors"
+                          placeholder="버튼"
+                          className="text-[13px] bg-white border border-gray-100 rounded-lg px-2 py-1 w-14 outline-none focus:border-black transition-colors"
                         />
+                        <button
+                          onClick={() => setSections(sections.map(s => s.id === section.id ? { ...s, content: { ...s.content, collapsed: !(s.content?.collapsed !== false) } } : s))}
+                          className={`text-[12px] font-semibold px-2 py-1 rounded-lg transition-colors ${
+                            section.content?.collapsed !== false ? 'bg-gray-100 text-gray-400' : 'bg-black text-white'
+                          }`}
+                        >
+                          {section.content?.collapsed !== false ? '접힘' : '펼침'}
+                        </button>
                       </div>
                     )}
                     {!['header', 'links', 'portfolio'].includes(section.type) && (

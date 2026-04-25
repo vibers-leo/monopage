@@ -105,6 +105,7 @@ export function SectionRenderer({ sections, profile, links, portfolioItems, post
                   theme={theme}
                   ctaText={section.content?.ctaText}
                   title={section.content?.title}
+                  collapsed={section.content?.collapsed !== false}
                 />
               </div>
             );
