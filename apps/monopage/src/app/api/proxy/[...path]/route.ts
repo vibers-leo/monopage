@@ -27,11 +27,16 @@ async function proxy(req: NextRequest, params: { path: string[] }) {
   if (auth) headers['Authorization'] = auth;
   if (req.headers.get('content-type')) headers['Content-Type'] = req.headers.get('content-type')!;
 
-  const res = await fetch(url, {
-    method: req.method,
-    headers,
-    body: ['GET', 'HEAD'].includes(req.method) ? undefined : await req.arrayBuffer(),
-  });
+  let body: ArrayBuffer | undefined;
+  if (!['GET', 'HEAD', 'DELETE'].includes(req.method)) {
+    body = await req.arrayBuffer();
+  }
+
+  const res = await fetch(url, { method: req.method, headers, body });
+
+  if (res.status === 204) {
+    return new NextResponse(null, { status: 204 });
+  }
 
   const data = await res.arrayBuffer();
   return new NextResponse(data, {
