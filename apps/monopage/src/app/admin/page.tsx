@@ -1233,14 +1233,65 @@ function AdminDashboard() {
                 );
               })()}
 
-              {/* 다른 SNS 연결 (향후 확장) */}
+              {/* Threads 가져오기 */}
+              <div>
+                <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest mb-3 block">Threads</label>
+                <div className="p-5 border border-gray-200 rounded-2xl">
+                  <p className="text-[14px] text-gray-400 mb-3">username을 입력하면 Threads 게시물을 타임라인으로 표시해요</p>
+                  <div className="flex gap-2">
+                    <div className="flex-1 flex items-center gap-2 px-4 py-3 border border-gray-100 rounded-xl focus-within:border-black transition-colors">
+                      <span className="text-[14px] text-gray-300">@</span>
+                      <input
+                        type="text"
+                        placeholder="threads_username"
+                        id="threads-handle-input"
+                        className="flex-1 text-[14px] font-medium outline-none bg-transparent"
+                        onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('threads-fetch-btn')?.click(); }}
+                      />
+                    </div>
+                    <button
+                      id="threads-fetch-btn"
+                      onClick={async () => {
+                        const input = document.getElementById('threads-handle-input') as HTMLInputElement;
+                        const handle = input?.value?.trim().replace('@', '');
+                        if (!handle) return;
+                        const btn = document.getElementById('threads-fetch-btn') as HTMLButtonElement;
+                        btn.disabled = true; btn.textContent = '...';
+                        try {
+                          const res = await fetch('/api/social-fetch', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ platform: 'threads', handle }),
+                          });
+                          const data = await res.json();
+                          if (data.error) { addToast('error', data.error); return; }
+                          // sns_timeline 섹션에 posts 저장
+                          const existing = sections.find(s => s.type === 'sns_timeline');
+                          if (existing) {
+                            setSections(sections.map(s => s.id === existing.id ? { ...s, content: { ...s.content, posts: data.posts } } : s));
+                          } else {
+                            setSections([...sections, { id: 'sns_timeline_' + Date.now(), type: 'sns_timeline' as any, order: sections.length, content: { posts: data.posts, count: 5 } }]);
+                          }
+                          addToast('success', `Threads에서 ${data.total}개 게시물을 가져왔어요`);
+                        } catch { addToast('error', '가져오기에 실패했어요'); }
+                        finally { btn.disabled = false; btn.textContent = '가져오기'; }
+                      }}
+                      className="px-5 py-3 bg-black text-white rounded-xl text-[14px] font-semibold hover:bg-gray-800 transition-colors"
+                    >
+                      가져오기
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* 다른 SNS (향후) */}
               <div>
                 <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest mb-3 block">다른 SNS</label>
                 <div className="flex flex-col gap-2">
                   {[
-                    { name: 'YouTube', icon: '▶️', color: 'from-red-500 to-red-600', soon: true },
-                    { name: 'TikTok', icon: '🎵', color: 'from-gray-800 to-black', soon: true },
-                    { name: 'Twitter / X', icon: '𝕏', color: 'from-gray-700 to-black', soon: true },
+                    { name: 'YouTube', icon: '▶️', color: 'from-red-500 to-red-600' },
+                    { name: 'TikTok', icon: '🎵', color: 'from-gray-800 to-black' },
+                    { name: 'Twitter / X', icon: '𝕏', color: 'from-gray-700 to-black' },
                   ].map(sns => (
                     <div key={sns.name} className="flex items-center gap-3 p-4 border border-gray-100 rounded-2xl opacity-60">
                       <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${sns.color} flex items-center justify-center text-white shrink-0 text-sm`}>
@@ -1359,6 +1410,7 @@ function AdminDashboard() {
                        section.type === 'sns_icons' ? 'SNS 아이콘' :
                        section.type === 'sns_feed' ? 'SNS 피드' :
                        section.type === 'text' ? '텍스트' :
+                       section.type === 'sns_timeline' ? 'Threads' :
                        section.type === 'inquiry' ? '문의폼' : section.type}
                     </span>
                     {section.type === 'portfolio' && (

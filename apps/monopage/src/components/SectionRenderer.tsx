@@ -7,12 +7,13 @@ import { SnsIconBar } from './SnsIconBar';
 import { PortfolioGallery } from './PortfolioGallery';
 import { SnsGallery } from './SnsGallery';
 import { InquiryForm } from './InquiryForm';
+import { SnsTimeline } from './SnsTimeline';
 import { trackClick } from '@/lib/api';
 import type { Theme } from '@/lib/themes';
 
 export interface Section {
   id: string;
-  type: 'header' | 'sns_icons' | 'links' | 'portfolio' | 'text' | 'sns_feed' | 'inquiry';
+  type: 'header' | 'sns_icons' | 'links' | 'portfolio' | 'text' | 'sns_feed' | 'sns_timeline' | 'inquiry';
   order: number;
   content?: any;
 }
@@ -95,6 +96,17 @@ export function SectionRenderer({ sections, profile, links, portfolioItems, post
           case 'sns_feed':
             return posts.length > 0 ? (
               <SnsGallery key={section.id} posts={posts} />
+            ) : null;
+
+          case 'sns_timeline':
+            return section.content?.posts?.length > 0 ? (
+              <SnsTimeline
+                key={section.id}
+                posts={section.content.posts}
+                theme={theme}
+                showPermalink={section.content?.showPermalink !== false}
+                count={section.content?.count || 5}
+              />
             ) : null;
 
           case 'inquiry':

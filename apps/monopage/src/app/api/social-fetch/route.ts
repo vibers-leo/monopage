@@ -60,6 +60,59 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Threads
+    if (platform === 'threads') {
+      const res = await fetch(
+        `${BASE_URL}/v1/threads/user/posts?handle=${encodeURIComponent(handle.replace('@', ''))}`,
+        { headers: { 'x-api-key': API_KEY } }
+      );
+
+      if (!res.ok) {
+        return NextResponse.json({ error: '게시물을 가져오지 못했어요. username을 확인해주세요.' }, { status: res.status });
+      }
+
+      const data = await res.json();
+      if (!data.success) {
+        return NextResponse.json({ error: data.message || '가져오기에 실패했어요' }, { status: 400 });
+      }
+
+      const rawPosts = data.posts || [];
+      const posts = rawPosts.map((item: any) => {
+        const text = item.caption?.text || '';
+        const imageUrl = item.image_versions2?.candidates?.[0]?.url || '';
+        const videoUrl = item.video_versions?.[0]?.url || '';
+        const info = item.text_post_app_info || {};
+        const user = item.user || {};
+
+        return {
+          text,
+          image_url: imageUrl,
+          video_url: videoUrl,
+          username: user.username || handle,
+          avatar_url: user.profile_pic_url || '',
+          verified: user.is_verified || false,
+          likes: item.like_count || 0,
+          replies: info.direct_reply_count || 0,
+          reposts: info.repost_count || 0,
+          quotes: info.quote_count || 0,
+          permalink: `https://www.threads.net/@${user.username || handle}/post/${item.code || ''}`,
+          published_at: item.taken_at ? new Date(item.taken_at * 1000).toISOString() : '',
+          media_type: item.media_type === 2 ? 'video' : item.media_type === 8 ? 'carousel' : imageUrl ? 'image' : 'text',
+        };
+      }).filter((p: any) => p.text);
+
+      return NextResponse.json({
+        posts,
+        profile: {
+          username: rawPosts[0]?.user?.username || handle,
+          avatar_url: rawPosts[0]?.user?.profile_pic_url || '',
+          verified: rawPosts[0]?.user?.is_verified || false,
+        },
+        credits_remaining: data.credits_remaining,
+        total: posts.length,
+      });
+    }
+
     // YouTube (향후)
     if (platform === 'youtube') {
       return NextResponse.json({ error: 'YouTube 지원은 준비 중이에요' }, { status: 400 });
