@@ -2080,9 +2080,9 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* 가이드 챗봇 */}
+        {/* 가이드 챗봇 — 오른쪽 하단 고정 */}
         {view === 'editor' && (
-          <div className="mt-6 w-full max-w-[400px]">
+          <div className="fixed bottom-6 right-6 z-50 w-[360px]">
             <AdminGuideChat
               profile={profile}
               linksCount={links.length}
