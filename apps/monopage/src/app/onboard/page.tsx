@@ -3,7 +3,15 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Camera, Sparkles, Loader2, X, Plus, Trash2, Link as LinkIcon, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { signup, setToken, updateProfile, createLink, getToken } from '@/lib/api';
+import { signup, setToken, updateProfile, createLink, getToken, getMyProfile } from '@/lib/api';
+
+const SUPER_ADMINS = [
+  'juuuno@naver.com',
+  'juuuno1116@gmail.com',
+  'designd@designd.co.kr',
+  'designdlab@designdlab.co.kr',
+  'vibers.leo@gmail.com',
+];
 import { detectLink, getLinkIcon, isSnsLink, type DetectedLink } from '@/lib/link-detector';
 import { Navbar } from '@/components/Navbar';
 
@@ -30,6 +38,7 @@ export default function Onboarding() {
   const [progressStep, setProgressStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [requestForm, setRequestForm] = useState({ username: '', purpose: '', email: '' });
@@ -41,7 +50,12 @@ export default function Onboarding() {
 
   useEffect(() => {
     const token = getToken();
-    if (token) setIsLoggedIn(true);
+    if (token) {
+      setIsLoggedIn(true);
+      getMyProfile().then(p => {
+        if (p?.email && SUPER_ADMINS.includes(p.email)) setIsSuperAdmin(true);
+      }).catch(() => {});
+    }
     try {
       const draft = sessionStorage.getItem('monopage_draft_links');
       if (draft) {
@@ -198,7 +212,7 @@ export default function Onboarding() {
     }
   };
 
-  if (isLoggedIn && !isGenerating) {
+  if (isLoggedIn && !isGenerating && !isSuperAdmin) {
     return (
       <div className="min-h-screen bg-white text-[#0a0a0a]">
         <Navbar />
