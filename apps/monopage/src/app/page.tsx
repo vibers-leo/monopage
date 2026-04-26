@@ -158,6 +158,9 @@ export default function Home() {
                 <div key={`${link.url}-${i}`} className="flex items-center gap-3 px-4 py-3.5 bg-[#f5f5f5] rounded-xl group">
                   <span className="text-base shrink-0">{getLinkIcon(link.type)}</span>
                   <p className="text-[15px] font-medium truncate flex-1">{link.handle ? `@${link.handle}` : link.label}</p>
+                  {link.handle && ['instagram', 'threads'].includes(link.type) && (
+                    <span className="text-[12px] font-semibold text-purple-500 bg-purple-50 px-2 py-0.5 rounded-full shrink-0">자동</span>
+                  )}
                   <button onClick={() => handleRemove(i)} className="text-[#a3a3a3] hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
                     <Trash2 size={14} />
                   </button>
@@ -186,7 +189,11 @@ export default function Home() {
             onClick={handleStartWithLinks}
             className="inline-flex items-center gap-2 px-8 py-4 bg-[#0a0a0a] text-white rounded-full text-[16px] font-semibold hover:bg-[#262626] active:scale-[0.98] transition-all"
           >
-            {links.length > 0 ? `${links.length}개 링크로 시작` : '무료로 시작하기'}
+            {links.length > 0
+              ? links.some(l => l.handle && ['instagram', 'threads', 'tiktok'].includes(l.type))
+                ? `${links.length}개 링크 + SNS 게시물로 시작`
+                : `${links.length}개 링크로 시작`
+              : '무료로 시작하기'}
             <ArrowRight size={18} />
           </Link>
 

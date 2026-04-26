@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Camera, Sparkles, Loader2, X, Plus, Trash2, Link as LinkIcon, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { signup, setToken, updateProfile, createLink, getToken, getMyProfile } from '@/lib/api';
+import { signup, setToken, updateProfile, createLink, createPortfolioItem, getToken, getMyProfile } from '@/lib/api';
 
 const SUPER_ADMINS = [
   'juuuno@naver.com',
@@ -176,7 +176,41 @@ export default function Onboarding() {
         }
       }
 
-      setProgressStep(4);
+      // 4. SNS 핸들이 있으면 자동 크롤링 → 포트폴리오 추가
+      const snsHandles = links.filter(l => l.handle && ['instagram', 'threads'].includes(l.type));
+      if (snsHandles.length > 0) {
+        setProgressStep(5);
+        for (const sns of snsHandles) {
+          try {
+            const platform = sns.type === 'threads' ? 'threads' : 'instagram';
+            const fetchRes = await fetch('/api/social-fetch', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ platform, handle: sns.handle }),
+            });
+            const fetchData = await fetchRes.json();
+            if (fetchData.posts) {
+              const token = getToken();
+              for (const post of fetchData.posts.slice(0, 9)) {
+                if (post.image_url) {
+                  try {
+                    await createPortfolioItem({
+                      image_url: post.image_url,
+                      video_url: post.video_url || '',
+                      media_type: post.media_type || 'image',
+                      permalink: post.permalink || '',
+                      title: (post.caption || post.text || '').split('\n')[0].slice(0, 50),
+                      source: platform,
+                    });
+                  } catch { /* skip */ }
+                }
+              }
+            }
+          } catch { /* skip */ }
+        }
+      }
+
+      setProgressStep(6);
       await new Promise(r => setTimeout(r, 600));
       router.push('/admin');
     } catch (e: any) {
@@ -365,7 +399,8 @@ export default function Onboarding() {
                   { step: 1, label: '계정 만들기', sub: '이메일 · 비밀번호 등록 중' },
                   { step: 2, label: '프로필 설정', sub: '기본 정보 저장 중' },
                   ...(links.length > 0 ? [{ step: 3, label: `링크 ${links.length}개 추가`, sub: '링크 카드 생성 중' }] : []),
-                  { step: links.length > 0 ? 4 : 3, label: '페이지 완성!', sub: '어드민으로 이동 중' },
+                  ...(snsLinks.length > 0 ? [{ step: 5, label: 'SNS 게시물 가져오기', sub: '포트폴리오 자동 생성 중' }] : []),
+                  { step: 6, label: '페이지 완성!', sub: '어드민으로 이동 중' },
                 ].map(({ step, label, sub }) => {
                   const done = progressStep > step;
                   const active = progressStep === step;
