@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react
 
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { AdminGuideChat } from '@/components/AdminGuideChat';
+import { Navbar } from '@/components/Navbar';
 import { LinkCard } from '@/components/LinkCard';
 import { PortfolioGallery } from '@/components/PortfolioGallery';
 import { SectionRenderer, DEFAULT_SECTIONS, type Section } from '@/components/SectionRenderer';
@@ -81,7 +82,7 @@ function AdminDashboard() {
   const [editingPortfolio, setEditingPortfolio] = useState<number | null>(null);
   const [uploadingPortfolio, setUploadingPortfolio] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-  const [panelWidth, setPanelWidth] = useState(380);
+  const [panelWidth, setPanelWidth] = useState(420);
   const isResizing = useRef(false);
   const startX = useRef(0);
   const startW = useRef(0);
@@ -370,7 +371,7 @@ function AdminDashboard() {
     const onMove = (ev: MouseEvent) => {
       if (!isResizing.current) return;
       const delta = ev.clientX - startX.current;
-      setPanelWidth(Math.max(280, Math.min(600, startW.current + delta)));
+      setPanelWidth(Math.max(360, Math.min(640, startW.current + delta)));
     };
     const onUp = () => { isResizing.current = false; window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
     window.addEventListener('mousemove', onMove);
@@ -379,6 +380,9 @@ function AdminDashboard() {
 
   return (
     <div className="flex flex-col h-screen bg-white text-[#0a0a0a] overflow-hidden">
+      {/* 공통 Navbar */}
+      <Navbar />
+
       {/* 슈퍼어드민 배너 */}
       {managingUser && (
         <div className="bg-purple-600 text-white px-4 py-2 flex items-center justify-between text-[14px] font-semibold shrink-0">
@@ -435,84 +439,6 @@ function AdminDashboard() {
         {/* ===== 목록 뷰 ===== */}
         {view === 'list' ? (
           <div className="flex flex-col h-full p-6 lg:p-8 animate-in fade-in duration-200">
-            {/* 목록 헤더 */}
-            <div className="flex items-center justify-between mb-8">
-              <Link href="/" className="font-paperlogy font-extrabold text-[16px] tracking-tight text-[#0a0a0a]">Monopage</Link>
-              <div className="flex items-center gap-3">
-                {/* 알림 벨 */}
-                <div className="relative">
-                  <button
-                    onClick={() => setShowNotifications(v => !v)}
-                    className="relative p-2 text-gray-300 hover:text-black transition-colors"
-                  >
-                    <Bell size={16} />
-                    {unreadCount > 0 && (
-                      <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">{unreadCount > 9 ? '9+' : unreadCount}</span>
-                    )}
-                  </button>
-                  {showNotifications && (
-                    <div className="absolute right-0 top-full mt-2 w-72 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 max-h-80 overflow-y-auto" onClick={e => e.stopPropagation()}>
-                      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-                        <p className="text-[14px] font-bold">알림</p>
-                        {unreadCount > 0 && (
-                          <button
-                            onClick={async () => { await markAllNotificationsRead(); setUnreadCount(0); setNotifications(n => n.map(x => ({ ...x, read: true }))); }}
-                            className="text-[13px] text-purple-500 font-semibold hover:underline"
-                          >모두 읽음</button>
-                        )}
-                      </div>
-                      {notifications.length === 0 ? (
-                        <p className="text-[14px] text-gray-300 text-center py-8">알림이 없어요</p>
-                      ) : notifications.map(n => (
-                        <div
-                          key={n.id}
-                          onClick={async () => {
-                            if (!n.read) { await markNotificationRead(n.id); setUnreadCount(c => Math.max(0, c - 1)); setNotifications(ns => ns.map(x => x.id === n.id ? { ...x, read: true } : x)); }
-                            if (n.type_key === 'new_inquiry') setActiveTab('inquiries');
-                            setShowNotifications(false);
-                            if (view === 'list') setView('editor');
-                          }}
-                          className={`px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-50 ${!n.read ? 'bg-blue-50/30' : ''}`}
-                        >
-                          <p className={`text-[14px] ${!n.read ? 'font-bold' : 'font-medium text-gray-500'}`}>{n.title}</p>
-                          {n.body && <p className="text-[13px] text-gray-400 mt-0.5 truncate">{n.body}</p>}
-                          <p className="text-[12px] text-gray-300 mt-1">{new Date(n.created_at).toLocaleDateString('ko', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              <div className="relative">
-                <button
-                  onClick={() => setShowUserMenu(v => !v)}
-                  className="flex items-center gap-2 text-[14px] font-bold text-gray-300 hover:text-black transition-colors"
-                >
-                  <span>monopage.kr/{profile.username}</span>
-                  <ChevronDown size={12} />
-                </button>
-                {showUserMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-lg py-2 z-50" onClick={() => setShowUserMenu(false)}>
-                    <a href={`/${profile.username}`} target="_blank" className="flex items-center gap-2 px-4 py-2.5 text-[14px] font-semibold hover:bg-gray-50 transition-colors text-gray-500">
-                      <Eye size={13} /> 내 페이지 보기
-                    </a>
-                    {SUPER_ADMINS.includes(profile.email || '') && (
-                      <>
-                        <div className="h-px bg-gray-100 my-1" />
-                        <Link href="/admin-console" className="flex items-center gap-2 px-4 py-2.5 text-[14px] font-semibold hover:bg-gray-50 transition-colors text-purple-600">
-                          <Shield size={13} /> 관리자 대시보드
-                        </Link>
-                      </>
-                    )}
-                    <div className="h-px bg-gray-100 my-1" />
-                    <button onClick={logout} className="flex items-center gap-2 w-full px-4 py-2.5 text-[14px] font-semibold hover:bg-gray-50 transition-colors text-gray-500">
-                      <LogOut size={13} /> 로그아웃
-                    </button>
-                  </div>
-                )}
-              </div>
-              </div>
-            </div>
-
             <p className="text-[14px] font-black text-gray-300 uppercase tracking-[0.3em] mb-2">내 모노페이지</p>
             <h1 className="text-2xl font-black mb-6">페이지 목록</h1>
 
