@@ -633,8 +633,14 @@ function AdminDashboard() {
             ))}
           </nav>
 
-          {/* 하단 저장 버튼 */}
-          <div className="p-3 border-t border-gray-100">
+          {/* 하단 버튼 */}
+          <div className="p-3 border-t border-gray-100 space-y-2">
+            <button
+              onClick={() => setShowPreview(true)}
+              className="w-full py-2.5 border border-gray-200 rounded-xl text-[14px] font-semibold flex items-center justify-center gap-2 hover:border-black transition-colors"
+            >
+              <Eye size={14} /> 미리보기
+            </button>
             <button
               onClick={save}
               disabled={saving}
@@ -1936,65 +1942,45 @@ function AdminDashboard() {
         )}
       </aside>
 
-      {/* Live Preview */}
-      <main className={`flex-1 bg-gray-50 flex flex-col items-center justify-center p-6 lg:p-12 overflow-y-auto ${showPreview ? 'flex' : 'hidden lg:flex'}`}>
-        {/* Mobile: back button */}
-        {showPreview && (
-          <button
-            onClick={() => setShowPreview(false)}
-            className="lg:hidden self-start mb-4 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors"
-          >
-            <EyeOff size={14} /> 에디터로 돌아가기
-          </button>
-        )}
-
-        {/* 목록 뷰일 때 — 페이지 선택 안내 + 바로가기 */}
-        {view === 'list' && (
-          <div className="text-center mb-8">
-            <p className="text-xs font-bold text-gray-300 mb-3">왼쪽에서 페이지를 선택하면 편집할 수 있어요</p>
-            <a
-              href={`/${profile.username}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-full text-xs font-black hover:border-black transition-colors"
+      {/* 미리보기 슬라이드 패널 — 오른쪽에서 나옴 */}
+      {showPreview && (
+        <div className="fixed inset-0 z-40 flex" onClick={() => setShowPreview(false)}>
+          <div className="flex-1 bg-black/30" />
+          <div className="w-[400px] bg-gray-50 flex flex-col items-center justify-center p-6 shadow-2xl animate-in slide-in-from-right duration-300" onClick={e => e.stopPropagation()}>
+            <button
+              onClick={() => setShowPreview(false)}
+              className="self-end mb-4 flex items-center gap-1.5 text-[14px] text-gray-400 hover:text-black transition-colors"
             >
-              <Eye size={12} /> monopage.kr/{profile.username}
-            </a>
-          </div>
-        )}
-        <div className="w-[320px] max-w-full h-[620px] lg:h-[680px] border-[7px] border-black rounded-[44px] shadow-2xl relative overflow-hidden"
-          style={{ backgroundColor: THEMES[selectedTheme].vars.bg }}>
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-5 bg-black rounded-b-2xl z-20"></div>
-          <div className="h-full overflow-y-auto scrollbar-hide">
-          <div className="px-5 py-16 flex flex-col items-center">
-            <div className="inline-block px-3 py-1 bg-black text-white rounded-full text-[8px] font-black uppercase tracking-widest mb-10">
-              Live Preview
+              <X size={14} /> 닫기
+            </button>
+            <div className="w-[300px] h-[600px] border-[7px] border-black rounded-[44px] shadow-xl relative overflow-hidden"
+              style={{ backgroundColor: THEMES[selectedTheme].vars.bg }}>
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-5 bg-black rounded-b-2xl z-20" />
+              <div className="h-full overflow-y-auto scrollbar-hide">
+                <div className="px-5 py-14 flex flex-col items-center">
+                  <SectionRenderer
+                    sections={sections}
+                    profile={{ ...profile, id: 0 }}
+                    links={links}
+                    portfolioItems={portfolioItems}
+                    posts={[]}
+                    theme={THEMES[selectedTheme]}
+                  />
+                </div>
+              </div>
             </div>
-            <SectionRenderer
-              sections={sections}
-              profile={{ ...profile, id: 0 }}
-              links={links}
-              portfolioItems={portfolioItems}
-              posts={[]}
-              theme={THEMES[selectedTheme]}
-            />
-            <div className="mt-10 opacity-20 text-[7px] font-black uppercase tracking-widest text-center"
-              style={{ color: THEMES[selectedTheme].vars.textMuted }}>
-              Preview Mode
-            </div>
-          </div>
           </div>
         </div>
+      )}
 
-        {/* AI 비서 — createPortal로 자체 렌더링 */}
-        {view === 'editor' && (
-          <AdminGuideChat
-            profile={profile}
-            linksCount={links.length}
-            portfolioCount={portfolioItems.length}
-          />
-        )}
-      </main>
+      {/* AI 비서 */}
+      {view === 'editor' && (
+        <AdminGuideChat
+          profile={profile}
+          linksCount={links.length}
+          portfolioCount={portfolioItems.length}
+        />
+      )}
       </div>
     </div>
   );
