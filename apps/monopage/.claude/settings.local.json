@@ -77,7 +77,9 @@
       "WebFetch(domain:docs.socialcrawl.dev)",
       "Bash(npx -y socialcrawl-mcp --help)",
       "Bash(SOCIALCRAWL_API_KEY=\"sc_2WK52rPxWjrBYBaQMWlqJbZekar2Nyx3QkJvBtxTJHM\" npx -y socialcrawl-mcp)",
-      "Bash(npx skills:*)"
+      "Bash(npx skills:*)",
+      "WebFetch(domain:scrapecreators.com)",
+      "WebFetch(domain:docs.scrapecreators.com)"
     ]
   }
 }

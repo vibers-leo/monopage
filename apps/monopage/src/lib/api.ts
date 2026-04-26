@@ -106,7 +106,7 @@ export const disconnectSocial = () =>
 export const getPortfolioItems = () =>
   request<any[]>('/api/v1/portfolio_items');
 
-export const createPortfolioItem = (data: { image_url: string; title?: string; description?: string; category?: string; source?: string }) =>
+export const createPortfolioItem = (data: { image_url: string; video_url?: string; media_type?: string; permalink?: string; title?: string; description?: string; category?: string; source?: string }) =>
   request<any>('/api/v1/portfolio_items', {
     method: 'POST',
     body: JSON.stringify(data),

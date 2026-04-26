@@ -32,6 +32,8 @@ export async function POST(req: NextRequest) {
         const imageUrl =
           item.image_versions2?.candidates?.[0]?.url ||
           item.carousel_media?.[0]?.image_versions2?.candidates?.[0]?.url || '';
+        const videoUrl = item.video_versions?.[0]?.url || '';
+        const mediaType = item.media_type === 2 ? 'video' : item.media_type === 8 ? 'carousel' : 'image';
         const caption = typeof item.caption === 'object'
           ? item.caption?.text || ''
           : String(item.caption || '');
@@ -39,7 +41,9 @@ export async function POST(req: NextRequest) {
 
         return {
           image_url: imageUrl,
-          caption: caption.split('\n')[0].slice(0, 60), // 첫 줄, 60자
+          video_url: videoUrl,
+          media_type: mediaType,
+          caption: caption.split('\n')[0].slice(0, 60),
           permalink: code ? `https://instagram.com/p/${code}/` : '',
         };
       }).filter((p: any) => p.image_url);

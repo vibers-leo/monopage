@@ -1189,6 +1189,9 @@ function AdminDashboard() {
                                       try {
                                         const item = await createPortfolioItem({
                                           image_url: post.image_url,
+                                          video_url: post.video_url || '',
+                                          media_type: post.media_type || 'image',
+                                          permalink: post.permalink || '',
                                           title: (post.caption || '').slice(0, 50),
                                           source: 'instagram',
                                         });
@@ -1359,7 +1362,7 @@ function AdminDashboard() {
                        section.type === 'inquiry' ? '문의폼' : section.type}
                     </span>
                     {section.type === 'portfolio' && (
-                      <div className="flex gap-1">
+                      <div className="flex gap-1 items-center">
                         <select
                           value={section.content?.ratio || '1:1'}
                           onChange={(e) => setSections(sections.map(s => s.id === section.id ? { ...s, content: { ...s.content, ratio: e.target.value } } : s))}
@@ -1376,6 +1379,14 @@ function AdminDashboard() {
                           <option value={9}>9개</option>
                           <option value={12}>12개</option>
                         </select>
+                        <button
+                          onClick={() => setSections(sections.map(s => s.id === section.id ? { ...s, content: { ...s.content, showPermalink: !(s.content?.showPermalink !== false) } } : s))}
+                          className={`text-[12px] font-semibold px-2 py-1 rounded-lg transition-colors ${
+                            section.content?.showPermalink !== false ? 'bg-blue-50 text-blue-500' : 'bg-gray-100 text-gray-400'
+                          }`}
+                        >
+                          {section.content?.showPermalink !== false ? '원본↗' : '원본✕'}
+                        </button>
                       </div>
                     )}
                     {section.type === 'text' && (

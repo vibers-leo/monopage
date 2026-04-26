@@ -79,6 +79,7 @@ export function SectionRenderer({ sections, profile, links, portfolioItems, post
                 theme={theme}
                 ratio={section.content?.ratio || '1:1'}
                 count={section.content?.count || 9}
+                showPermalink={section.content?.showPermalink !== false}
               />
             ) : null;
 
