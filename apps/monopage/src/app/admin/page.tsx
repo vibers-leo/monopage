@@ -1374,35 +1374,26 @@ function AdminDashboard() {
 
               <div className="flex flex-col gap-1.5">
                 {[...sections].sort((a, b) => a.order - b.order).map((section, index) => (
-                  <div key={section.id} className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl group">
-                    <div className="flex flex-col gap-0.5">
-                      <button
-                        onClick={() => {
-                          if (index === 0) return;
-                          const sorted = [...sections].sort((a, b) => a.order - b.order);
-                          const newSections = sorted.map((s, i) => ({ ...s, order: i }));
-                          [newSections[index].order, newSections[index - 1].order] = [newSections[index - 1].order, newSections[index].order];
-                          setSections(newSections);
-                        }}
-                        disabled={index === 0}
-                        className="text-gray-300 hover:text-black disabled:opacity-20 transition-colors"
-                      >
-                        <ChevronUp size={10} />
-                      </button>
-                      <button
-                        onClick={() => {
-                          const sorted = [...sections].sort((a, b) => a.order - b.order);
-                          if (index >= sorted.length - 1) return;
-                          const newSections = sorted.map((s, i) => ({ ...s, order: i }));
-                          [newSections[index].order, newSections[index + 1].order] = [newSections[index + 1].order, newSections[index].order];
-                          setSections(newSections);
-                        }}
-                        disabled={index >= sections.length - 1}
-                        className="text-gray-300 hover:text-black disabled:opacity-20 transition-colors"
-                      >
-                        <ChevronDown size={10} />
-                      </button>
-                    </div>
+                  <div
+                    key={section.id}
+                    draggable
+                    onDragStart={(e) => { e.dataTransfer.setData('section-index', String(index)); (e.currentTarget as HTMLElement).style.opacity = '0.5'; }}
+                    onDragEnd={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
+                    onDragOver={(e) => { e.preventDefault(); (e.currentTarget as HTMLElement).style.borderColor = '#0a0a0a'; }}
+                    onDragLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'transparent'; }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      (e.currentTarget as HTMLElement).style.borderColor = 'transparent';
+                      const fromIndex = Number(e.dataTransfer.getData('section-index'));
+                      if (fromIndex === index) return;
+                      const sorted = [...sections].sort((a, b) => a.order - b.order);
+                      const [moved] = sorted.splice(fromIndex, 1);
+                      sorted.splice(index, 0, moved);
+                      setSections(sorted.map((s, i) => ({ ...s, order: i })));
+                    }}
+                    className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl group cursor-grab active:cursor-grabbing border-2 border-transparent transition-colors"
+                  >
+                    <GripVertical size={14} className="text-gray-300 shrink-0" />
                     <span className="text-xs font-black flex-1 capitalize">
                       {section.type === 'header' ? '프로필 헤더' :
                        section.type === 'links' ? '링크' :
