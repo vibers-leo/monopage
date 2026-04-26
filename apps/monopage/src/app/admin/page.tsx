@@ -581,85 +581,72 @@ function AdminDashboard() {
           </div>
 
         ) : (
-          /* ===== 에디터 뷰 ===== */
-          <div className="flex flex-col h-full p-6 lg:p-8 animate-in fade-in duration-200">
-        {/* 상단 헤더 */}
-        <div className="flex items-center justify-between mb-4">
-          <button onClick={() => setView('list')} className="flex items-center gap-1.5 text-gray-400 hover:text-black transition-colors text-[14px] font-medium">
-            <ChevronLeft size={16} /> 목록
-          </button>
-          <div className="flex items-center gap-2">
-            <button onClick={() => setShowPreview(true)} className="text-gray-300 hover:text-black transition-colors lg:hidden">
-              <Eye size={16} />
+          /* ===== 에디터 뷰 — 팬이지 스타일 사이드바 ===== */
+          <div className="flex h-full">
+        {/* 왼쪽 사이드 메뉴 (w-56 = 224px) */}
+        <div className="w-56 border-r border-gray-100 flex flex-col bg-white shrink-0">
+          {/* 페이지 헤더 */}
+          <div className="p-4 border-b border-gray-100">
+            <button onClick={() => setView('list')} className="flex items-center gap-1.5 text-[13px] text-gray-400 hover:text-black transition-colors mb-3">
+              <ChevronLeft size={14} /> 목록으로
             </button>
-          </div>
-        </div>
-
-        {/* 페이지 이름 + 3버튼 */}
-        <div className="mb-5">
-          <p className="text-[18px] font-bold mb-3">@{profile.username}</p>
-          <div className="grid grid-cols-3 gap-2">
-            <a
-              href={`/${profile.username}`}
-              target="_blank"
-              className="flex items-center justify-center gap-1.5 py-2.5 border border-gray-200 rounded-xl text-[14px] font-semibold hover:border-black transition-colors"
-            >
-              <ExternalLink size={14} /> 보기
-            </a>
-            <button
-              onClick={() => setActiveTab('analytics')}
-              className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[14px] font-semibold transition-colors ${
-                activeTab === 'analytics' ? 'bg-black text-white' : 'border border-gray-200 hover:border-black'
-              }`}
-            >
-              <BarChart3 size={14} /> 통계
-            </button>
-            <button
-              onClick={() => { if (activeTab === 'analytics') setActiveTab('profile'); }}
-              className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[14px] font-semibold transition-colors ${
-                activeTab !== 'analytics' ? 'bg-black text-white' : 'border border-gray-200 hover:border-black'
-              }`}
-            >
-              <Settings size={14} /> 관리
-            </button>
-          </div>
-        </div>
-
-        {/* 관리 모드일 때 탭 그룹 */}
-        {activeTab !== 'analytics' && (
-        <div className="flex flex-col gap-2 mb-5">
-          {tabGroups.filter(g => g.group !== '관리').map(group => (
-            <div key={group.group}>
-              <p className="text-[11px] font-semibold text-gray-300 uppercase tracking-wider mb-1.5 px-1">{group.group}</p>
-              <div className="flex gap-1 p-0.5 bg-gray-50 rounded-xl">
-                {group.tabs.map(tab => (
-                  <button
-                    key={tab.key}
-                    onClick={() => setActiveTab(tab.key)}
-                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                      activeTab === tab.key
-                        ? 'bg-black text-white shadow-sm'
-                        : 'text-gray-400 hover:text-black'
-                    }`}
-                  >
-                    {tab.icon}
-                    <span className="hidden sm:inline">{tab.label}</span>
-                  </button>
-                ))}
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center shrink-0">
+                {profile.avatar_url
+                  ? <img src={profile.avatar_url} className="w-full h-full object-cover" alt="" />
+                  : <span className="text-[13px] font-bold text-gray-300">{(profile.username?.[0] || '?').toUpperCase()}</span>
+                }
               </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[14px] font-bold truncate">@{profile.username}</p>
+              </div>
+              <a href={`/${profile.username}`} target="_blank" className="text-gray-300 hover:text-black transition-colors">
+                <ExternalLink size={13} />
+              </a>
             </div>
-          ))}
-          {/* 관리 그룹의 문의함 바로가기 */}
-          <div className="flex gap-1 p-0.5 bg-gray-50 rounded-xl">
-            <button onClick={() => setActiveTab('inquiries')} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${activeTab === 'inquiries' ? 'bg-black text-white shadow-sm' : 'text-gray-400 hover:text-black'}`}>
-              <MessageCircle size={14} /> <span className="hidden sm:inline">문의함</span>
-            </button>
-            <button onClick={() => setActiveTab('settings')} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${activeTab === 'settings' ? 'bg-black text-white shadow-sm' : 'text-gray-400 hover:text-black'}`}>
-              <Settings size={14} /> <span className="hidden sm:inline">설정</span>
+          </div>
+
+          {/* 사이드 메뉴 */}
+          <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+            {[
+              { key: 'profile' as Tab, label: '프로필', icon: <User size={15} /> },
+              { key: 'links' as Tab, label: '링크', icon: <LinkIcon size={15} /> },
+              { key: 'portfolio' as Tab, label: '갤러리', icon: <Image size={15} /> },
+              { key: 'sns' as Tab, label: 'SNS', icon: <Camera size={15} /> },
+              { key: 'layout' as Tab, label: '디자인', icon: <Layout size={15} /> },
+              { key: 'inquiries' as Tab, label: '문의함', icon: <MessageCircle size={15} /> },
+              { key: 'analytics' as Tab, label: '통계', icon: <BarChart3 size={15} /> },
+              { key: 'settings' as Tab, label: '설정', icon: <Settings size={15} /> },
+            ].map(item => (
+              <button
+                key={item.key}
+                onClick={() => setActiveTab(item.key)}
+                className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-[14px] transition-colors ${
+                  activeTab === item.key
+                    ? 'bg-black text-white font-semibold'
+                    : 'text-gray-500 hover:bg-gray-50 hover:text-black font-medium'
+                }`}
+              >
+                {item.icon}
+                {item.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* 하단 저장 버튼 */}
+          <div className="p-3 border-t border-gray-100">
+            <button
+              onClick={save}
+              disabled={saving}
+              className="w-full py-3 bg-black text-white rounded-xl text-[14px] font-semibold flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors disabled:opacity-50"
+            >
+              {saving ? <Loader2 size={14} className="animate-spin" /> : saved ? <><Check size={14} /> 저장 완료</> : <><Save size={14} /> 저장하기</>}
             </button>
           </div>
         </div>
-        )}
+
+        {/* 오른쪽 콘텐츠 영역 */}
+        <div className="flex-1 overflow-y-auto p-6 lg:p-8">
 
         <div className="flex flex-col gap-8 flex-1 overflow-y-auto pb-4">
           {/* ===== PROFILE TAB ===== */}
@@ -1943,23 +1930,7 @@ function AdminDashboard() {
           )}
         </div>
 
-        {error && <p className="text-red-500 text-xs font-bold text-center mb-3">{error}</p>}
-
-        <div className="pt-4 border-t border-gray-50 flex gap-3">
-          <Link
-            href={`/${profile.username}`}
-            target="_blank"
-            className="px-5 py-4 border border-gray-200 rounded-full text-xs font-black uppercase tracking-widest hover:border-black transition-colors"
-          >
-            미리보기
-          </Link>
-          <button
-            onClick={save}
-            disabled={saving}
-            className="flex-1 py-4 bg-black text-white rounded-full text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform disabled:opacity-50"
-          >
-            {saving ? <Loader2 size={14} className="animate-spin" /> : saved ? <><Check size={14} /> 저장 완료!</> : <><Save size={14} /> 저장하기</>}
-          </button>
+        {error && <p className="text-red-500 text-[14px] font-medium text-center mb-3">{error}</p>}
         </div>
           </div>
         )}
