@@ -47,12 +47,14 @@ export function AdminGuideChat({ profile, linksCount, portfolioCount }: AdminGui
     if (portfolioCount === 0) missing.push('포트폴리오');
 
     let greeting: string;
+    const hi = profile.display_name ? `${profile.display_name}님, 안녕하세요!` : '안녕하세요!';
+
     if (missing.length === 4) {
-      greeting = '${profile.display_name ? `${profile.display_name}님, 안녕하세요!` : '안녕하세요!'} 모노페이지 AI 비서예요 🙌\n\n페이지가 아직 비어있네요. 제가 단계별로 도와드릴게요!\n\n먼저 **프로필** 탭에서 사진과 소개글을 설정해보세요.\n\n그리고 **SNS** 탭에서 Instagram username만 입력하면 게시물을 자동으로 가져올 수 있어요!';
+      greeting = `${hi} 모노페이지 AI 비서예요 🙌\n\n페이지가 아직 비어있네요. 제가 단계별로 도와드릴게요!\n\n먼저 **프로필** 탭에서 사진과 소개글을 설정해보세요.\n\n그리고 **SNS** 탭에서 Instagram username만 입력하면 게시물을 자동으로 가져올 수 있어요!`;
     } else if (missing.length > 0) {
-      greeting = `${profile.display_name ? `${profile.display_name}님, 안녕하세요!` : '안녕하세요!'} 모노페이지 AI 비서예요 🙌\n\n거의 다 됐어요! ${missing.join(', ')}만 추가하면 더 멋진 페이지가 될 거예요.\n\n궁금한 점이 있으면 언제든 물어보세요.`;
+      greeting = `${hi} 모노페이지 AI 비서예요 🙌\n\n거의 다 됐어요! ${missing.join(', ')}만 추가하면 더 멋진 페이지가 될 거예요.\n\n궁금한 점이 있으면 언제든 물어보세요.`;
     } else {
-      greeting = '${profile.display_name ? `${profile.display_name}님, 안녕하세요!` : '안녕하세요!'} 모노페이지 AI 비서예요 🙌\n\n페이지가 잘 만들어졌어요! 수정하거나 궁금한 점이 있으면 물어보세요.';
+      greeting = `${hi} 모노페이지 AI 비서예요 🙌\n\n페이지가 잘 만들어졌어요! 수정하거나 궁금한 점이 있으면 물어보세요.`;
     }
     setMessages([{ role: 'ai', text: greeting }]);
   }, [open]);
