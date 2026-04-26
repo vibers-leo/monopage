@@ -2,7 +2,10 @@ class Api::V1::ProfilesController < ApplicationController
   skip_before_action :authorized, only: [:public_show]
 
   def show
-    render json: current_user.profile, include: [:links, :social_accounts]
+    profile_json = current_user.profile.as_json(include: [:links, :social_accounts])
+    profile_json['email'] = current_user.email
+    profile_json['provider'] = current_user.provider
+    render json: profile_json
   end
 
   def update
