@@ -52,7 +52,7 @@ export const login = (email: string, password: string) =>
 export const getMyProfile = () =>
   request<any>('/api/v1/profile');
 
-export const updateProfile = (data: { bio?: string; avatar_url?: string; username?: string; knowledge_md?: string; theme_config?: any }) =>
+export const updateProfile = (data: { bio?: string; avatar_url?: string; username?: string; display_name?: string; knowledge_md?: string; theme_config?: any }) =>
   request<any>('/api/v1/profile', {
     method: 'PATCH',
     body: JSON.stringify(data),

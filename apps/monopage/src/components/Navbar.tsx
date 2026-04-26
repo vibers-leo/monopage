@@ -103,8 +103,8 @@ export function Navbar() {
                       }
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[15px] font-bold truncate">@{profile.username}</p>
-                      <p className="text-[13px] text-gray-400 truncate">{profile.email}</p>
+                      <p className="text-[15px] font-bold truncate">{profile.display_name || `@${profile.username}`}</p>
+                      <p className="text-[13px] text-gray-400 truncate">{profile.email || `@${profile.username}`}</p>
                     </div>
                   </div>
                   {providerLabel && (

@@ -4,13 +4,16 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Unlink, Check, ExternalLink } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
-import { getToken, getMyProfile, changePassword, getSocialConnections, disconnectSocial, deleteAccount, clearToken } from '@/lib/api';
+import { getToken, getMyProfile, updateProfile, changePassword, getSocialConnections, disconnectSocial, deleteAccount, clearToken } from '@/lib/api';
 
 export default function ProfilePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
   const [connections, setConnections] = useState<any>(null);
+  const [nickname, setNickname] = useState('');
+  const [nickSaving, setNickSaving] = useState(false);
+  const [nickSaved, setNickSaved] = useState(false);
   const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
   const [pwSaving, setPwSaving] = useState(false);
   const [pwMsg, setPwMsg] = useState<string | null>(null);
@@ -20,7 +23,7 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!getToken()) { router.push('/login'); return; }
     Promise.all([getMyProfile(), getSocialConnections()])
-      .then(([p, c]) => { setProfile(p); setConnections(c); })
+      .then(([p, c]) => { setProfile(p); setConnections(c); setNickname(p.display_name || ''); })
       .catch(() => router.push('/login'))
       .finally(() => setLoading(false));
   }, [router]);
@@ -56,6 +59,36 @@ export default function ProfilePage() {
             </a>
             <button onClick={() => router.push('/admin')} className="flex-1 py-2.5 bg-[#0a0a0a] text-white rounded-xl text-[14px] font-semibold hover:bg-[#262626] transition-colors">
               페이지 관리
+            </button>
+          </div>
+        </div>
+
+        {/* 닉네임 설정 */}
+        <div className="bg-white rounded-2xl p-6 mb-4">
+          <p className="text-[15px] font-bold mb-1">닉네임</p>
+          <p className="text-[14px] text-[#a3a3a3] mb-3">AI 비서가 이 이름으로 불러요</p>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="예: 준호"
+              value={nickname}
+              onChange={e => { setNickname(e.target.value); setNickSaved(false); }}
+              className="flex-1 py-3 px-4 text-[15px] bg-[#fafafa] border border-[#e5e5e5] rounded-xl outline-none focus:border-[#0a0a0a] transition-colors"
+            />
+            <button
+              onClick={async () => {
+                setNickSaving(true);
+                try {
+                  await updateProfile({ display_name: nickname } as any);
+                  setNickSaved(true);
+                  setTimeout(() => setNickSaved(false), 2000);
+                } catch { }
+                finally { setNickSaving(false); }
+              }}
+              disabled={nickSaving}
+              className="px-5 py-3 bg-[#0a0a0a] text-white rounded-xl text-[14px] font-semibold hover:bg-[#262626] transition-colors disabled:opacity-30 flex items-center gap-1.5"
+            >
+              {nickSaving ? <Loader2 size={14} className="animate-spin" /> : nickSaved ? <><Check size={14} /> 저장됨</> : '저장'}
             </button>
           </div>
         </div>
