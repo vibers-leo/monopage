@@ -502,7 +502,7 @@ function AdminDashboard() {
 
             <div className="flex flex-col gap-4 flex-1">
               {/* 내 페이지 카드 — 콘텐츠가 있을 때만 */}
-              {(links.length > 0 || profile.bio || profile.avatar_url) ? (
+              {(links.length > 0 || portfolioItems.length > 0 || profile.bio || profile.avatar_url) ? (
               <div className="border border-gray-200 rounded-2xl p-5 relative group">
                 {/* 우측 상단 메뉴 */}
                 <div className="absolute top-4 right-4 z-10">
