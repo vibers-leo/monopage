@@ -17,6 +17,9 @@ services:
       - SMTP_USER=vibers.leo@gmail.com
       - SMTP_PASSWORD=ttiyfegllmwwyolt
       - SMTP_FROM=Monopage <vibers.leo@gmail.com>
+      - INSTAGRAM_CLIENT_ID=1342970281185278
+      - INSTAGRAM_CLIENT_SECRET=b50b4a7f56b505b4f8233ae721247ea6
+      - NEXT_PUBLIC_APP_URL=https://monopage.kr
     networks:
       - npm_default
     healthcheck:
