@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 
 import { ProfileHeader } from '@/components/ProfileHeader';
+import { AdminGuideChat } from '@/components/AdminGuideChat';
 import { LinkCard } from '@/components/LinkCard';
 import { PortfolioGallery } from '@/components/PortfolioGallery';
 import { SectionRenderer, DEFAULT_SECTIONS, type Section } from '@/components/SectionRenderer';
@@ -336,15 +337,30 @@ function AdminDashboard() {
     </div>
   );
 
-  const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
-    { key: 'profile', label: 'Profile', icon: <User size={14} /> },
-    { key: 'links', label: 'Links', icon: <LinkIcon size={14} /> },
-    { key: 'portfolio', label: 'Portfolio', icon: <Image size={14} /> },
-    { key: 'sns', label: 'SNS', icon: <Camera size={14} /> },
-    { key: 'layout', label: 'Layout', icon: <Layout size={14} /> },
-    { key: 'inquiries', label: 'Inbox', icon: <MessageCircle size={14} /> },
-    { key: 'analytics', label: 'Stats', icon: <BarChart3 size={14} /> },
-    { key: 'settings', label: 'Settings', icon: <Settings size={14} /> },
+  const tabGroups: { group: string; tabs: { key: Tab; label: string; icon: React.ReactNode }[] }[] = [
+    {
+      group: '콘텐츠',
+      tabs: [
+        { key: 'profile', label: '프로필', icon: <User size={14} /> },
+        { key: 'links', label: '링크', icon: <LinkIcon size={14} /> },
+        { key: 'portfolio', label: '갤러리', icon: <Image size={14} /> },
+        { key: 'sns', label: 'SNS', icon: <Camera size={14} /> },
+      ],
+    },
+    {
+      group: '설정',
+      tabs: [
+        { key: 'layout', label: '레이아웃', icon: <Layout size={14} /> },
+        { key: 'settings', label: '설정', icon: <Settings size={14} /> },
+      ],
+    },
+    {
+      group: '관리',
+      tabs: [
+        { key: 'inquiries', label: '문의함', icon: <MessageCircle size={14} /> },
+        { key: 'analytics', label: '통계', icon: <BarChart3 size={14} /> },
+      ],
+    },
   ];
 
   const onResizeStart = (e: React.MouseEvent) => {
@@ -686,20 +702,27 @@ function AdminDashboard() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-8 p-1 bg-gray-50 rounded-2xl">
-          {tabs.map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[14px] font-black uppercase tracking-widest transition-all ${
-                activeTab === tab.key
-                  ? 'bg-black text-white shadow-sm'
-                  : 'text-gray-300 hover:text-black'
-              }`}
-            >
-              {tab.icon}
-              <span className="hidden sm:inline">{tab.label}</span>
-            </button>
+        <div className="flex flex-col gap-2 mb-6">
+          {tabGroups.map(group => (
+            <div key={group.group}>
+              <p className="text-[11px] font-semibold text-gray-300 uppercase tracking-wider mb-1.5 px-1">{group.group}</p>
+              <div className="flex gap-1 p-0.5 bg-gray-50 rounded-xl">
+                {group.tabs.map(tab => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setActiveTab(tab.key)}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${
+                      activeTab === tab.key
+                        ? 'bg-black text-white shadow-sm'
+                        : 'text-gray-400 hover:text-black'
+                    }`}
+                  >
+                    {tab.icon}
+                    <span className="hidden sm:inline">{tab.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
 
@@ -2056,6 +2079,17 @@ function AdminDashboard() {
           </div>
           </div>
         </div>
+
+        {/* 가이드 챗봇 */}
+        {view === 'editor' && (
+          <div className="mt-6 w-full max-w-[400px]">
+            <AdminGuideChat
+              profile={profile}
+              linksCount={links.length}
+              portfolioCount={portfolioItems.length}
+            />
+          </div>
+        )}
       </main>
       </div>
     </div>
