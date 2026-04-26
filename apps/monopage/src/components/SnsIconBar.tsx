@@ -1,6 +1,10 @@
 'use client';
 
 import React from 'react';
+import {
+  Instagram, Youtube, Music, Github, Linkedin, Facebook,
+  MessageCircle, MapPin, AtSign, Newspaper, Globe,
+} from 'lucide-react';
 import type { Theme } from '@/lib/themes';
 
 interface SnsIconBarProps {
@@ -9,24 +13,24 @@ interface SnsIconBarProps {
   theme?: Theme;
 }
 
-const SNS_ICONS: Record<string, { icon: string }> = {
-  instagram: { icon: '📸' },
-  youtube: { icon: '▶️' },
-  tiktok: { icon: '🎵' },
-  twitter: { icon: '𝕏' },
-  x: { icon: '𝕏' },
-  facebook: { icon: 'f' },
-  threads: { icon: '🧵' },
-  github: { icon: '⌨️' },
-  linkedin: { icon: '💼' },
-  naver: { icon: 'N' },
-  blog: { icon: 'N' },
-  kakao: { icon: '💬' },
+const SNS_MAP: Record<string, { icon: React.ReactNode; label: string }> = {
+  instagram: { icon: <Instagram size={16} />, label: 'Instagram' },
+  youtube: { icon: <Youtube size={16} />, label: 'YouTube' },
+  tiktok: { icon: <Music size={16} />, label: 'TikTok' },
+  twitter: { icon: <AtSign size={16} />, label: 'X' },
+  x: { icon: <AtSign size={16} />, label: 'X' },
+  facebook: { icon: <Facebook size={16} />, label: 'Facebook' },
+  threads: { icon: <AtSign size={16} />, label: 'Threads' },
+  github: { icon: <Github size={16} />, label: 'GitHub' },
+  linkedin: { icon: <Linkedin size={16} />, label: 'LinkedIn' },
+  naver: { icon: <Newspaper size={16} />, label: 'Naver' },
+  blog: { icon: <Newspaper size={16} />, label: 'Blog' },
+  kakao: { icon: <MessageCircle size={16} />, label: 'KakaoTalk' },
 };
 
 function detectSnsType(url: string): string | null {
   const lower = url.toLowerCase();
-  for (const key of Object.keys(SNS_ICONS)) {
+  for (const key of Object.keys(SNS_MAP)) {
     if (lower.includes(key)) return key;
   }
   return null;
@@ -43,7 +47,7 @@ export function SnsIconBar({ links, style = 'circle', theme }: SnsIconBarProps) 
   return (
     <div className="flex items-center justify-center gap-2.5 w-full my-4">
       {snsLinks.map((link) => {
-        const sns = SNS_ICONS[link.snsType!];
+        const sns = SNS_MAP[link.snsType!];
         return (
           <a
             key={link.id}
@@ -58,12 +62,13 @@ export function SnsIconBar({ links, style = 'circle', theme }: SnsIconBarProps) 
               backgroundColor: t?.cardBg || '#f5f5f5',
               border: `1px solid ${t?.cardBorder || '#e5e5e5'}`,
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+              color: t?.text || '#0a0a0a',
             }}
           >
-            <span className="text-[16px] leading-none">{sns.icon}</span>
+            {sns.icon}
             {style === 'pill' && (
-              <span className="text-[14px] font-semibold uppercase tracking-wide" style={{ color: t?.textMuted || '#a3a3a3' }}>
-                {link.snsType}
+              <span className="text-[14px] font-semibold" style={{ color: t?.textMuted || '#a3a3a3' }}>
+                {sns.label}
               </span>
             )}
           </a>
