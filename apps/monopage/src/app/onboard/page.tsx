@@ -177,12 +177,12 @@ export default function Onboarding() {
       }
 
       // 4. SNS 핸들이 있으면 자동 크롤링 → 포트폴리오 추가
-      const snsHandles = links.filter(l => l.handle && ['instagram', 'threads'].includes(l.type));
+      const snsHandles = links.filter(l => l.handle && ['instagram', 'threads', 'youtube', 'tiktok', 'twitter'].includes(l.type));
       if (snsHandles.length > 0) {
         setProgressStep(5);
         for (const sns of snsHandles) {
           try {
-            const platform = sns.type === 'threads' ? 'threads' : 'instagram';
+            const platform = sns.type;
             const fetchRes = await fetch('/api/social-fetch', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },

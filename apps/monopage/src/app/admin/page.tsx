@@ -1284,28 +1284,85 @@ function AdminDashboard() {
                 </div>
               </div>
 
-              {/* 다른 SNS (향후) */}
-              <div>
-                <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest mb-3 block">다른 SNS</label>
-                <div className="flex flex-col gap-2">
-                  {[
-                    { name: 'YouTube', icon: '▶️', color: 'from-red-500 to-red-600' },
-                    { name: 'TikTok', icon: '🎵', color: 'from-gray-800 to-black' },
-                    { name: 'Twitter / X', icon: '𝕏', color: 'from-gray-700 to-black' },
-                  ].map(sns => (
-                    <div key={sns.name} className="flex items-center gap-3 p-4 border border-gray-100 rounded-2xl opacity-60">
-                      <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${sns.color} flex items-center justify-center text-white shrink-0 text-sm`}>
-                        {sns.icon}
+              {/* 다른 SNS 가져오기 */}
+              {[
+                { platform: 'youtube', label: 'YouTube', fa: 'fa-brands fa-youtube', color: '#FF0000', placeholder: 'youtube_channel', target: 'portfolio' },
+                { platform: 'tiktok', label: 'TikTok', fa: 'fa-brands fa-tiktok', color: '#010101', placeholder: 'tiktok_username', target: 'portfolio' },
+                { platform: 'twitter', label: 'X (Twitter)', fa: 'fa-brands fa-x-twitter', color: '#000000', placeholder: 'twitter_handle', target: 'timeline' },
+              ].map(sns => (
+                <div key={sns.platform}>
+                  <label className="text-[14px] font-black text-gray-300 uppercase tracking-widest mb-3 block">{sns.label}</label>
+                  <div className="p-5 border border-gray-200 rounded-2xl">
+                    <div className="flex gap-2">
+                      <div className="flex-1 flex items-center gap-2 px-4 py-3 border border-gray-100 rounded-xl focus-within:border-black transition-colors">
+                        <i className={`${sns.fa} text-[16px]`} style={{ color: sns.color }} />
+                        <input
+                          type="text"
+                          placeholder={sns.placeholder}
+                          id={`${sns.platform}-handle-input`}
+                          className="flex-1 text-[14px] font-medium outline-none bg-transparent"
+                          onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById(`${sns.platform}-fetch-btn`)?.click(); }}
+                        />
                       </div>
-                      <div className="flex-1">
-                        <p className="text-[14px] font-bold">{sns.name}</p>
-                        <p className="text-[14px] text-gray-400">곧 지원할 예정이에요</p>
-                      </div>
-                      <span className="px-2.5 py-1 bg-gray-100 rounded-full text-[13px] font-semibold text-gray-400">Soon</span>
+                      <button
+                        id={`${sns.platform}-fetch-btn`}
+                        onClick={async () => {
+                          const input = document.getElementById(`${sns.platform}-handle-input`) as HTMLInputElement;
+                          const handle = input?.value?.trim().replace('@', '');
+                          if (!handle) return;
+                          const btn = document.getElementById(`${sns.platform}-fetch-btn`) as HTMLButtonElement;
+                          btn.disabled = true; btn.textContent = '...';
+                          try {
+                            const res = await fetch('/api/social-fetch', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ platform: sns.platform, handle }),
+                            });
+                            const data = await res.json();
+                            if (data.error) { addToast('error', data.error); return; }
+
+                            if (sns.target === 'portfolio') {
+                              // 포트폴리오에 추가 (YouTube/TikTok)
+                              let added = 0;
+                              const existingUrls = new Set(portfolioItems.map((i: any) => i.image_url));
+                              for (const post of data.posts.slice(0, 9)) {
+                                if (post.image_url && !existingUrls.has(post.image_url)) {
+                                  try {
+                                    const item = await createPortfolioItem({
+                                      image_url: post.image_url,
+                                      video_url: post.video_url || '',
+                                      media_type: post.media_type || 'image',
+                                      permalink: post.permalink || '',
+                                      title: post.caption || '',
+                                      source: sns.platform,
+                                    });
+                                    setPortfolioItems(prev => [...prev, item]);
+                                    added++;
+                                  } catch { /* skip */ }
+                                }
+                              }
+                              addToast('success', `${sns.label}에서 ${added}개 가져왔어요`);
+                            } else {
+                              // 타임라인에 추가 (X/Twitter)
+                              const existing = sections.find(s => s.type === 'sns_timeline');
+                              if (existing) {
+                                setSections(sections.map(s => s.id === existing.id ? { ...s, content: { ...s.content, posts: data.posts } } : s));
+                              } else {
+                                setSections([...sections, { id: 'sns_timeline_' + Date.now(), type: 'sns_timeline' as any, order: sections.length, content: { posts: data.posts, count: 5 } }]);
+                              }
+                              addToast('success', `${sns.label}에서 ${data.total}개 가져왔어요`);
+                            }
+                          } catch { addToast('error', '가져오기에 실패했어요'); }
+                          finally { btn.disabled = false; btn.textContent = '가져오기'; }
+                        }}
+                        className="px-5 py-3 bg-[#0a0a0a] text-white rounded-xl text-[14px] font-semibold hover:bg-[#262626] transition-colors"
+                      >
+                        가져오기
+                      </button>
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
+              ))}
             </section>
           )}
 

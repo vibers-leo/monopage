@@ -113,14 +113,75 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // YouTube (향후)
+    // YouTube
     if (platform === 'youtube') {
-      return NextResponse.json({ error: 'YouTube 지원은 준비 중이에요' }, { status: 400 });
+      const res = await fetch(
+        `${BASE_URL}/v1/youtube/channel-videos?handle=${encodeURIComponent(handle.replace('@', ''))}`,
+        { headers: { 'x-api-key': API_KEY } }
+      );
+      if (!res.ok) return NextResponse.json({ error: '영상을 가져오지 못했어요' }, { status: res.status });
+      const data = await res.json();
+      const items = data.videos || [];
+      const posts = items.map((item: any) => ({
+        image_url: item.thumbnail || '',
+        video_url: item.url || '',
+        media_type: 'video',
+        caption: (item.title || '').slice(0, 60),
+        permalink: item.url || '',
+        views: item.viewCountInt || 0,
+      })).filter((p: any) => p.image_url);
+      return NextResponse.json({ posts, credits_remaining: data.credits_remaining, total: posts.length });
     }
 
-    // TikTok (향후)
+    // TikTok
     if (platform === 'tiktok') {
-      return NextResponse.json({ error: 'TikTok 지원은 준비 중이에요' }, { status: 400 });
+      const res = await fetch(
+        `${BASE_URL}/v3/tiktok/profile/videos?handle=${encodeURIComponent(handle.replace('@', ''))}`,
+        { headers: { 'x-api-key': API_KEY } }
+      );
+      if (!res.ok) return NextResponse.json({ error: '영상을 가져오지 못했어요' }, { status: res.status });
+      const data = await res.json();
+      const items = data.videos || data.aweme_list || [];
+      const posts = items.map((item: any) => ({
+        image_url: item.video?.cover?.url_list?.[0] || item.video?.origin_cover?.url_list?.[0] || '',
+        video_url: item.video?.play_addr?.url_list?.[0] || '',
+        media_type: 'video',
+        caption: (item.desc || '').split('\n')[0].slice(0, 60),
+        permalink: item.share_url || '',
+        likes: item.statistics?.digg_count || 0,
+        views: item.statistics?.play_count || 0,
+      })).filter((p: any) => p.image_url);
+      return NextResponse.json({ posts, credits_remaining: data.credits_remaining, total: posts.length });
+    }
+
+    // X/Twitter
+    if (platform === 'twitter' || platform === 'x') {
+      const res = await fetch(
+        `${BASE_URL}/v1/twitter/user-tweets?handle=${encodeURIComponent(handle.replace('@', ''))}`,
+        { headers: { 'x-api-key': API_KEY } }
+      );
+      if (!res.ok) return NextResponse.json({ error: '트윗을 가져오지 못했어요' }, { status: res.status });
+      const data = await res.json();
+      const items = data.tweets || [];
+      const posts = items.map((item: any) => {
+        const legacy = item.legacy || {};
+        const text = legacy.full_text || '';
+        const media = legacy.entities?.media?.[0];
+        return {
+          text,
+          image_url: media?.media_url_https || '',
+          video_url: '',
+          media_type: media ? 'image' : 'text',
+          caption: text.split('\n')[0].slice(0, 60),
+          permalink: `https://x.com/${handle}/status/${item.rest_id || ''}`,
+          likes: legacy.favorite_count || 0,
+          replies: legacy.reply_count || 0,
+          reposts: legacy.retweet_count || 0,
+          username: handle,
+          published_at: legacy.created_at || '',
+        };
+      }).filter((p: any) => p.text);
+      return NextResponse.json({ posts, credits_remaining: data.credits_remaining, total: posts.length });
     }
 
     return NextResponse.json({ error: '지원하지 않는 플랫폼이에요' }, { status: 400 });

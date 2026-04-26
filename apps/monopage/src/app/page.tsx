@@ -158,7 +158,7 @@ export default function Home() {
                 <div key={`${link.url}-${i}`} className="flex items-center gap-3 px-4 py-3.5 bg-[#f5f5f5] rounded-xl group">
                   <span className="text-base shrink-0">{getLinkIcon(link.type)}</span>
                   <p className="text-[15px] font-medium truncate flex-1">{link.handle ? `@${link.handle}` : link.label}</p>
-                  {link.handle && ['instagram', 'threads'].includes(link.type) && (
+                  {link.handle && ['instagram', 'threads', 'youtube', 'tiktok', 'twitter'].includes(link.type) && (
                     <span className="text-[12px] font-semibold text-purple-500 bg-purple-50 px-2 py-0.5 rounded-full shrink-0">자동</span>
                   )}
                   <button onClick={() => handleRemove(i)} className="text-[#a3a3a3] hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
