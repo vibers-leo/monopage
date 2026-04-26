@@ -1,36 +1,35 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-  ArrowUpRight, Camera, Play, Music, Code, Briefcase,
-  MessageCircle, MapPin, Phone, Globe, Mail, ShoppingBag, Newspaper,
-  AtSign, Hash, Users,
-} from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Theme } from '@/lib/themes';
 
 interface SnsIconDef {
-  icon: React.ReactNode;
+  fa: string;   // Font Awesome class
   color: string;
   bg: string;
 }
 
 function getSnsIcon(url: string): SnsIconDef | null {
-  const s = 16;
-  if (url.includes('instagram.com')) return { icon: <Camera size={s} />, color: '#E1306C', bg: '#E1306C15' };
-  if (url.includes('youtube.com') || url.includes('youtu.be')) return { icon: <Play size={s} />, color: '#FF0000', bg: '#FF000012' };
-  if (url.includes('tiktok.com')) return { icon: <Music size={s} />, color: '#010101', bg: '#01010110' };
-  if (url.includes('twitter.com') || url.includes('x.com')) return { icon: <Hash size={s} />, color: '#000000', bg: '#00000010' };
-  if (url.includes('github.com')) return { icon: <Code size={s} />, color: '#24292e', bg: '#24292e10' };
-  if (url.includes('linkedin.com')) return { icon: <Briefcase size={s} />, color: '#0A66C2', bg: '#0A66C212' };
-  if (url.includes('threads.net')) return { icon: <AtSign size={s} />, color: '#101010', bg: '#10101010' };
-  if (url.includes('facebook.com')) return { icon: <Users size={s} />, color: '#1877F2', bg: '#1877F212' };
-  if (url.includes('blog.naver.com')) return { icon: <Newspaper size={s} />, color: '#03C75A', bg: '#03C75A12' };
-  if (url.includes('place.naver.com') || url.includes('naver.me') || url.includes('map.naver.com')) return { icon: <MapPin size={s} />, color: '#03C75A', bg: '#03C75A12' };
-  if (url.includes('kakao')) return { icon: <MessageCircle size={s} />, color: '#3C1E1E', bg: '#FEE50030' };
-  if (url.startsWith('tel:')) return { icon: <Phone size={s} />, color: '#16a34a', bg: '#16a34a12' };
-  if (url.startsWith('mailto:')) return { icon: <Mail size={s} />, color: '#525252', bg: '#52525212' };
-  if (url.includes('shop') || url.includes('store') || url.includes('smartstore')) return { icon: <ShoppingBag size={s} />, color: '#525252', bg: '#52525210' };
+  if (url.includes('instagram.com')) return { fa: 'fa-brands fa-instagram', color: '#E1306C', bg: '#E1306C12' };
+  if (url.includes('youtube.com') || url.includes('youtu.be')) return { fa: 'fa-brands fa-youtube', color: '#FF0000', bg: '#FF000010' };
+  if (url.includes('tiktok.com')) return { fa: 'fa-brands fa-tiktok', color: '#010101', bg: '#01010110' };
+  if (url.includes('twitter.com') || url.includes('x.com')) return { fa: 'fa-brands fa-x-twitter', color: '#000000', bg: '#00000010' };
+  if (url.includes('github.com')) return { fa: 'fa-brands fa-github', color: '#24292e', bg: '#24292e10' };
+  if (url.includes('linkedin.com')) return { fa: 'fa-brands fa-linkedin-in', color: '#0A66C2', bg: '#0A66C212' };
+  if (url.includes('threads.net')) return { fa: 'fa-brands fa-threads', color: '#101010', bg: '#10101010' };
+  if (url.includes('facebook.com')) return { fa: 'fa-brands fa-facebook-f', color: '#1877F2', bg: '#1877F212' };
+  if (url.includes('blog.naver.com')) return { fa: 'fa-solid fa-pen-nib', color: '#03C75A', bg: '#03C75A12' };
+  if (url.includes('place.naver.com') || url.includes('naver.me') || url.includes('map.naver.com')) return { fa: 'fa-solid fa-location-dot', color: '#03C75A', bg: '#03C75A12' };
+  if (url.includes('kakao')) return { fa: 'fa-solid fa-comment', color: '#3C1E1E', bg: '#FEE50030' };
+  if (url.startsWith('tel:')) return { fa: 'fa-solid fa-phone', color: '#16a34a', bg: '#16a34a12' };
+  if (url.startsWith('mailto:')) return { fa: 'fa-solid fa-envelope', color: '#525252', bg: '#52525212' };
+  if (url.includes('shop') || url.includes('store') || url.includes('smartstore')) return { fa: 'fa-solid fa-bag-shopping', color: '#525252', bg: '#52525210' };
+  if (url.includes('discord')) return { fa: 'fa-brands fa-discord', color: '#5865F2', bg: '#5865F212' };
+  if (url.includes('twitch')) return { fa: 'fa-brands fa-twitch', color: '#9146FF', bg: '#9146FF12' };
+  if (url.includes('spotify')) return { fa: 'fa-brands fa-spotify', color: '#1DB954', bg: '#1DB95412' };
+  if (url.includes('pinterest')) return { fa: 'fa-brands fa-pinterest', color: '#E60023', bg: '#E6002312' };
   return null;
 }
 
@@ -75,15 +74,14 @@ export const LinkCard: React.FC<LinkCardProps> = ({ title, url, favicon, domain,
         style={{
           backgroundColor: sns ? sns.bg : (t?.cardBorder || '#f5f5f5'),
           borderRadius: '28%',
-          color: sns ? sns.color : (t?.textMuted || '#a3a3a3'),
         }}
       >
         {sns ? (
-          sns.icon
+          <i className={`${sns.fa} text-[16px]`} style={{ color: sns.color }} />
         ) : favicon && !faviconError ? (
           <img src={favicon} alt="" className="w-5 h-5 object-contain" onError={() => setFaviconError(true)} />
         ) : (
-          <Globe size={16} style={{ color: t?.textMuted || '#a3a3a3' }} />
+          <i className="fa-solid fa-globe text-[16px]" style={{ color: t?.textMuted || '#a3a3a3' }} />
         )}
       </div>
 

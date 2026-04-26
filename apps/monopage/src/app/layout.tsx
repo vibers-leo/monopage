@@ -34,6 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+      </head>
       <body className="antialiased text-[#0a0a0a] bg-white">{children}</body>
     </html>
   );

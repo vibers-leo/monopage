@@ -1,10 +1,6 @@
 'use client';
 
 import React from 'react';
-import {
-  Camera, Play, Music, Code, Briefcase, Users,
-  MessageCircle, MapPin, AtSign, Newspaper, Globe, Hash,
-} from 'lucide-react';
 import type { Theme } from '@/lib/themes';
 
 interface SnsIconBarProps {
@@ -13,19 +9,19 @@ interface SnsIconBarProps {
   theme?: Theme;
 }
 
-const SNS_MAP: Record<string, { icon: React.ReactNode; label: string }> = {
-  instagram: { icon: <Camera size={16} />, label: 'Instagram' },
-  youtube: { icon: <Play size={16} />, label: 'YouTube' },
-  tiktok: { icon: <Music size={16} />, label: 'TikTok' },
-  twitter: { icon: <Hash size={16} />, label: 'X' },
-  x: { icon: <Hash size={16} />, label: 'X' },
-  facebook: { icon: <Users size={16} />, label: 'Facebook' },
-  threads: { icon: <AtSign size={16} />, label: 'Threads' },
-  github: { icon: <Code size={16} />, label: 'GitHub' },
-  linkedin: { icon: <Briefcase size={16} />, label: 'LinkedIn' },
-  naver: { icon: <Newspaper size={16} />, label: 'Naver' },
-  blog: { icon: <Newspaper size={16} />, label: 'Blog' },
-  kakao: { icon: <MessageCircle size={16} />, label: 'KakaoTalk' },
+const SNS_MAP: Record<string, { fa: string; label: string }> = {
+  instagram: { fa: 'fa-brands fa-instagram', label: 'Instagram' },
+  youtube: { fa: 'fa-brands fa-youtube', label: 'YouTube' },
+  tiktok: { fa: 'fa-brands fa-tiktok', label: 'TikTok' },
+  twitter: { fa: 'fa-brands fa-x-twitter', label: 'X' },
+  x: { fa: 'fa-brands fa-x-twitter', label: 'X' },
+  facebook: { fa: 'fa-brands fa-facebook-f', label: 'Facebook' },
+  threads: { fa: 'fa-brands fa-threads', label: 'Threads' },
+  github: { fa: 'fa-brands fa-github', label: 'GitHub' },
+  linkedin: { fa: 'fa-brands fa-linkedin-in', label: 'LinkedIn' },
+  naver: { fa: 'fa-solid fa-pen-nib', label: 'Naver' },
+  blog: { fa: 'fa-solid fa-pen-nib', label: 'Blog' },
+  kakao: { fa: 'fa-solid fa-comment', label: 'KakaoTalk' },
 };
 
 function detectSnsType(url: string): string | null {
@@ -65,7 +61,7 @@ export function SnsIconBar({ links, style = 'circle', theme }: SnsIconBarProps) 
               color: t?.text || '#0a0a0a',
             }}
           >
-            {sns.icon}
+            <i className={`${sns.fa} text-[16px]`} />
             {style === 'pill' && (
               <span className="text-[14px] font-semibold" style={{ color: t?.textMuted || '#a3a3a3' }}>
                 {sns.label}
