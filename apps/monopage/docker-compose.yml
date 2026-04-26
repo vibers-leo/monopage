@@ -20,6 +20,7 @@ services:
       - INSTAGRAM_CLIENT_ID=1342970281185278
       - INSTAGRAM_CLIENT_SECRET=b50b4a7f56b505b4f8233ae721247ea6
       - NEXT_PUBLIC_APP_URL=https://monopage.kr
+      - SOCIALCRAWL_API_KEY=sc_2WK52rPxWjrBYBaQMWlqJbZekar2Nyx3QkJvBtxTJHM
     networks:
       - npm_default
     healthcheck:

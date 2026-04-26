@@ -73,7 +73,11 @@
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Updated: {d[\\\\\"title\\\\\"]} → {d[\\\\\"url\\\\\"]}'\\)\")",
       "Bash(echo \"비밀번호 찾기: $\\(curl -s -X POST https://monopage.kr/api/proxy/api/v1/password_resets -H \"Content-Type: application/json\" -d '{\"email\":\"yahwa@monopage.kr\"}'\\)\")",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Inquiry created: ID={d.get\\(\\\\\"id\\\\\",\\\\\"FAIL\\\\\"\\)}'\\)\")",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "WebFetch(domain:docs.socialcrawl.dev)",
+      "Bash(npx -y socialcrawl-mcp --help)",
+      "Bash(SOCIALCRAWL_API_KEY=\"sc_2WK52rPxWjrBYBaQMWlqJbZekar2Nyx3QkJvBtxTJHM\" npx -y socialcrawl-mcp)",
+      "Bash(npx skills:*)"
     ]
   }
 }

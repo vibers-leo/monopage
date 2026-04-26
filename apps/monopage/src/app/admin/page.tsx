@@ -1142,26 +1142,88 @@ function AdminDashboard() {
                         )}
                       </>
                     ) : (
-                      /* 미연동 상태 */
-                      <div className="p-6 border border-dashed border-gray-200 rounded-2xl flex flex-col items-center gap-4 text-center">
-                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white">
-                          <Camera size={24} />
+                      /* 미연동 상태 — 간편 가져오기 + OAuth */
+                      <div className="flex flex-col gap-4">
+                        {/* 간편 가져오기 (SocialCrawl) */}
+                        <div className="p-5 border border-gray-200 rounded-2xl">
+                          <p className="text-[15px] font-bold mb-1">Instagram 게시물 가져오기</p>
+                          <p className="text-[14px] text-gray-400 mb-4">username만 입력하면 공개 게시물을 바로 가져와요</p>
+                          <div className="flex gap-2">
+                            <div className="flex-1 flex items-center gap-2 px-4 py-3 border border-gray-100 rounded-xl focus-within:border-black transition-colors">
+                              <span className="text-[14px] text-gray-300">@</span>
+                              <input
+                                type="text"
+                                placeholder="instagram_username"
+                                id="ig-handle-input"
+                                className="flex-1 text-[14px] font-medium outline-none bg-transparent"
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    const btn = document.getElementById('ig-fetch-btn');
+                                    btn?.click();
+                                  }
+                                }}
+                              />
+                            </div>
+                            <button
+                              id="ig-fetch-btn"
+                              onClick={async () => {
+                                const input = document.getElementById('ig-handle-input') as HTMLInputElement;
+                                const handle = input?.value?.trim().replace('@', '');
+                                if (!handle) return;
+                                const btn = document.getElementById('ig-fetch-btn') as HTMLButtonElement;
+                                btn.disabled = true;
+                                btn.textContent = '...';
+                                try {
+                                  const res = await fetch('/api/social-fetch', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ platform: 'instagram', handle }),
+                                  });
+                                  const data = await res.json();
+                                  if (data.error) { addToast('error', data.error); return; }
+                                  // 포트폴리오에 추가
+                                  let added = 0;
+                                  const existingUrls = new Set(portfolioItems.map((i: any) => i.image_url));
+                                  for (const post of data.posts.slice(0, 12)) {
+                                    if (post.image_url && !existingUrls.has(post.image_url)) {
+                                      try {
+                                        const item = await createPortfolioItem({
+                                          image_url: post.image_url,
+                                          title: (post.caption || '').slice(0, 50),
+                                          source: 'instagram',
+                                        });
+                                        setPortfolioItems(prev => [...prev, item]);
+                                        added++;
+                                      } catch { /* skip */ }
+                                    }
+                                  }
+                                  addToast('success', `Instagram에서 ${added}개 게시물을 가져왔어요`);
+                                } catch { addToast('error', '가져오기에 실패했어요'); }
+                                finally { btn.disabled = false; btn.textContent = '가져오기'; }
+                              }}
+                              className="px-5 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl text-[14px] font-semibold hover:opacity-90 transition-opacity"
+                            >
+                              가져오기
+                            </button>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-[16px] font-bold mb-1">Instagram을 연결해보세요</p>
-                          <p className="text-[14px] text-gray-400 leading-relaxed">
-                            연결하면 최근 게시물이 자동으로<br />내 모노페이지에 표시돼요
-                          </p>
-                        </div>
-                        <a
-                          href={`/api/instagram/login?token=${getToken() || ''}`}
-                          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full text-[15px] font-semibold hover:opacity-90 transition-opacity"
-                        >
-                          <Camera size={16} /> Instagram 연결하기
-                        </a>
-                        <p className="text-[14px] text-gray-300">
-                          Instagram 앱에서 "허용"을 누르면 동기화돼요
-                        </p>
+
+                        {/* OAuth 연동 (고급) */}
+                        <details className="group">
+                          <summary className="flex items-center gap-2 text-[14px] text-gray-400 cursor-pointer hover:text-gray-600 transition-colors">
+                            <Camera size={14} /> Instagram 계정 연동 (고급)
+                            <span className="text-[12px] text-gray-300 ml-auto">비공개 게시물, 자동 동기화</span>
+                          </summary>
+                          <div className="mt-3 p-4 bg-gray-50 rounded-xl">
+                            <a
+                              href={`/api/instagram/login?token=${getToken() || ''}`}
+                              className="inline-flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-full text-[14px] font-semibold hover:bg-gray-800 transition-colors"
+                            >
+                              <Camera size={14} /> OAuth로 연결하기
+                            </a>
+                            <p className="text-[13px] text-gray-400 mt-2">Instagram 앱에서 "허용"을 누르면 동기화돼요</p>
+                          </div>
+                        </details>
                       </div>
                     )}
                   </div>
