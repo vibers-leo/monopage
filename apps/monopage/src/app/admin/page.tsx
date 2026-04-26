@@ -687,23 +687,52 @@ function AdminDashboard() {
         ) : (
           /* ===== 에디터 뷰 ===== */
           <div className="flex flex-col h-full p-6 lg:p-8 animate-in fade-in duration-200">
-        <div className="flex items-center justify-between mb-6">
-          <button onClick={() => setView('list')} className="flex items-center gap-1.5 text-gray-400 hover:text-black transition-colors text-xs font-bold">
+        {/* 상단 헤더 */}
+        <div className="flex items-center justify-between mb-4">
+          <button onClick={() => setView('list')} className="flex items-center gap-1.5 text-gray-400 hover:text-black transition-colors text-[14px] font-medium">
             <ChevronLeft size={16} /> 목록
           </button>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button onClick={() => setShowPreview(true)} className="text-gray-300 hover:text-black transition-colors lg:hidden">
               <Eye size={16} />
-            </button>
-            <button onClick={logout} className="text-gray-300 hover:text-black transition-colors">
-              <LogOut size={16} />
             </button>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex flex-col gap-2 mb-6">
-          {tabGroups.map(group => (
+        {/* 페이지 이름 + 3버튼 */}
+        <div className="mb-5">
+          <p className="text-[18px] font-bold mb-3">@{profile.username}</p>
+          <div className="grid grid-cols-3 gap-2">
+            <a
+              href={`/${profile.username}`}
+              target="_blank"
+              className="flex items-center justify-center gap-1.5 py-2.5 border border-gray-200 rounded-xl text-[14px] font-semibold hover:border-black transition-colors"
+            >
+              <ExternalLink size={14} /> 보기
+            </a>
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[14px] font-semibold transition-colors ${
+                activeTab === 'analytics' ? 'bg-black text-white' : 'border border-gray-200 hover:border-black'
+              }`}
+            >
+              <BarChart3 size={14} /> 통계
+            </button>
+            <button
+              onClick={() => { if (activeTab === 'analytics') setActiveTab('profile'); }}
+              className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[14px] font-semibold transition-colors ${
+                activeTab !== 'analytics' ? 'bg-black text-white' : 'border border-gray-200 hover:border-black'
+              }`}
+            >
+              <Settings size={14} /> 관리
+            </button>
+          </div>
+        </div>
+
+        {/* 관리 모드일 때 탭 그룹 */}
+        {activeTab !== 'analytics' && (
+        <div className="flex flex-col gap-2 mb-5">
+          {tabGroups.filter(g => g.group !== '관리').map(group => (
             <div key={group.group}>
               <p className="text-[11px] font-semibold text-gray-300 uppercase tracking-wider mb-1.5 px-1">{group.group}</p>
               <div className="flex gap-1 p-0.5 bg-gray-50 rounded-xl">
@@ -724,7 +753,17 @@ function AdminDashboard() {
               </div>
             </div>
           ))}
+          {/* 관리 그룹의 문의함 바로가기 */}
+          <div className="flex gap-1 p-0.5 bg-gray-50 rounded-xl">
+            <button onClick={() => setActiveTab('inquiries')} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${activeTab === 'inquiries' ? 'bg-black text-white shadow-sm' : 'text-gray-400 hover:text-black'}`}>
+              <MessageCircle size={14} /> <span className="hidden sm:inline">문의함</span>
+            </button>
+            <button onClick={() => setActiveTab('settings')} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[13px] font-semibold transition-all ${activeTab === 'settings' ? 'bg-black text-white shadow-sm' : 'text-gray-400 hover:text-black'}`}>
+              <Settings size={14} /> <span className="hidden sm:inline">설정</span>
+            </button>
+          </div>
         </div>
+        )}
 
         <div className="flex flex-col gap-8 flex-1 overflow-y-auto pb-4">
           {/* ===== PROFILE TAB ===== */}
