@@ -2119,15 +2119,13 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* 가이드 챗봇 — 오른쪽 하단 고정 */}
+        {/* AI 비서 — createPortal로 자체 렌더링 */}
         {view === 'editor' && (
-          <div className="fixed bottom-6 right-6 z-50 w-[360px]">
-            <AdminGuideChat
-              profile={profile}
-              linksCount={links.length}
-              portfolioCount={portfolioItems.length}
-            />
-          </div>
+          <AdminGuideChat
+            profile={profile}
+            linksCount={links.length}
+            portfolioCount={portfolioItems.length}
+          />
         )}
       </main>
       </div>
