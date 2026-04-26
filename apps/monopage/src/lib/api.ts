@@ -52,6 +52,15 @@ export const login = (email: string, password: string) =>
 export const getMyProfile = () =>
   request<any>('/api/v1/profile');
 
+export const getMyProfiles = () =>
+  request<any[]>('/api/v1/profiles');
+
+export const createNewProfile = (data: { username: string; bio?: string; avatar_url?: string; display_name?: string }) =>
+  request<any>('/api/v1/profiles', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+
 export const updateProfile = (data: { bio?: string; avatar_url?: string; username?: string; display_name?: string; knowledge_md?: string; theme_config?: any }) =>
   request<any>('/api/v1/profile', {
     method: 'PATCH',

@@ -79,7 +79,8 @@
       "Bash(SOCIALCRAWL_API_KEY=\"sc_2WK52rPxWjrBYBaQMWlqJbZekar2Nyx3QkJvBtxTJHM\" npx -y socialcrawl-mcp)",
       "Bash(npx skills:*)",
       "WebFetch(domain:scrapecreators.com)",
-      "WebFetch(domain:docs.scrapecreators.com)"
+      "WebFetch(domain:docs.scrapecreators.com)",
+      "Bash(xxd /Users/juuuno/.claude/projects/-Users-juuuno-Desktop-macminim4-dev-nextjs/memory/MEMORY.md)"
     ]
   }
 }

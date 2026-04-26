@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Camera, Sparkles, Loader2, X, Plus, Trash2, Link as LinkIcon, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { signup, setToken, updateProfile, createLink, createPortfolioItem, getToken, getMyProfile } from '@/lib/api';
+import { signup, setToken, updateProfile, createLink, createPortfolioItem, createNewProfile, getToken, getMyProfile } from '@/lib/api';
 
 const SUPER_ADMINS = [
   'juuuno@naver.com',

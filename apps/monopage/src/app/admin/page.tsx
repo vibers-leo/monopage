@@ -26,6 +26,7 @@ import {
   getSocialAccounts, deleteSocialAccount,
   getAnalytics,
   getInquiries, getInquiryStats, updateInquiry, deleteInquiry,
+  getMyProfiles,
   adminGetProfile, adminGetLinks, adminGetPortfolioItems, adminGetInquiries,
   getNotifications, markNotificationRead, markAllNotificationsRead,
   clearToken, getToken,
@@ -68,6 +69,7 @@ function AdminDashboard() {
   const { toasts, addToast, dismiss } = useToast();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
   const [profile, setProfile] = useState<ProfileData>({ username: '', bio: '', avatar_url: '' });
+  const [allProfiles, setAllProfiles] = useState<any[]>([]);
   const [links, setLinks] = useState<LinkItem[]>([]);
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItemData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -150,6 +152,12 @@ function AdminDashboard() {
   }, [router, managingUser]);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  // 전체 프로필 목록 로드
+  useEffect(() => {
+    if (!getToken() || managingUser) return;
+    getMyProfiles().then(setAllProfiles).catch(() => {});
+  }, [managingUser]);
 
   // 알림 로드 + 30초마다 폴링
   useEffect(() => {
@@ -442,110 +450,72 @@ function AdminDashboard() {
             <p className="text-[14px] font-black text-gray-300 uppercase tracking-[0.3em] mb-2">내 모노페이지</p>
             <h1 className="text-2xl font-black mb-6">페이지 목록</h1>
 
-            <div className="flex flex-col gap-4 flex-1">
-              {/* 내 페이지 카드 — 콘텐츠가 있을 때만 */}
-              {(links.length > 0 || portfolioItems.length > 0 || profile.bio || profile.avatar_url) ? (
-              <div className="border border-gray-200 rounded-2xl p-5 relative group">
-                {/* 우측 상단 메뉴 */}
-                <div className="absolute top-4 right-4 z-10">
-                  <button
-                    onClick={() => setShowPageMenu(v => !v)}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-300 hover:text-black hover:bg-gray-100 transition-colors"
-                  >
-                    <Settings size={14} />
-                  </button>
-                  {showPageMenu && (
-                    <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-100 rounded-xl shadow-lg py-1 z-50" onClick={() => setShowPageMenu(false)}>
-                      <button
-                        onClick={() => setView('editor')}
-                        className="flex items-center gap-2 w-full px-4 py-2.5 text-[14px] font-medium hover:bg-gray-50 transition-colors"
-                      >
-                        <Settings size={13} /> 페이지 편집
-                      </button>
-                      <a
-                        href={`/${profile.username}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 w-full px-4 py-2.5 text-[14px] font-medium hover:bg-gray-50 transition-colors"
-                      >
-                        <Eye size={13} /> 페이지 보기
+            <div className="flex flex-col gap-3 flex-1">
+              {/* 내 페이지 카드 목록 */}
+              {allProfiles.map(p => (
+                <div key={p.id} className="border border-gray-200 rounded-2xl p-4 hover:border-gray-400 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center shrink-0">
+                      {p.avatar_url
+                        ? <img src={p.avatar_url} className="w-full h-full object-cover" alt="" />
+                        : <span className="text-[15px] font-bold text-gray-300">{(p.username?.[0] || '?').toUpperCase()}</span>
+                      }
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-[15px] font-bold truncate">@{p.username}</p>
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
+                      </div>
+                      <p className="text-[13px] text-gray-400 truncate">{p.bio || '소개가 없어요'}</p>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <a href={`/${p.username}`} target="_blank" className="p-2 text-gray-300 hover:text-black transition-colors rounded-lg hover:bg-gray-50" title="보기">
+                        <ExternalLink size={14} />
                       </a>
-                      <div className="h-px bg-gray-100 my-1" />
                       <button
-                        onClick={() => setShowResetConfirm(true)}
-                        className="flex items-center gap-2 w-full px-4 py-2.5 text-[14px] font-medium text-red-500 hover:bg-red-50 transition-colors"
+                        onClick={() => {
+                          // 해당 프로필로 전환해서 에디터 열기
+                          setProfile({ username: p.username || '', bio: p.bio || '', avatar_url: p.avatar_url || '', email: profile.email || '' } as any);
+                          setView('editor');
+                          loadData();
+                        }}
+                        className="p-2 text-gray-300 hover:text-black transition-colors rounded-lg hover:bg-gray-50" title="관리"
                       >
-                        <Trash2 size={13} /> 페이지 삭제
+                        <Settings size={14} />
                       </button>
                     </div>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-4 cursor-pointer" onClick={() => setView('editor')}>
-                  <div className="w-14 h-14 rounded-full bg-gray-100 overflow-hidden shrink-0">
-                    {profile.avatar_url
-                      ? <img src={profile.avatar_url} className="w-full h-full object-cover" alt="" />
-                      : <div className="w-full h-full flex items-center justify-center text-lg font-bold text-gray-300">{(profile.username?.[0] || '?').toUpperCase()}</div>
-                    }
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
-                      <span className="text-[13px] font-semibold text-gray-400">Active</span>
-                    </div>
-                    <p className="font-bold text-[15px]">@{profile.username}</p>
-                    <p className="text-[14px] text-gray-400 font-medium mt-0.5 truncate">{profile.bio || '소개가 없어요'}</p>
+                  <div className="flex gap-4 mt-3 pt-3 border-t border-gray-50 text-[13px] text-gray-400">
+                    <span>{p.links_count || 0} 링크</span>
+                    <span>{p.portfolio_count || 0} 갤러리</span>
+                    <span>{p.inquiries_count || 0} 문의</span>
+                    <span>{p.views_count || 0} 조회</span>
                   </div>
-                  <ArrowRight size={16} className="text-gray-300 shrink-0" />
                 </div>
+              ))}
 
-                <div className="flex gap-2 mt-4 pt-4 border-t border-gray-100">
-                  <button
-                    onClick={() => setView('editor')}
-                    className="flex-1 py-2.5 bg-[#0a0a0a] text-white rounded-xl text-[14px] font-semibold hover:bg-[#262626] transition-colors"
-                  >
-                    편집하기
-                  </button>
-                  <a
-                    href={`/${profile.username}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 py-2.5 border border-gray-200 rounded-xl text-[14px] font-semibold text-center hover:border-black transition-colors"
-                  >
-                    미리보기
-                  </a>
+              {allProfiles.length === 0 && (
+                <div className="border border-dashed border-gray-200 rounded-2xl p-8 flex flex-col items-center gap-4 text-center">
+                  <div className="w-16 h-16 bg-[#f5f5f5] rounded-full flex items-center justify-center text-2xl">✨</div>
+                  <p className="text-[16px] font-bold">아직 페이지가 없어요</p>
+                  <Link href="/onboard" className="px-6 py-3 bg-[#0a0a0a] text-white rounded-full text-[15px] font-semibold hover:bg-[#262626] transition-colors">
+                    첫 페이지 만들기
+                  </Link>
                 </div>
-              </div>
-              ) : (
-              /* 빈 상태 — 페이지 삭제 후 */
-              <div className="border border-dashed border-gray-200 rounded-2xl p-8 flex flex-col items-center gap-4 text-center">
-                <div className="w-16 h-16 bg-[#f5f5f5] rounded-full flex items-center justify-center text-2xl">✨</div>
-                <div>
-                  <p className="text-[16px] font-bold mb-1">페이지가 비어있어요</p>
-                  <p className="text-[14px] text-gray-400">새로운 페이지를 만들어보세요</p>
-                </div>
-                <button
-                  onClick={() => setView('editor')}
-                  className="px-6 py-3 bg-[#0a0a0a] text-white rounded-full text-[15px] font-semibold hover:bg-[#262626] transition-colors"
-                >
-                  새로 시작하기
-                </button>
-              </div>
               )}
 
               {/* + 추가 카드 */}
-              <button
-                onClick={() => setShowSupportModal(true)}
-                className="border border-dashed border-gray-200 rounded-2xl p-5 flex items-center gap-4 hover:border-gray-400 transition-colors group"
+              <Link
+                href="/onboard"
+                className="border border-dashed border-gray-200 rounded-2xl p-4 flex items-center gap-3 hover:border-gray-400 transition-colors group"
               >
                 <div className="w-10 h-10 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center group-hover:border-gray-400 transition-colors shrink-0">
                   <Plus size={16} className="text-gray-300 group-hover:text-gray-500 transition-colors" />
                 </div>
                 <div className="text-left">
-                  <p className="text-[14px] font-semibold text-gray-400">새 페이지 추가하기</p>
-                  <p className="text-[13px] text-gray-300 font-medium mt-0.5">후원 후 신청할 수 있어요</p>
+                  <p className="text-[14px] font-semibold text-gray-400">새 페이지 만들기</p>
                 </div>
-              </button>
+              </Link>
             </div>
 
             {/* 페이지 삭제 확인 모달 */}

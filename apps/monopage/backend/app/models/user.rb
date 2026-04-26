@@ -1,8 +1,9 @@
 class User < ApplicationRecord
   has_secure_password validations: false  # 소셜 로그인은 password 없음
-  has_one :profile, dependent: :destroy
+  has_many :profiles, dependent: :destroy
+  has_one :profile, -> { order(created_at: :asc) } # 기본 프로필 (하위 호환)
   has_many :notifications, dependent: :destroy
-  after_create :create_profile
+  after_create :create_first_profile
 
   store_accessor :notification_settings, :token_expiry_reminder
 
@@ -16,7 +17,7 @@ class User < ApplicationRecord
 
   private
 
-  def create_profile
-    Profile.create(user: self) unless profile.present?
+  def create_first_profile
+    profiles.create unless profiles.exists?
   end
 end
