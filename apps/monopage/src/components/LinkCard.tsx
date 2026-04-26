@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import {
-  ArrowUpRight, Instagram, Youtube, Music, Github, Linkedin, Facebook,
+  ArrowUpRight, Camera, Play, Music, Code, Briefcase,
   MessageCircle, MapPin, Phone, Globe, Mail, ShoppingBag, Newspaper,
-  AtSign, LinkIcon, Play,
+  AtSign, Hash, Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Theme } from '@/lib/themes';
@@ -17,14 +17,14 @@ interface SnsIconDef {
 
 function getSnsIcon(url: string): SnsIconDef | null {
   const s = 16;
-  if (url.includes('instagram.com')) return { icon: <Instagram size={s} />, color: '#E1306C', bg: '#E1306C15' };
-  if (url.includes('youtube.com') || url.includes('youtu.be')) return { icon: <Play size={s} fill="currentColor" />, color: '#FF0000', bg: '#FF000012' };
+  if (url.includes('instagram.com')) return { icon: <Camera size={s} />, color: '#E1306C', bg: '#E1306C15' };
+  if (url.includes('youtube.com') || url.includes('youtu.be')) return { icon: <Play size={s} />, color: '#FF0000', bg: '#FF000012' };
   if (url.includes('tiktok.com')) return { icon: <Music size={s} />, color: '#010101', bg: '#01010110' };
-  if (url.includes('twitter.com') || url.includes('x.com')) return { icon: <AtSign size={s} />, color: '#000000', bg: '#00000010' };
-  if (url.includes('github.com')) return { icon: <Github size={s} />, color: '#24292e', bg: '#24292e10' };
-  if (url.includes('linkedin.com')) return { icon: <Linkedin size={s} />, color: '#0A66C2', bg: '#0A66C212' };
+  if (url.includes('twitter.com') || url.includes('x.com')) return { icon: <Hash size={s} />, color: '#000000', bg: '#00000010' };
+  if (url.includes('github.com')) return { icon: <Code size={s} />, color: '#24292e', bg: '#24292e10' };
+  if (url.includes('linkedin.com')) return { icon: <Briefcase size={s} />, color: '#0A66C2', bg: '#0A66C212' };
   if (url.includes('threads.net')) return { icon: <AtSign size={s} />, color: '#101010', bg: '#10101010' };
-  if (url.includes('facebook.com')) return { icon: <Facebook size={s} />, color: '#1877F2', bg: '#1877F212' };
+  if (url.includes('facebook.com')) return { icon: <Users size={s} />, color: '#1877F2', bg: '#1877F212' };
   if (url.includes('blog.naver.com')) return { icon: <Newspaper size={s} />, color: '#03C75A', bg: '#03C75A12' };
   if (url.includes('place.naver.com') || url.includes('naver.me') || url.includes('map.naver.com')) return { icon: <MapPin size={s} />, color: '#03C75A', bg: '#03C75A12' };
   if (url.includes('kakao')) return { icon: <MessageCircle size={s} />, color: '#3C1E1E', bg: '#FEE50030' };

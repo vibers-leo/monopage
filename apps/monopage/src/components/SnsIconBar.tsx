@@ -2,8 +2,8 @@
 
 import React from 'react';
 import {
-  Instagram, Youtube, Music, Github, Linkedin, Facebook,
-  MessageCircle, MapPin, AtSign, Newspaper, Globe,
+  Camera, Play, Music, Code, Briefcase, Users,
+  MessageCircle, MapPin, AtSign, Newspaper, Globe, Hash,
 } from 'lucide-react';
 import type { Theme } from '@/lib/themes';
 
@@ -14,15 +14,15 @@ interface SnsIconBarProps {
 }
 
 const SNS_MAP: Record<string, { icon: React.ReactNode; label: string }> = {
-  instagram: { icon: <Instagram size={16} />, label: 'Instagram' },
-  youtube: { icon: <Youtube size={16} />, label: 'YouTube' },
+  instagram: { icon: <Camera size={16} />, label: 'Instagram' },
+  youtube: { icon: <Play size={16} />, label: 'YouTube' },
   tiktok: { icon: <Music size={16} />, label: 'TikTok' },
-  twitter: { icon: <AtSign size={16} />, label: 'X' },
-  x: { icon: <AtSign size={16} />, label: 'X' },
-  facebook: { icon: <Facebook size={16} />, label: 'Facebook' },
+  twitter: { icon: <Hash size={16} />, label: 'X' },
+  x: { icon: <Hash size={16} />, label: 'X' },
+  facebook: { icon: <Users size={16} />, label: 'Facebook' },
   threads: { icon: <AtSign size={16} />, label: 'Threads' },
-  github: { icon: <Github size={16} />, label: 'GitHub' },
-  linkedin: { icon: <Linkedin size={16} />, label: 'LinkedIn' },
+  github: { icon: <Code size={16} />, label: 'GitHub' },
+  linkedin: { icon: <Briefcase size={16} />, label: 'LinkedIn' },
   naver: { icon: <Newspaper size={16} />, label: 'Naver' },
   blog: { icon: <Newspaper size={16} />, label: 'Blog' },
   kakao: { icon: <MessageCircle size={16} />, label: 'KakaoTalk' },
